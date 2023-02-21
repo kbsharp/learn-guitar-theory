@@ -3,11 +3,11 @@
 </script>
 
 <svelte:head>
-	<title>About</title>
-	<meta name="description" content="About this app" />
+	<title>Guitar Theory</title>
+	<meta name="Guitar Theory" content="Guitar theory" />
 </svelte:head>
 
-<div class="text-column">
+<div>
 	<h1>Guitar Theory</h1>
 
 	<Fretboard />
