@@ -1,94 +1,20 @@
 <script lang="ts">
-	import { Scale } from 'tonal';
-	import { EString, AString, DString, GString, BString, eString } from './strings';
+	import { currentTonic, frets, getClassName, type MajorScales } from './helpers';
+	import { key } from './stores';
+	import { strings } from './strings';
 
-	const majorScales = [
-		'A major',
-		'B major',
-		'C major',
-		'D major',
-		'E major',
-		'F major',
-		'G major'
-	] as const;
-	type MajorScales = (typeof majorScales)[number];
+	let keyValue: MajorScales;
 
-	let currentScale: MajorScales = 'E major';
-
-	let AScale = Scale.get('A major');
-	let BScale = Scale.get('B major');
-	let CScale = Scale.get('C major');
-	let DScale = Scale.get('D major');
-	let EScale = Scale.get('E major');
-	let FScale = Scale.get('F major');
-	let GScale = Scale.get('G major');
-
-	let frets = new Array(25).fill(null);
-
-	function currentTonic(): string {
-		switch (currentScale) {
-			case 'A major':
-				return AScale.tonic ?? '';
-			case 'B major':
-				return BScale.tonic ?? '';
-			case 'C major':
-				return CScale.tonic ?? '';
-			case 'D major':
-				return DScale.tonic ?? '';
-			case 'E major':
-				return EScale.tonic ?? '';
-			case 'F major':
-				return FScale.tonic ?? '';
-			case 'G major':
-				return GScale.tonic ?? '';
-		}
-	}
-
-	function getClassName(note: string, currentScale: string, tonic: string) {
-		let inScale = false;
-
-		const isTonic = tonic === note;
-
-		switch (currentScale) {
-			case 'A major':
-				inScale = AScale.notes.includes(note);
-				break;
-			case 'B major':
-				inScale = BScale.notes.includes(note);
-				break;
-			case 'C major':
-				inScale = CScale.notes.includes(note);
-				break;
-			case 'D major':
-				inScale = DScale.notes.includes(note);
-				break;
-			case 'E major':
-				inScale = EScale.notes.includes(note);
-				break;
-			case 'F major':
-				inScale = FScale.notes.includes(note);
-				break;
-			case 'G major':
-				inScale = GScale.notes.includes(note);
-				break;
-		}
-
-		if (inScale && isTonic) return 'in-scale tonic';
-		if (inScale) return 'in-scale';
-
-		return '';
-	}
-
-	function handleClick(scale: MajorScales) {
-		currentScale = scale;
-	}
+	key.subscribe((value) => {
+		keyValue = value;
+	});
 </script>
 
 <div class="wrap">
 	<div class="fretboard">
 		<div class="fret-container">
 			<div class="frets">
-				{#each frets as fret}
+				{#each frets as _}
 					<div class="fret" />
 				{/each}
 			</div>
@@ -96,60 +22,18 @@
 
 		<div class="string-container">
 			<div class="strings">
-				<div class="string">
-					{#each eString as eNote}
-						<div class="note">
-							<p class={getClassName(eNote, currentScale, currentTonic())}>{eNote}</p>
-						</div>
-					{/each}
-				</div>
-
-				<div class="string">
-					{#each BString as BNote}
-						<div class="note">
-							<p class={getClassName(BNote, currentScale, currentTonic())}>{BNote}</p>
-						</div>
-					{/each}
-				</div>
-
-				<div class="string">
-					{#each GString as GNote}
-						<div class="note">
-							<p class={getClassName(GNote, currentScale, currentTonic())}>{GNote}</p>
-						</div>
-					{/each}
-				</div>
-
-				<div class="string">
-					{#each DString as DNote}
-						<div class="note">
-							<p class={getClassName(DNote, currentScale, currentTonic())}>{DNote}</p>
-						</div>
-					{/each}
-				</div>
-
-				<div class="string">
-					{#each AString as ANote}
-						<div class="note">
-							<p class={getClassName(ANote, currentScale, currentTonic())}>{ANote}</p>
-						</div>
-					{/each}
-				</div>
-
-				<div class="string">
-					{#each EString as ENote}
-						<div class="note">
-							<p class={getClassName(ENote, currentScale, currentTonic())}>{ENote}</p>
-						</div>
-					{/each}
-				</div>
+				{#each strings as string}
+					<div class="string">
+						{#each string as note}
+							<div class="note">
+								<p class={getClassName(note, keyValue, currentTonic(keyValue))}>{note}</p>
+							</div>
+						{/each}
+					</div>
+				{/each}
 			</div>
 		</div>
 	</div>
-
-	{#each majorScales as scale}
-		<button on:click={() => handleClick(scale)}>{scale}</button>
-	{/each}
 </div>
 
 <style lang="scss">

@@ -11,6 +11,15 @@ const GString = removeNumbers(Range.chromatic(['G3', 'G5'], { sharps: true }));
 const BString = removeNumbers(Range.chromatic(['B3', 'B5'], { sharps: true }));
 const eString = removeNumbers(Range.chromatic(['E4', 'E6'], { sharps: true }));
 
+const strings = [
+    eString,
+    BString,
+    GString,
+    DString,
+    AString,
+    EString
+]
+
 
 export {
     EString,
@@ -18,5 +27,6 @@ export {
     DString,
     GString,
     BString,
-    eString
+    eString,
+    strings
 }
