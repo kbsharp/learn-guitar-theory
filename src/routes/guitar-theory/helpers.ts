@@ -21,16 +21,14 @@ export enum Keys {
 }
 
 export const majorScales: Keys[] = [
-    MajorScale.A,
-    MajorScale.B,
-    MajorScale.C,
-    MajorScale.D,
-    MajorScale.E,
-    MajorScale.F,
-    MajorScale.G
+    Keys.A,
+    Keys.B,
+    Keys.C,
+    Keys.D,
+    Keys.E,
+    Keys.F,
+    Keys.G
 ]
-
-// export type MajorScales = (typeof majorScales)[number];
 
 export function currentTonic(currentScale: Keys): string {
     switch (currentScale) {
