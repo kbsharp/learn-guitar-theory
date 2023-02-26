@@ -1,4 +1,5 @@
 import { writable, type Writable } from 'svelte/store';
-import type { MajorScales } from './helpers';
+import type { MajorScale } from './helpers';
+import { MajorScale as Scale } from './helpers';
 
-export const key: Writable<MajorScales> = writable("C major");
+export const key: Writable<MajorScale> = writable(Scale.C);

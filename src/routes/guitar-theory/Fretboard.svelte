@@ -1,16 +1,16 @@
 <script lang="ts">
-	import { currentTonic, frets, getClassName, type MajorScales } from './helpers';
+	import { currentTonic, frets, getClassName, type MajorScale } from './helpers';
 	import { key } from './stores';
 	import { strings } from './strings';
 
-	let keyValue: MajorScales;
+	let keyValue: MajorScale;
 
 	key.subscribe((value) => {
 		keyValue = value;
 	});
 </script>
 
-<div class="wrap">
+<div class="fretboard-container">
 	<div class="fretboard">
 		<div class="fret-container">
 			<div class="frets">
@@ -37,7 +37,7 @@
 </div>
 
 <style lang="scss">
-	.wrap {
+	.fretboard-container {
 		margin: auto;
 		width: 1250px;
 		height: 260px;
