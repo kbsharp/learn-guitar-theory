@@ -20,7 +20,6 @@ const strings = [
     EString
 ]
 
-
 export {
     EString,
     AString,

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { majorScales, type MajorScale } from './helpers';
+	import { majorScales, type Keys } from './helpers';
 	import { key } from './stores';
 
 	let keyValue: string = String(key);
 
-	function handleClick(scale: MajorScale) {
+	function handleClick(scale: Keys) {
 		key.set(scale);
 	}
 </script>

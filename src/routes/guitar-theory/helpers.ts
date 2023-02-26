@@ -10,7 +10,7 @@ export const gMajScale = Scale.get('G major');
 
 export const frets = new Array(25).fill(null);
 
-export enum MajorScale {
+export enum Keys {
     A = 'A major',
     B = 'B major',
     C = 'C major',
@@ -20,7 +20,7 @@ export enum MajorScale {
     G = 'G major'
 }
 
-export const majorScales: MajorScale[] = [
+export const majorScales: Keys[] = [
     MajorScale.A,
     MajorScale.B,
     MajorScale.C,
@@ -32,9 +32,9 @@ export const majorScales: MajorScale[] = [
 
 // export type MajorScales = (typeof majorScales)[number];
 
-export function currentTonic(currentScale: MajorScale): string {
+export function currentTonic(currentScale: Keys): string {
     switch (currentScale) {
-        case MajorScale.A:
+        case Keys.A:
             return aMajScale.tonic ?? '';
         case 'B major':
             return bMajScale.tonic ?? '';
@@ -53,7 +53,7 @@ export function currentTonic(currentScale: MajorScale): string {
     }
 }
 
-export function getClassName(note: string, currentScale: MajorScale, tonic: string) {
+export function getClassName(note: string, currentScale: Keys, tonic: string) {
     let inScale = false;
 
     const isTonic = tonic === note;

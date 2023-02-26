@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { currentTonic, frets, getClassName, type MajorScale } from './helpers';
+	import { currentTonic, frets, getClassName, type Keys } from './helpers';
 	import { key } from './stores';
 	import { strings } from './strings';
 
-	let keyValue: MajorScale;
+	let keyValue: Keys;
 
 	key.subscribe((value) => {
 		keyValue = value;
