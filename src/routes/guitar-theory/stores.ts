@@ -1,5 +1,5 @@
 import { writable, type Writable } from 'svelte/store';
-import type { Keys } from './helpers';
-import { Keys as Key } from './helpers';
+import type { Key } from './helpers';
+import { Key as Keys } from './helpers';
 
-export const key: Writable<Keys> = writable(Key.C);
+export const key: Writable<Key> = writable(Keys.C);

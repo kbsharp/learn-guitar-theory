@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { currentTonic, frets, getClassName, type Keys } from './helpers';
+	import { convertFlatToSharp, currentTonic, frets, getClassName, type Key } from './helpers';
 	import { key } from './stores';
 	import { strings } from './strings';
 
-	let keyValue: Keys;
+	let keyValue: Key;
 
 	key.subscribe((value) => {
 		keyValue = value;
@@ -26,7 +26,9 @@
 					<div class="string">
 						{#each string as note}
 							<div class="note">
-								<p class={getClassName(note, keyValue, currentTonic(keyValue))}>{note}</p>
+								<p class={getClassName(note, keyValue, currentTonic(keyValue))}>
+									{convertFlatToSharp(note)}
+								</p>
 							</div>
 						{/each}
 					</div>

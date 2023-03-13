@@ -1,18 +1,19 @@
 <script lang="ts">
-	import { majorScales, type Keys } from './helpers';
+	import { convertFlatToSharp, majorScales, type Key } from './helpers';
 	import { key } from './stores';
 
 	let keyValue: string = String(key);
 
-	function handleClick(scale: Keys) {
+	function handleClick(scale: Key) {
 		key.set(scale);
 	}
 </script>
 
 <div class="keys-container">
 	{#each majorScales as scale}
-		<button class="button ${keyValue === scale}" on:click={() => handleClick(scale)}>{scale}</button
-		>
+		<button class="button ${keyValue === scale}" on:click={() => handleClick(scale)}>
+			{convertFlatToSharp(scale)}
+		</button>
 	{/each}
 </div>
 
