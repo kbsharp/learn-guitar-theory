@@ -4,6 +4,10 @@
 
 	let keyValue: string = String(key);
 
+	key.subscribe((value) => {
+		keyValue = value;
+	});
+
 	function handleClick(scale: Key) {
 		key.set(scale);
 	}
@@ -11,7 +15,11 @@
 
 <div class="keys-container">
 	{#each majorScales as scale}
-		<button class="button ${keyValue === scale}" on:click={() => handleClick(scale)}>
+		<button
+			class="button ${keyValue === scale ? 'active' : ''}"
+			name={scale}
+			on:click={() => handleClick(scale)}
+		>
 			{convertFlatToSharp(scale)}
 		</button>
 	{/each}
@@ -46,7 +54,7 @@
 			}
 
 			&.active {
-				background-color: #4c7aaf;
+				background-color: #863d82;
 			}
 		}
 	}
