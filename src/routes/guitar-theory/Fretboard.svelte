@@ -47,7 +47,7 @@
 		.fretboard {
 			margin-left: 50px;
 			position: relative;
-			background-color: black;
+			background-color: #303841;
 			width: 1150px;
 			height: 100%;
 
@@ -93,6 +93,10 @@
 							display: flex;
 							justify-content: center;
 							align-items: center;
+
+							.hide-note {
+								display: none;
+							}
 
 							> p {
 								width: 50%;

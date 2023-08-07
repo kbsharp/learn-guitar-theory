@@ -57,7 +57,7 @@ export function getClassName(note: string, currentScale: Key, tonic: string) {
     if (inScale && isTonic) return 'in-scale tonic';
     if (inScale) return 'in-scale';
 
-    return '';
+    return 'hide-note';
 }
 
 export function convertFlatToSharp(note: string): string {

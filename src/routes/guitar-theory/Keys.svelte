@@ -41,7 +41,7 @@
 			outline: inherit;
 
 			&.button {
-				background-color: #4c7aaf;
+				background-color: #303841;
 				border: none;
 				color: white;
 				padding: 15px 32px;
@@ -54,7 +54,7 @@
 			}
 
 			&.active {
-				background-color: #863d82;
+				background-color: #d72323;
 			}
 		}
 	}
