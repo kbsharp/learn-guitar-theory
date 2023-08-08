@@ -54,7 +54,7 @@
 			}
 
 			&.active {
-				background-color: #d72323;
+				background-color: var(--key-color);
 			}
 		}
 	}

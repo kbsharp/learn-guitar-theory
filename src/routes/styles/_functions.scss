@@ -1,0 +1,9 @@
+@function adjust-color-lightness($color, $percent) {
+    $adjusted-color: lighten($color, $percent);
+    @return $adjusted-color;
+}
+
+@function adjust-color-darkness($color, $percent) {
+    $adjusted-color: darken($color, $percent);
+    @return $adjusted-color;
+}
