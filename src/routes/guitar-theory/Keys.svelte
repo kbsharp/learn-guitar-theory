@@ -38,7 +38,6 @@
 			padding: 0;
 			font: inherit;
 			cursor: pointer;
-			outline: inherit;
 
 			&.button {
 				background-color: #303841;

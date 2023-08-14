@@ -10,14 +10,15 @@
 	});
 </script>
 
-<div class="strings">
-	{#each strings as string}
-		<div class="string">
-			{#each string as note}
-				<div class="note">
+<div class="string-container">
+	{#each strings as string, i}
+		<div class={`string string${i}`}>
+			{#each string as note, j}
+				<div class={`note note${j}`}>
 					<p class={getClassName(note, keyValue, currentTonic(keyValue))}>
 						{convertFlatToSharp(note)}
 					</p>
+					<div class="string-graphic" />
 				</div>
 			{/each}
 		</div>
@@ -25,10 +26,10 @@
 </div>
 
 <style lang="scss">
-	.strings {
+	.string-container {
 		display: flex;
 		flex-direction: column;
-		height: 50px;
+		height: 100%;
 
 		.string {
 			display: flex;
@@ -36,19 +37,33 @@
 			height: 42px;
 
 			.note {
-				width: 50px;
-				height: 50px;
-				display: flex;
-				justify-content: center;
-				align-items: center;
+				position: relative;
+				width: 100%;
+				height: 100%;
 
 				.hide-note {
 					display: none;
 				}
 
+				.string-graphic {
+					position: absolute;
+					width: 106%;
+					height: 4px;
+					top: 18px;
+					left: 0;
+					background-color: hsl(220, 7%, 43%);
+					z-index: 5;
+				}
+
 				> p {
-					width: 50%;
-					height: 50%;
+					// color: var(--fret-boarder);
+					margin: 0;
+					padding: 0;
+					position: absolute;
+					width: 20px;
+					height: 20px;
+					top: 6px;
+					left: 10px;
 					border-radius: 50%;
 
 					display: flex;
@@ -56,19 +71,24 @@
 					align-items: center;
 					padding: 4px;
 
+					// outline: solid 2px #1212129f;
+
+					z-index: 10;
+
 					&.in-scale {
 						background-color: var(--note);
-						color: black;
 					}
 
 					&.tonic {
+						outline: solid 1px var(--fret-boarder);
 						background-color: var(--tonic);
-						color: black;
 					}
 				}
+			}
 
-				&:first-child {
-					color: black;
+			.note24 {
+				.string-graphic {
+					width: 100%;
 				}
 			}
 		}

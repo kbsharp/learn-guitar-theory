@@ -1,19 +1,9 @@
 <script lang="ts">
 	import { frets } from './helpers';
 
-	const hasDot = (fret: number) => {
-		if (
-			fret === 3 ||
-			fret === 5 ||
-			fret === 7 ||
-			fret === 9 ||
-			fret === 15 ||
-			fret === 17 ||
-			fret === 19 ||
-			fret === 21
-		) {
-			return true;
-		}
+	const hasDot = (fret: number): boolean => {
+		const fretsWithDots = [3, 5, 7, 9, 15, 17, 19, 21];
+		return fretsWithDots.includes(fret);
 	};
 
 	const hasDots = (fret: number) => {
@@ -45,22 +35,23 @@
 		top: 0;
 		left: -50px;
 		right: -50px;
-		width: 1200px;
+		width: 100%;
 
 		.frets {
 			display: flex;
-			height: 260px;
+			height: 240px;
 
 			.fret {
-				width: 50px;
+				width: 100%;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
+				border-right: 1px solid var(--fret-border);
 
 				.dot {
-					margin: 16px 0;
-					background-color: hsl(0, 0%, 100%);
+					margin: 26px 0;
+					background-color: var(--white);
 					height: 25px;
 					width: 25px;
 					border-radius: 50%;
@@ -68,7 +59,8 @@
 			}
 
 			.fret:not(:first-child) {
-				border-right: 1px solid var(--fret-border);
+				border-top: 1px solid var(--fret-border);
+				border-bottom: 1px solid var(--fret-border);
 			}
 		}
 	}
