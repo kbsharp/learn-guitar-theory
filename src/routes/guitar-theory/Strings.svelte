@@ -51,12 +51,12 @@
 					height: 4px;
 					top: 18px;
 					left: 0;
-					background-color: hsl(220, 7%, 43%);
+					background-color: var(--string-color);
 					z-index: 5;
 				}
 
 				> p {
-					// color: var(--fret-boarder);
+					font-size: 14px;
 					margin: 0;
 					padding: 0;
 					position: absolute;
@@ -70,8 +70,6 @@
 					justify-content: center;
 					align-items: center;
 					padding: 4px;
-
-					// outline: solid 2px #1212129f;
 
 					z-index: 10;
 
@@ -89,6 +87,65 @@
 			.note24 {
 				.string-graphic {
 					width: 100%;
+				}
+			}
+
+			&.string0::before {
+				content: 'e';
+				position: absolute;
+				top: 8px;
+				left: -36px;
+			}
+
+			&.string1::before {
+				content: 'B';
+				position: absolute;
+				top: 50px;
+				left: -36px;
+			}
+			&.string2::before {
+				content: 'G';
+				position: absolute;
+				top: 90px;
+				left: -36px;
+			}
+			&.string3::before {
+				content: 'D';
+				position: absolute;
+				top: 130px;
+				left: -36px;
+			}
+			&.string4::before {
+				content: 'A';
+				position: absolute;
+				top: 170px;
+				left: -36px;
+			}
+			&.string5::before {
+				content: 'E';
+				position: absolute;
+				top: 210px;
+				left: -36px;
+			}
+
+			&.string0,
+			&.string1 {
+				.string-graphic {
+					height: 2px;
+				}
+			}
+
+			&.string2,
+			&.string3 {
+				.string-graphic {
+					height: 3px;
+				}
+			}
+
+			&.string4,
+			&.string5 {
+				.string-graphic {
+					height: 4px;
 				}
 			}
 		}

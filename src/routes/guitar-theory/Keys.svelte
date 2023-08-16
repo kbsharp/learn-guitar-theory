@@ -40,7 +40,7 @@
 			cursor: pointer;
 
 			&.button {
-				background-color: #303841;
+				background-color: var(--note);
 				border: none;
 				color: white;
 				padding: 15px 32px;
@@ -53,7 +53,7 @@
 			}
 
 			&.active {
-				background-color: var(--key-color);
+				background-color: var(--tonic);
 			}
 		}
 	}

@@ -8,8 +8,10 @@ $color-bg-1: #121212;
 $fretboard-bg: $color-bg-1;
 $fret-border: #444444;
 
-$note: #186c81;
+$note: #207a91;
 $tonic: #973333;
+
+$string-color: hsl(220, 7%, 43%);
 
 $key-color: #5B9A8B;
 
@@ -25,6 +27,8 @@ $black: #000;
 
     --note: #{$note};
     --tonic: #{$tonic};
+
+    --string-color: #{$string-color};
   
     --key-color: #{$key-color};
 
