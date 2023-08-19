@@ -17,6 +17,14 @@ export enum Key {
     G = 'G',
 }
 
+export enum Quality {
+    Major = 'major',
+    Minor = 'minor',
+    Diminished = 'diminished',
+    Augmented = 'augmented',
+    Mixolydian = 'mixolydian',
+}
+
 export const majorScales: Key[] = [
     Key.Ab,
     Key.A,
@@ -43,14 +51,14 @@ export function currentTonic(currentScale: Key): string {
     }
 }
 
-export function getClassName(note: string, currentScale: Key, tonic: string) {
+export function getClassName(note: string, currentScale: Key, tonic: string, quality: "major" | "minor" | "diminished" | "augmented" | "mixolydian") {
     let inScale = false;
 
     const isTonic = tonic === note;
 
     for (const scale of majorScales) {
         if (currentScale === scale) {
-            inScale = incluesNoteInScale(note, Scale.get(`${scale} major`).notes);
+            inScale = incluesNoteInScale(note, Scale.get(`${scale} ${quality}`).notes);
         }
     }
 

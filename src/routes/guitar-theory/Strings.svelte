@@ -1,12 +1,23 @@
 <script lang="ts">
 	import { strings } from './strings';
-	import { convertFlatToSharp, currentTonic, getClassName, type Key } from './helpers';
-	import { key } from './stores';
+	import {
+		convertFlatToSharp,
+		currentTonic,
+		getClassName,
+		type Quality,
+		type Key
+	} from './helpers';
+	import { key, quality } from './stores';
 
 	let keyValue: Key;
+	let qualityValue: Quality;
 
 	key.subscribe((value) => {
 		keyValue = value;
+	});
+
+	quality.subscribe((value) => {
+		qualityValue = value;
 	});
 </script>
 
@@ -15,7 +26,7 @@
 		<div class={`string string${i}`}>
 			{#each string as note, j}
 				<div class={`note note${j}`}>
-					<p class={getClassName(note, keyValue, currentTonic(keyValue))}>
+					<p class={getClassName(note, keyValue, currentTonic(keyValue), qualityValue)}>
 						{convertFlatToSharp(note)}
 					</p>
 					<div class="string-graphic" />
