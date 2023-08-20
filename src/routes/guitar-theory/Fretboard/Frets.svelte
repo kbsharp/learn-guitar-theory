@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { frets } from './helpers';
+	import { frets } from '../helpers';
 
 	const hasDot = (fret: number): boolean => {
 		const fretsWithDots = [3, 5, 7, 9, 15, 17, 19, 21];

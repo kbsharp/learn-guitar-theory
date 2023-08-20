@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { strings } from './strings';
+	import { strings } from '../strings';
 	import {
 		convertFlatToSharp,
 		currentTonic,
 		getClassName,
 		type Quality,
 		type Key
-	} from './helpers';
-	import { key, quality } from './stores';
+	} from '../helpers';
+	import { key, quality } from '../../../stores';
 
 	let keyValue: Key;
 	let qualityValue: Quality;

@@ -25,6 +25,14 @@ export enum Quality {
     Mixolydian = 'mixolydian',
 }
 
+export const qualities: Quality[] = [
+    Quality.Major,
+    Quality.Minor,
+    Quality.Diminished,
+    Quality.Augmented,
+    Quality.Mixolydian,
+]
+
 export const majorScales: Key[] = [
     Key.Ab,
     Key.A,
@@ -51,7 +59,7 @@ export function currentTonic(currentScale: Key): string {
     }
 }
 
-export function getClassName(note: string, currentScale: Key, tonic: string, quality: "major" | "minor" | "diminished" | "augmented" | "mixolydian") {
+export function getClassName(note: string, currentScale: Key, tonic: string, quality: Quality) {
     let inScale = false;
 
     const isTonic = tonic === note;

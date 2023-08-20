@@ -1,35 +1,35 @@
 <script lang="ts">
-	import { convertFlatToSharp, majorScales, type Key } from './helpers';
-	import { key } from '../../stores';
+	import { type Quality as QualityType, Quality, qualities } from './helpers';
+	import { quality } from '../../stores';
 
-	let keyValue: string = String(key);
+	let qualityValue: QualityType = Quality.Major;
 
-	key.subscribe((value) => {
-		keyValue = value;
+	quality.subscribe((value) => {
+		qualityValue = value;
 	});
 
-	function handleClick(scale: Key) {
-		key.set(scale);
+	function handleClick(value: Quality) {
+		quality.set(value);
 	}
 </script>
 
-<div class="keys-container">
-	{#each majorScales as scale}
+<div class="qualities-container">
+	{#each qualities as qual}
 		<button
-			class={`button ${keyValue === scale ? 'active' : ''}`}
-			name={scale}
-			on:click={() => handleClick(scale)}
+			class={`button ${qualityValue === qual ? 'active' : ''}`}
+			name={qual}
+			on:click={() => handleClick(qual)}
 		>
-			{convertFlatToSharp(scale)}
+			{qual}
 		</button>
 	{/each}
 </div>
 
 <style lang="scss">
-	.keys-container {
+	.qualities-container {
 		display: flex;
 		justify-content: center;
-		margin-top: 75px;
+		margin-top: 12px;
 
 		button {
 			background: none;

@@ -1,6 +1,7 @@
 <script>
-	import Fretboard from './Fretboard.svelte';
+	import Fretboard from './Fretboard/Fretboard.svelte';
 	import Keys from './Keys.svelte';
+	import Qualities from './Qualities.svelte';
 </script>
 
 <svelte:head>
@@ -13,6 +14,7 @@
 
 	<Fretboard />
 	<Keys />
+	<Qualities />
 </div>
 
 <style lang="scss">
