@@ -52,10 +52,6 @@
 				width: 100%;
 				height: 100%;
 
-				.hide-note {
-					display: none;
-				}
-
 				.string-graphic {
 					position: absolute;
 					width: 106%;
@@ -83,6 +79,15 @@
 					padding: 4px;
 
 					z-index: 10;
+
+					opacity: 1;
+					visibility: visible;
+					transition: opacity 0.5s, visibility 0.5s, background-color 0.5s;
+
+					&.hide-note {
+						opacity: 0;
+						visibility: hidden;
+					}
 
 					&.in-scale {
 						background-color: var(--note);

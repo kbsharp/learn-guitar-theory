@@ -21,7 +21,6 @@ export enum Quality {
     Major = 'major',
     Minor = 'minor',
     Diminished = 'diminished',
-    Augmented = 'augmented',
     Mixolydian = 'mixolydian',
 }
 
@@ -29,7 +28,6 @@ export const qualities: Quality[] = [
     Quality.Major,
     Quality.Minor,
     Quality.Diminished,
-    Quality.Augmented,
     Quality.Mixolydian,
 ]
 
