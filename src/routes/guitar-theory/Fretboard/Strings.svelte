@@ -101,62 +101,32 @@
 				}
 			}
 
-			&.string0::before {
-				content: 'e';
-				position: absolute;
-				top: 8px;
-				left: -36px;
-			}
+			// String names
 
-			&.string1::before {
-				content: 'B';
-				position: absolute;
-				top: 50px;
-				left: -36px;
-			}
-			&.string2::before {
-				content: 'G';
-				position: absolute;
-				top: 90px;
-				left: -36px;
-			}
-			&.string3::before {
-				content: 'D';
-				position: absolute;
-				top: 130px;
-				left: -36px;
-			}
-			&.string4::before {
-				content: 'A';
-				position: absolute;
-				top: 170px;
-				left: -36px;
-			}
-			&.string5::before {
-				content: 'E';
-				position: absolute;
-				top: 210px;
-				left: -36px;
-			}
+			$strings: ('e', 'B', 'G', 'D', 'A', 'E');
+			$top-spacing: 40px;
+			$left-spacing: -36px;
 
-			&.string0,
-			&.string1 {
-				.string-graphic {
-					height: 2px;
+			@for $i from 0 through length($strings) - 1 {
+				$content: nth($strings, $i + 1);
+				&.string#{$i}::before {
+					content: $content;
+					position: absolute;
+					top: $i * $top-spacing + 8px;
+					left: $left-spacing;
 				}
 			}
 
-			&.string2,
-			&.string3 {
-				.string-graphic {
-					height: 3px;
-				}
-			}
+			// String heights
 
-			&.string4,
-			&.string5 {
-				.string-graphic {
-					height: 4px;
+			$string-heights: (2, 2, 3, 3, 4, 4);
+
+			@for $i from 0 through length($string-heights) - 1 {
+				$height: nth($string-heights, $i + 1);
+				&.string#{$i} {
+					.string-graphic {
+						height: #{$height}px;
+					}
 				}
 			}
 		}
