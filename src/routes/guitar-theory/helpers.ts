@@ -17,20 +17,6 @@ export enum Key {
     G = 'G',
 }
 
-export enum Quality {
-    Major = 'major',
-    Minor = 'minor',
-    Diminished = 'diminished',
-    Mixolydian = 'mixolydian',
-}
-
-export const qualities: Quality[] = [
-    Quality.Major,
-    Quality.Minor,
-    Quality.Diminished,
-    Quality.Mixolydian,
-]
-
 export const majorScales: Key[] = [
     Key.Ab,
     Key.A,
@@ -44,6 +30,20 @@ export const majorScales: Key[] = [
     Key.F,
     Key.Gb,
     Key.G,
+]
+
+export enum Quality {
+    Major = 'major',
+    Minor = 'minor',
+    Diminished = 'diminished',
+    Mixolydian = 'mixolydian',
+}
+
+export const qualities: Quality[] = [
+    Quality.Major,
+    Quality.Minor,
+    Quality.Diminished,
+    Quality.Mixolydian,
 ]
 
 export function currentTonic(currentScale: Key): string {
