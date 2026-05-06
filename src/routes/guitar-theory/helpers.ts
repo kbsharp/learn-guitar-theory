@@ -1,4 +1,4 @@
-import { Scale } from 'tonal';
+import { Scale, Note } from 'tonal';
 
 export const frets = new Array(25).fill(null);
 
@@ -33,18 +33,48 @@ export const majorScales: Key[] = [
 ];
 
 export enum Quality {
-	Major = 'major',
-	Minor = 'minor',
-	Diminished = 'diminished',
-	Mixolydian = 'mixolydian'
+	// Modes
+	Ionian = 'major',
+	Dorian = 'dorian',
+	Phrygian = 'phrygian',
+	Lydian = 'lydian',
+	Mixolydian = 'mixolydian',
+	Aeolian = 'minor',
+	Locrian = 'locrian',
+	// Pentatonic & Blues
+	MajorPentatonic = 'major pentatonic',
+	MinorPentatonic = 'minor pentatonic',
+	Blues = 'blues'
 }
 
-export const qualities: Quality[] = [
-	Quality.Major,
-	Quality.Minor,
-	Quality.Diminished,
-	Quality.Mixolydian
+export const modes: Quality[] = [
+	Quality.Ionian,
+	Quality.Dorian,
+	Quality.Phrygian,
+	Quality.Lydian,
+	Quality.Mixolydian,
+	Quality.Aeolian,
+	Quality.Locrian
 ];
+
+export const pentatonics: Quality[] = [
+	Quality.MajorPentatonic,
+	Quality.MinorPentatonic,
+	Quality.Blues
+];
+
+export const qualityLabels: Record<Quality, string> = {
+	[Quality.Ionian]: 'Ionian',
+	[Quality.Dorian]: 'Dorian',
+	[Quality.Phrygian]: 'Phrygian',
+	[Quality.Lydian]: 'Lydian',
+	[Quality.Mixolydian]: 'Mixolydian',
+	[Quality.Aeolian]: 'Aeolian',
+	[Quality.Locrian]: 'Locrian',
+	[Quality.MajorPentatonic]: 'Maj Penta',
+	[Quality.MinorPentatonic]: 'Min Penta',
+	[Quality.Blues]: 'Blues'
+};
 
 export function currentTonic(currentScale: Key): string {
 	switch (currentScale) {
@@ -64,20 +94,21 @@ export function currentTonic(currentScale: Key): string {
 }
 
 export function getClassName(note: string, currentScale: Key, tonic: string, quality: Quality) {
-	let inScale = false;
-
 	const isTonic = tonic === note;
-
-	for (const scale of majorScales) {
-		if (currentScale === scale) {
-			inScale = incluesNoteInScale(note, Scale.get(`${scale} ${quality}`).notes);
-		}
-	}
+	const inScale = incluesNoteInScale(note, Scale.get(`${currentScale} ${quality}`).notes);
 
 	if (inScale && isTonic) return 'in-scale tonic';
 	if (inScale) return 'in-scale';
-
 	return 'hide-note';
+}
+
+export function getScaleDegree(note: string, tonic: string): string {
+	const labels = ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'];
+	const tonicChroma = Note.chroma(tonic);
+	const noteChroma = Note.chroma(note);
+	if (tonicChroma === undefined || noteChroma === undefined) return note;
+	const semitones = (noteChroma - tonicChroma + 12) % 12;
+	return labels[semitones];
 }
 
 export function convertFlatToSharp(note: string): string {
@@ -102,8 +133,6 @@ export function convertFlatToSharp(note: string): string {
 }
 
 function convertFlatsToSharps(notes: string[]) {
-	console.log(notes);
-
 	return notes.map((note) => convertFlatToSharp(note));
 }
 

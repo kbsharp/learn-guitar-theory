@@ -1,24 +1,8 @@
 <script lang="ts">
-	import { strings } from '../strings';
-	import {
-		convertFlatToSharp,
-		currentTonic,
-		getClassName,
-		type Quality,
-		type Key
-	} from '../helpers';
-	import { key, quality } from '../../../stores';
+	import { strings } from '$lib/strings';
 
-	let keyValue: Key;
-	let qualityValue: Quality;
-
-	key.subscribe((value) => {
-		keyValue = value;
-	});
-
-	quality.subscribe((value) => {
-		qualityValue = value;
-	});
+	export let getNoteClass: (note: string) => string = () => 'hide-note';
+	export let getNoteLabel: (note: string) => string = (note) => note;
 </script>
 
 <div class="string-container">
@@ -26,8 +10,8 @@
 		<div class={`string string${i}`}>
 			{#each string as note, j}
 				<div class={`note note${j}`}>
-					<p class={getClassName(note, keyValue, currentTonic(keyValue), qualityValue)}>
-						{convertFlatToSharp(note)}
+					<p class={getNoteClass(note)}>
+						{getNoteLabel(note)}
 					</p>
 					<div class="string-graphic" />
 				</div>

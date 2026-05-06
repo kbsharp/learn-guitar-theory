@@ -1,16 +1,10 @@
 <script lang="ts">
-	import { frets } from '../helpers';
+	const frets = new Array(25).fill(null);
 
-	const hasDot = (fret: number): boolean => {
-		const fretsWithDots = [3, 5, 7, 9, 15, 17, 19, 21];
-		return fretsWithDots.includes(fret);
-	};
+	const fretsWithDot = [3, 5, 7, 9, 15, 17, 19, 21];
 
-	const hasDots = (fret: number) => {
-		if (fret === 12) {
-			return true;
-		}
-	};
+	const hasDot = (fret: number): boolean => fretsWithDot.includes(fret);
+	const hasDoubleDot = (fret: number): boolean => fret === 12;
 </script>
 
 <div class="fret-container">
@@ -18,11 +12,11 @@
 		{#each frets as _, i}
 			<div class="fret">
 				{#if hasDot(i)}
-					<div class={`dot ${i}`} />
+					<div class="dot" />
 				{/if}
-				{#if hasDots(i)}
-					<div class={`dot ${i}`} />
-					<div class={`dot ${i}`} />
+				{#if hasDoubleDot(i)}
+					<div class="dot" />
+					<div class="dot" />
 				{/if}
 			</div>
 		{/each}

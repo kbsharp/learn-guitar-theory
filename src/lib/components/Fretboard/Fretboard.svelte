@@ -1,6 +1,9 @@
 <script lang="ts">
 	import Frets from './Frets.svelte';
 	import Strings from './Strings.svelte';
+
+	export let getNoteClass: (note: string) => string = () => 'hide-note';
+	export let getNoteLabel: (note: string) => string = (note) => note;
 </script>
 
 <div class="fretboard-container">
@@ -8,7 +11,7 @@
 		<Frets />
 
 		<div class="string-container">
-			<Strings />
+			<Strings {getNoteClass} {getNoteLabel} />
 		</div>
 	</div>
 </div>

@@ -1,18 +1,35 @@
-<script>
-	import Fretboard from './Fretboard/Fretboard.svelte';
+<script lang="ts">
+	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
 	import Keys from './Keys.svelte';
 	import Qualities from './Qualities.svelte';
+	import { key, quality } from '../../stores';
+	import { getClassName, currentTonic, getScaleDegree, convertFlatToSharp } from './helpers';
+
+	let showDegrees = false;
+
+	$: tonic = currentTonic($key);
+	$: getNoteClass = (note: string) => getClassName(note, $key, tonic, $quality);
+	$: getNoteLabel = (note: string) =>
+		showDegrees ? getScaleDegree(note, tonic) : convertFlatToSharp(note);
 </script>
 
 <svelte:head>
-	<title>Guitar Theory</title>
-	<meta name="Guitar Theory" content="Guitar theory" />
+	<title>Fretboard Explorer — Fretboard Lab</title>
 </svelte:head>
 
 <div class="container">
-	<p class="page-title">Guitar Theory</p>
+	<div class="page-header">
+		<p class="page-title">Fretboard Explorer</p>
+		<button
+			class="toggle-btn"
+			class:active={showDegrees}
+			on:click={() => (showDegrees = !showDegrees)}
+		>
+			{showDegrees ? 'Degrees' : 'Notes'}
+		</button>
+	</div>
 
-	<Fretboard />
+	<Fretboard {getNoteClass} {getNoteLabel} />
 
 	<div class="controls">
 		<div class="control-group">
@@ -20,7 +37,7 @@
 			<Keys />
 		</div>
 		<div class="control-group">
-			<span class="group-label">Mode</span>
+			<span class="group-label">Scale</span>
 			<Qualities />
 		</div>
 	</div>
@@ -31,6 +48,14 @@
 		margin: auto;
 		width: 1250px;
 		padding-top: 48px;
+		padding-bottom: 64px;
+	}
+
+	.page-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 28px;
 	}
 
 	.page-title {
@@ -38,8 +63,34 @@
 		letter-spacing: 0.18em;
 		text-transform: uppercase;
 		color: var(--text-muted);
-		margin: 0 0 28px 0;
+		margin: 0;
 		font-weight: 500;
+	}
+
+	.toggle-btn {
+		font-family: inherit;
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		background: transparent;
+		border: 1px solid var(--color-fret);
+		color: var(--text-muted);
+		border-radius: var(--radius-sm);
+		padding: 6px 14px;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:hover {
+			border-color: var(--accent-note);
+			color: var(--accent-note);
+		}
+
+		&.active {
+			background: rgba(12, 207, 223, 0.1);
+			border-color: var(--accent-note);
+			color: var(--accent-note);
+		}
 	}
 
 	.controls {

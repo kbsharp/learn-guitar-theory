@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { type Quality as QualityType, Quality, qualities } from './helpers';
+	import { type Quality as QualityType, Quality, modes, pentatonics, qualityLabels } from './helpers';
 	import { quality } from '../../stores';
 
-	let qualityValue: QualityType = Quality.Major;
+	let qualityValue: QualityType = Quality.Ionian;
 
 	quality.subscribe((value) => {
 		qualityValue = value;
@@ -14,46 +14,65 @@
 </script>
 
 <div class="qualities-container">
-	{#each qualities as qual}
-		<button
-			class={`button ${qualityValue === qual ? 'active' : ''}`}
-			name={qual}
-			on:click={() => handleClick(qual)}
-		>
-			{qual}
-		</button>
-	{/each}
+	<div class="scale-group">
+		{#each modes as qual}
+			<button
+				class:active={qualityValue === qual}
+				on:click={() => handleClick(qual)}
+			>
+				{qualityLabels[qual]}
+			</button>
+		{/each}
+	</div>
+
+	<div class="scale-group">
+		{#each pentatonics as qual}
+			<button
+				class:active={qualityValue === qual}
+				on:click={() => handleClick(qual)}
+			>
+				{qualityLabels[qual]}
+			</button>
+		{/each}
+	</div>
 </div>
 
 <style lang="scss">
 	.qualities-container {
 		display: flex;
-		justify-content: center;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.scale-group {
+		display: flex;
 		flex-wrap: wrap;
+		justify-content: center;
 		gap: 6px;
+	}
 
-		button {
-			background: transparent;
-			border: 1px solid var(--accent-tonic);
-			color: var(--accent-tonic);
-			border-radius: var(--radius-sm);
-			padding: 8px 18px;
-			font-family: inherit;
-			font-size: 13px;
-			font-weight: 600;
-			letter-spacing: 0.05em;
-			cursor: pointer;
-			transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+	button {
+		background: transparent;
+		border: 1px solid var(--accent-tonic);
+		color: var(--accent-tonic);
+		border-radius: var(--radius-sm);
+		padding: 8px 18px;
+		font-family: inherit;
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 0.05em;
+		cursor: pointer;
+		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 
-			&:hover:not(.active) {
-				background: rgba(240, 56, 96, 0.1);
-			}
+		&:hover:not(.active) {
+			background: rgba(240, 56, 96, 0.1);
+		}
 
-			&.active {
-				background: var(--accent-tonic);
-				color: var(--bg-base);
-				box-shadow: 0 0 12px 2px rgba(240, 56, 96, 0.3);
-			}
+		&.active {
+			background: var(--accent-tonic);
+			color: var(--bg-base);
+			box-shadow: 0 0 12px 2px rgba(240, 56, 96, 0.3);
 		}
 	}
 </style>
