@@ -58,12 +58,13 @@
 					height: 4px;
 					top: 18px;
 					left: 0;
-					background-color: var(--string-color);
+					background-color: var(--color-string);
 					z-index: 5;
 				}
 
 				> p {
-					font-size: 14px;
+					font-size: 13px;
+					font-weight: 600;
 					margin: 0;
 					padding: 0;
 					position: absolute;
@@ -82,7 +83,7 @@
 
 					opacity: 1;
 					visibility: visible;
-					transition: opacity 0.5s, visibility 0.5s, background-color 0.5s;
+					transition: opacity 0.5s, visibility 0.5s, background-color 0.5s, box-shadow 0.5s;
 
 					&.hide-note {
 						opacity: 0;
@@ -90,12 +91,15 @@
 					}
 
 					&.in-scale {
-						background-color: var(--note);
+						background-color: var(--accent-note);
+						color: var(--bg-base);
+						box-shadow: 0 0 10px 2px rgba(12, 207, 223, 0.4);
 					}
 
 					&.tonic {
-						outline: solid 1px var(--fret-boarder);
-						background-color: var(--tonic);
+						background-color: var(--accent-tonic);
+						color: var(--white);
+						box-shadow: 0 0 12px 3px rgba(240, 56, 96, 0.5);
 					}
 				}
 			}
@@ -119,6 +123,8 @@
 					position: absolute;
 					top: $i * $top-spacing + 8px;
 					left: $left-spacing;
+					color: var(--text-muted);
+					font-size: 12px;
 				}
 			}
 

@@ -47,20 +47,21 @@
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
-				border-right: 1px solid var(--fret-border);
+				border-right: 1px solid var(--color-fret);
 
 				.dot {
-					margin: 26px 0;
-					background-color: var(--white);
-					height: 25px;
-					width: 25px;
+					margin: 20px 0;
+					background-color: var(--color-dot);
+					height: 18px;
+					width: 18px;
 					border-radius: 50%;
+					box-shadow: 0 0 8px 2px rgba(196, 185, 138, 0.25);
 				}
 			}
 
 			.fret:not(:first-child) {
-				border-top: 1px solid var(--fret-border);
-				border-bottom: 1px solid var(--fret-border);
+				border-top: 1px solid var(--color-fret);
+				border-bottom: 1px solid var(--color-fret);
 			}
 		}
 	}

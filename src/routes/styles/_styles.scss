@@ -2,46 +2,60 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;500;700&display=swap');
 
+// ── Typography ────────────────────────────────────────────
 $font-body: Montserrat, sans-serif;
-$color-bg-1: #121212;
 
-$fretboard-bg: $color-bg-1;
-$fret-border: #444444;
+// ── Backgrounds (3 depth levels) ─────────────────────────
+$bg-base:      #090c12;
+$bg-surface:   #111520;
+$bg-fretboard: #0c0906;
 
-$note: #207a91;
-$tonic: #973333;
+// ── Accents ───────────────────────────────────────────────
+$accent-note:  #0ccfdf;
+$accent-tonic: #f03860;
 
-$string-color: hsl(220, 7%, 43%);
+// ── Structural ────────────────────────────────────────────
+$color-fret:   #1a2030;
+$color-string: #3d4a60;
+$color-dot:    #c4b98a;
 
-$key-color: #5B9A8B;
+// ── Text ──────────────────────────────────────────────────
+$text-primary: #dde4f0;
+$text-muted:   #3d4d68;
+$white:        #fff;
 
-$white: #fff;
-$black: #000;
+// ── Radius tokens ─────────────────────────────────────────
+$radius-sm: 6px;
+$radius-md: 12px;
 
 :root {
-    --font-body: #{$font-body};
-    --color-bg-1: #{$color-bg-1};
+    --font-body:     #{$font-body};
 
-    --fretboard-bg: #{$fretboard-bg};
-    --fret-border: #{$fret-border};
+    --bg-base:       #{$bg-base};
+    --bg-surface:    #{$bg-surface};
+    --bg-fretboard:  #{$bg-fretboard};
 
-    --note: #{$note};
-    --tonic: #{$tonic};
+    --accent-note:   #{$accent-note};
+    --accent-tonic:  #{$accent-tonic};
 
-    --string-color: #{$string-color};
-  
-    --key-color: #{$key-color};
+    --color-fret:    #{$color-fret};
+    --color-string:  #{$color-string};
+    --color-dot:     #{$color-dot};
 
-    --white: #{$white};
-    --black: #{$black};
+    --text-primary:  #{$text-primary};
+    --text-muted:    #{$text-muted};
+    --white:         #{$white};
+
+    --radius-sm:     #{$radius-sm};
+    --radius-md:     #{$radius-md};
 }
 
 body {
-    color: var(--white);
+    color: var(--text-primary);
     font-family: 'Montserrat', sans-serif;
-	min-height: 100vh;
-	margin: 0;
-	background-attachment: fixed;
-	background-color: var(--color-bg-1);
-	background-size: 100vw 100vh;
+    min-height: 100vh;
+    margin: 0;
+    background-attachment: fixed;
+    background-color: var(--bg-base);
+    background-size: 100vw 100vh;
 }

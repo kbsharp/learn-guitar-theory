@@ -29,31 +29,30 @@
 	.keys-container {
 		display: flex;
 		justify-content: center;
-		margin-top: 75px;
+		flex-wrap: wrap;
+		gap: 6px;
 
 		button {
-			background: none;
-			color: inherit;
-			border: none;
-			padding: 0;
-			font: inherit;
+			background: transparent;
+			border: 1px solid var(--accent-note);
+			color: var(--accent-note);
+			border-radius: var(--radius-sm);
+			padding: 8px 18px;
+			font-family: inherit;
+			font-size: 13px;
+			font-weight: 600;
+			letter-spacing: 0.05em;
 			cursor: pointer;
+			transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 
-			&.button {
-				background-color: var(--note);
-				border: none;
-				color: white;
-				padding: 15px 32px;
-				text-align: center;
-				text-decoration: none;
-				display: inline-block;
-				font-size: 16px;
-				margin: 4px 2px;
-				cursor: pointer;
+			&:hover:not(.active) {
+				background: rgba(12, 207, 223, 0.1);
 			}
 
 			&.active {
-				background-color: var(--tonic);
+				background: var(--accent-note);
+				color: var(--bg-base);
+				box-shadow: 0 0 12px 2px rgba(12, 207, 223, 0.3);
 			}
 		}
 	}
