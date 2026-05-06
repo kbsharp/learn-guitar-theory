@@ -1,5 +1,7 @@
 import { Scale, Note } from 'tonal';
 
+const LOW_E = ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#'];
+
 export const frets = new Array(25).fill(null);
 
 export enum Key {
@@ -138,4 +140,30 @@ function convertFlatsToSharps(notes: string[]) {
 
 function incluesNoteInScale(note: string, notes: string[]) {
 	return convertFlatsToSharps(notes).includes(note);
+}
+
+export interface ScalePosition {
+	number: number;
+	startFret: number;
+	endFret: number;
+}
+
+export function computeScalePositions(key: Key, quality: Quality): ScalePosition[] {
+	const tonic = currentTonic(key);
+	const scaleNotes = Scale.get(`${key} ${quality}`).notes.map(convertFlatToSharp);
+	const tonicFret = LOW_E.indexOf(tonic);
+	if (tonicFret === -1) return [];
+
+	const anchors: number[] = [];
+	for (let fret = tonicFret; anchors.length < scaleNotes.length && fret <= 24; fret++) {
+		if (scaleNotes.includes(LOW_E[fret % 12])) {
+			anchors.push(fret);
+		}
+	}
+
+	return anchors.map((startFret, i) => ({
+		number: i + 1,
+		startFret,
+		endFret: startFret + 4
+	}));
 }

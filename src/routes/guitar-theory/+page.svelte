@@ -3,11 +3,30 @@
 	import Keys from './Keys.svelte';
 	import Qualities from './Qualities.svelte';
 	import { key, quality } from '../../stores';
-	import { getClassName, currentTonic, getScaleDegree, convertFlatToSharp } from './helpers';
+	import {
+		getClassName,
+		currentTonic,
+		getScaleDegree,
+		convertFlatToSharp,
+		computeScalePositions
+	} from './helpers';
 
 	let showDegrees = $state(false);
+	let selectedPosition = $state<number | null>(null);
+
+	$effect(() => {
+		$key;
+		$quality;
+		selectedPosition = null;
+	});
 
 	let tonic = $derived(currentTonic($key));
+	let positions = $derived(computeScalePositions($key, $quality));
+	let positionRange = $derived(
+		selectedPosition !== null && positions[selectedPosition - 1]
+			? { start: positions[selectedPosition - 1].startFret, end: positions[selectedPosition - 1].endFret }
+			: null
+	);
 	let getNoteClass = $derived((note: string) => getClassName(note, $key, tonic, $quality));
 	let getNoteLabel = $derived((note: string) =>
 		showDegrees ? getScaleDegree(note, tonic) : convertFlatToSharp(note));
@@ -29,7 +48,7 @@
 		</button>
 	</div>
 
-	<Fretboard {getNoteClass} {getNoteLabel} />
+	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} />
 
 	<div class="controls">
 		<div class="control-group">
@@ -39,6 +58,27 @@
 		<div class="control-group">
 			<span class="group-label">Scale</span>
 			<Qualities />
+		</div>
+		<div class="control-group">
+			<span class="group-label">Position</span>
+			<div class="btn-row">
+				<button
+					class="btn-position"
+					class:active={selectedPosition === null}
+					onclick={() => (selectedPosition = null)}
+				>
+					All
+				</button>
+				{#each positions as pos}
+					<button
+						class="btn-position"
+						class:active={selectedPosition === pos.number}
+						onclick={() => (selectedPosition = pos.number)}
+					>
+						{pos.number}
+					</button>
+				{/each}
+			</div>
 		</div>
 	</div>
 </div>
@@ -113,5 +153,38 @@
 		color: var(--text-muted);
 		margin-bottom: 10px;
 		font-weight: 600;
+	}
+
+	.btn-row {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 6px;
+	}
+
+	.btn-position {
+		background: transparent;
+		border: 1px solid var(--color-fret);
+		color: var(--text-muted);
+		border-radius: var(--radius-sm);
+		padding: 6px 16px;
+		font-family: inherit;
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:hover:not(.active) {
+			border-color: var(--accent-note);
+			color: var(--accent-note);
+		}
+
+		&.active {
+			background: rgba(12, 207, 223, 0.12);
+			border-color: var(--accent-note);
+			color: var(--accent-note);
+			box-shadow: 0 0 8px 1px rgba(12, 207, 223, 0.2);
+		}
 	}
 </style>

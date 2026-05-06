@@ -5,18 +5,19 @@
 	interface Props {
 		getNoteClass?: (note: string) => string;
 		getNoteLabel?: (note: string) => string;
+		positionRange?: { start: number; end: number } | null;
 	}
 
-	let { getNoteClass = () => 'hide-note', getNoteLabel = (note: string) => note }: Props =
+	let { getNoteClass = () => 'hide-note', getNoteLabel = (note: string) => note, positionRange = null }: Props =
 		$props();
 </script>
 
 <div class="fretboard-container">
 	<div class="fretboard">
-		<Frets />
+		<Frets {positionRange} />
 
 		<div class="string-container">
-			<Strings {getNoteClass} {getNoteLabel} />
+			<Strings {getNoteClass} {getNoteLabel} {positionRange} />
 		</div>
 	</div>
 </div>

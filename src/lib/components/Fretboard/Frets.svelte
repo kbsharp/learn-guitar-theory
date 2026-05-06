@@ -1,16 +1,24 @@
 <script lang="ts">
+	interface Props {
+		positionRange?: { start: number; end: number } | null;
+	}
+
+	let { positionRange = null }: Props = $props();
+
 	const frets = new Array(25).fill(null);
 
 	const fretsWithDot = [3, 5, 7, 9, 15, 17, 19, 21];
 
 	const hasDot = (fret: number): boolean => fretsWithDot.includes(fret);
 	const hasDoubleDot = (fret: number): boolean => fret === 12;
+	const inPosition = (fret: number): boolean =>
+		positionRange !== null && fret >= positionRange.start && fret <= positionRange.end;
 </script>
 
 <div class="fret-container">
 	<div class="frets">
 		{#each frets as _, i}
-			<div class="fret">
+			<div class="fret" class:in-position={inPosition(i)}>
 				{#if hasDot(i)}
 					<div class="dot"></div>
 				{/if}
@@ -42,6 +50,11 @@
 				align-items: center;
 				justify-content: center;
 				border-right: 1px solid var(--color-fret);
+				transition: background-color 0.3s ease;
+
+				&.in-position {
+					background-color: rgba(12, 207, 223, 0.04);
+				}
 
 				.dot {
 					margin: 20px 0;

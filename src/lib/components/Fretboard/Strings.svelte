@@ -4,10 +4,17 @@
 	interface Props {
 		getNoteClass?: (note: string) => string;
 		getNoteLabel?: (note: string) => string;
+		positionRange?: { start: number; end: number } | null;
 	}
 
-	let { getNoteClass = () => 'hide-note', getNoteLabel = (note: string) => note }: Props =
+	let { getNoteClass = () => 'hide-note', getNoteLabel = (note: string) => note, positionRange = null }: Props =
 		$props();
+
+	function displayClass(noteClass: string, fretIndex: number): string {
+		if (!positionRange || noteClass === 'hide-note') return noteClass;
+		if (fretIndex >= positionRange.start && fretIndex <= positionRange.end) return noteClass;
+		return noteClass + ' dim-note';
+	}
 </script>
 
 <div class="string-container">
@@ -15,7 +22,7 @@
 		<div class={`string string${i}`}>
 			{#each string as note, j}
 				<div class={`note note${j}`}>
-					<p class={getNoteClass(note)}>
+					<p class={displayClass(getNoteClass(note), j)}>
 						{getNoteLabel(note)}
 					</p>
 					<div class="string-graphic"></div>
@@ -79,6 +86,11 @@
 					&.hide-note {
 						opacity: 0;
 						visibility: hidden;
+					}
+
+					&.dim-note {
+						opacity: 0.15;
+						box-shadow: none !important;
 					}
 
 					&.in-scale {
