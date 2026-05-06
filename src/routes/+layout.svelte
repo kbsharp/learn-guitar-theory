@@ -11,34 +11,33 @@
 	</main>
 
 	<footer>
-		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
+		<p>© Fretboard Lab</p>
 	</footer>
 </div>
 
 <style>
 	.app {
 		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
 	}
 
 	main {
-		height: 100vh;
+		flex: 1;
 	}
 
 	footer {
 		display: flex;
-		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		padding: 12px;
+		padding: 24px;
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: #3d4d68;
 	}
 
-	footer a {
-		font-weight: bold;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 12px 0;
-		}
+	footer p {
+		margin: 0;
 	}
 </style>

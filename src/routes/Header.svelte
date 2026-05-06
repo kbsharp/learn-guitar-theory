@@ -1,126 +1,75 @@
 <script>
 	import { page } from '$app/stores';
-	import logo from '$lib/images/svelte-logo.svg';
-	import github from '$lib/images/github.svg';
 </script>
 
 <header>
-	<div class="corner">
-		<a href="https://kit.svelte.dev">
-			<img src={logo} alt="SvelteKit" />
-		</a>
-	</div>
+	<a href="/" class="logo">Fretboard Lab</a>
 
 	<nav>
-		<svg viewBox="0 0 2 3" aria-hidden="true">
-			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
-		</svg>
-		<ul>
-			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
-				<a href="/">Home</a>
-			</li>
-			<li aria-current={$page.url.pathname.startsWith('/guitar-theory') ? 'page' : undefined}>
-				<a href="/guitar-theory">Guitar</a>
-			</li>
-		</ul>
-		<svg viewBox="0 0 2 3" aria-hidden="true">
-			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
-		</svg>
-	</nav>
-
-	<div class="corner">
-		<a href="https://github.com/sveltejs/kit">
-			<img src={github} alt="GitHub" />
+		<a href="/guitar-theory" class:active={$page.url.pathname.startsWith('/guitar-theory')}>
+			Explorer
 		</a>
-	</div>
+		<a href="/chord-scale" class:active={$page.url.pathname.startsWith('/chord-scale')}>
+			Chord-Scale
+		</a>
+		<a href="/diatonic" class:active={$page.url.pathname.startsWith('/diatonic')}>
+			Diatonic
+		</a>
+	</nav>
 </header>
 
-<style>
+<style lang="scss">
 	header {
 		display: flex;
-		justify-content: space-between;
-	}
-
-	.corner {
-		width: 3em;
-		height: 3em;
-	}
-
-	.corner a {
-		display: flex;
 		align-items: center;
-		justify-content: center;
-		width: 100%;
-		height: 100%;
+		justify-content: space-between;
+		padding: 0 32px;
+		height: 56px;
+		background: var(--bg-surface);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+		position: sticky;
+		top: 0;
+		z-index: 100;
 	}
 
-	.corner img {
-		width: 2em;
-		height: 2em;
-		object-fit: contain;
+	.logo {
+		font-size: 13px;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--accent-note);
+		text-decoration: none;
+		transition: opacity 0.2s ease;
+
+		&:hover {
+			opacity: 0.8;
+		}
 	}
 
 	nav {
 		display: flex;
-		justify-content: center;
-		--background: rgba(255, 255, 255, 0.7);
-	}
-
-	svg {
-		width: 2em;
-		height: 3em;
-		display: block;
-	}
-
-	path {
-		fill: var(--background);
-	}
-
-	ul {
-		position: relative;
-		padding: 0;
-		margin: 0;
-		height: 3em;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		list-style: none;
-		background: var(--background);
-		background-size: contain;
-	}
-
-	li {
-		position: relative;
-		height: 100%;
-	}
-
-	li[aria-current='page']::before {
-		--size: 6px;
-		content: '';
-		width: 0;
-		height: 0;
-		position: absolute;
-		top: 0;
-		left: calc(50% - var(--size));
-		border: var(--size) solid transparent;
-		border-top: var(--size) solid var(--color-theme-1);
+		gap: 4px;
 	}
 
 	nav a {
-		display: flex;
-		height: 100%;
-		align-items: center;
-		padding: 0 0.5rem;
-		color: var(--color-text);
-		font-weight: 700;
-		font-size: 0.8rem;
-		text-transform: uppercase;
+		font-size: 11px;
+		font-weight: 600;
 		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--text-muted);
 		text-decoration: none;
-		transition: color 0.2s linear;
-	}
+		padding: 6px 14px;
+		border-radius: var(--radius-sm);
+		transition: color 0.2s ease, background 0.2s ease;
 
-	a:hover {
-		color: var(--color-theme-1);
+		&:hover {
+			color: var(--text-primary);
+			background: rgba(255, 255, 255, 0.04);
+		}
+
+		&.active {
+			color: var(--accent-note);
+			background: rgba(12, 207, 223, 0.08);
+		}
 	}
 </style>
