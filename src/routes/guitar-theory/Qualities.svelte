@@ -1,25 +1,12 @@
 <script lang="ts">
-	import { type Quality as QualityType, Quality, modes, pentatonics, qualityLabels } from './helpers';
+	import { modes, pentatonics, qualityLabels } from './helpers';
 	import { quality } from '../../stores';
-
-	let qualityValue: QualityType = Quality.Ionian;
-
-	quality.subscribe((value) => {
-		qualityValue = value;
-	});
-
-	function handleClick(value: Quality) {
-		quality.set(value);
-	}
 </script>
 
 <div class="qualities-container">
 	<div class="scale-group">
 		{#each modes as qual}
-			<button
-				class:active={qualityValue === qual}
-				on:click={() => handleClick(qual)}
-			>
+			<button class:active={$quality === qual} onclick={() => quality.set(qual)}>
 				{qualityLabels[qual]}
 			</button>
 		{/each}
@@ -27,10 +14,7 @@
 
 	<div class="scale-group">
 		{#each pentatonics as qual}
-			<button
-				class:active={qualityValue === qual}
-				on:click={() => handleClick(qual)}
-			>
+			<button class:active={$quality === qual} onclick={() => quality.set(qual)}>
 				{qualityLabels[qual]}
 			</button>
 		{/each}

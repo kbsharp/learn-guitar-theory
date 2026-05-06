@@ -1,18 +1,18 @@
-<script>
-	import { page } from '$app/stores';
+<script lang="ts">
+	import { page } from '$app/state';
 </script>
 
 <header>
 	<a href="/" class="logo">Fretboard Lab</a>
 
 	<nav>
-		<a href="/guitar-theory" class:active={$page.url.pathname.startsWith('/guitar-theory')}>
+		<a href="/guitar-theory" class:active={page.url.pathname.startsWith('/guitar-theory')}>
 			Explorer
 		</a>
-		<a href="/chord-scale" class:active={$page.url.pathname.startsWith('/chord-scale')}>
+		<a href="/chord-scale" class:active={page.url.pathname.startsWith('/chord-scale')}>
 			Chord-Scale
 		</a>
-		<a href="/diatonic" class:active={$page.url.pathname.startsWith('/diatonic')}>
+		<a href="/diatonic" class:active={page.url.pathname.startsWith('/diatonic')}>
 			Diatonic
 		</a>
 	</nav>

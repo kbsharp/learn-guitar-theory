@@ -3,7 +3,15 @@
     "allow": [
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(npm outdated *)",
+      "PowerShell(Get-ChildItem -Path \"c:\\\\Users\\\\Kevin\\\\Desktop\\\\dev\\\\learn-guitar-theory\" -Recurse -File | Where-Object { $_.Extension -in @\\('.svelte', '.ts', '.js', '.json', '.html', '.cjs', '.d.ts'\\) -or $_.Name -match '^\\(svelte\\\\.config|vite\\\\.config|tsconfig|\\\\.eslintrc|\\\\.prettierrc|app\\\\.\\)' } | Select-Object FullName | Sort-Object FullName)",
+      "Bash(npx svelte-migrate@latest sveltekit-2)",
+      "Bash(git stash *)",
+      "Bash(npx svelte-migrate@latest *)",
+      "Bash(del \"c:\\\\Users\\\\Kevin\\\\Desktop\\\\dev\\\\learn-guitar-theory\\\\.eslintrc.cjs\")",
+      "Bash(npm install *)",
+      "Bash(npx svelte-kit *)"
     ]
   }
 }

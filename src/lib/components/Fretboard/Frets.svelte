@@ -12,11 +12,11 @@
 		{#each frets as _, i}
 			<div class="fret">
 				{#if hasDot(i)}
-					<div class="dot" />
+					<div class="dot"></div>
 				{/if}
 				{#if hasDoubleDot(i)}
-					<div class="dot" />
-					<div class="dot" />
+					<div class="dot"></div>
+					<div class="dot"></div>
 				{/if}
 			</div>
 		{/each}

@@ -1,8 +1,13 @@
 <script lang="ts">
 	import { strings } from '$lib/strings';
 
-	export let getNoteClass: (note: string) => string = () => 'hide-note';
-	export let getNoteLabel: (note: string) => string = (note) => note;
+	interface Props {
+		getNoteClass?: (note: string) => string;
+		getNoteLabel?: (note: string) => string;
+	}
+
+	let { getNoteClass = () => 'hide-note', getNoteLabel = (note: string) => note }: Props =
+		$props();
 </script>
 
 <div class="string-container">
@@ -13,7 +18,7 @@
 					<p class={getNoteClass(note)}>
 						{getNoteLabel(note)}
 					</p>
-					<div class="string-graphic" />
+					<div class="string-graphic"></div>
 				</div>
 			{/each}
 		</div>
@@ -21,6 +26,8 @@
 </div>
 
 <style lang="scss">
+	@use 'sass:list';
+
 	.string-container {
 		display: flex;
 		flex-direction: column;
@@ -100,8 +107,8 @@
 			$top-spacing: 40px;
 			$left-spacing: -36px;
 
-			@for $i from 0 through length($strings) - 1 {
-				$content: nth($strings, $i + 1);
+			@for $i from 0 through list.length($strings) - 1 {
+				$content: list.nth($strings, $i + 1);
 				&.string#{$i}::before {
 					content: $content;
 					position: absolute;
@@ -116,8 +123,8 @@
 
 			$string-heights: (2, 2, 3, 3, 4, 4);
 
-			@for $i from 0 through length($string-heights) - 1 {
-				$height: nth($string-heights, $i + 1);
+			@for $i from 0 through list.length($string-heights) - 1 {
+				$height: list.nth($string-heights, $i + 1);
 				&.string#{$i} {
 					.string-graphic {
 						height: #{$height}px;

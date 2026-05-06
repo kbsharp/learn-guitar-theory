@@ -11,10 +11,11 @@
 	} from './helpers';
 	import { chordRoot, chordQuality } from '../../stores';
 
-	$: getNoteClass = (note: string) => getChordScaleClass(note, $chordRoot, $chordQuality as ChordType);
-	$: getNoteLabel = (note: string) => note;
-	$: chordName = getChordName($chordRoot, $chordQuality as ChordType);
-	$: scaleName = getRecommendedScaleName($chordQuality as ChordType);
+	let getNoteClass = $derived((note: string) =>
+		getChordScaleClass(note, $chordRoot, $chordQuality as ChordType));
+	const getNoteLabel = (note: string) => note;
+	let chordName = $derived(getChordName($chordRoot, $chordQuality as ChordType));
+	let scaleName = $derived(getRecommendedScaleName($chordQuality as ChordType));
 </script>
 
 <svelte:head>
@@ -40,7 +41,7 @@
 					<button
 						class="btn-root"
 						class:active={$chordRoot === root}
-						on:click={() => chordRoot.set(root)}
+						onclick={() => chordRoot.set(root)}
 					>
 						{root}
 					</button>
@@ -55,7 +56,7 @@
 					<button
 						class="btn-chord"
 						class:active={$chordQuality === ct}
-						on:click={() => chordQuality.set(ct)}
+						onclick={() => chordQuality.set(ct)}
 					>
 						{chordTypeLabels[ct]}
 					</button>
@@ -66,11 +67,11 @@
 
 	<div class="legend">
 		<div class="legend-item">
-			<span class="legend-dot chord-tone" />
+			<span class="legend-dot chord-tone"></span>
 			<span>Chord tone</span>
 		</div>
 		<div class="legend-item">
-			<span class="legend-dot scale-tone" />
+			<span class="legend-dot scale-tone"></span>
 			<span>Scale tone</span>
 		</div>
 	</div>

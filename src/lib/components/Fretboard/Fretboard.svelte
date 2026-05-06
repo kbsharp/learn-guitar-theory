@@ -2,8 +2,13 @@
 	import Frets from './Frets.svelte';
 	import Strings from './Strings.svelte';
 
-	export let getNoteClass: (note: string) => string = () => 'hide-note';
-	export let getNoteLabel: (note: string) => string = (note) => note;
+	interface Props {
+		getNoteClass?: (note: string) => string;
+		getNoteLabel?: (note: string) => string;
+	}
+
+	let { getNoteClass = () => 'hide-note', getNoteLabel = (note: string) => note }: Props =
+		$props();
 </script>
 
 <div class="fretboard-container">

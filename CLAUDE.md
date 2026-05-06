@@ -17,7 +17,7 @@ npm run test:unit    # Vitest unit tests
 
 ## Architecture
 
-**SvelteKit** (v1.5) with file-based routing, **TypeScript**, **SCSS** preprocessed globally via Vite, and **tonal** (v4.14) as the music theory engine.
+**SvelteKit** (v2) with file-based routing, **Svelte 5** (runes mode), **TypeScript**, **SCSS** via `vitePreprocess`, and **tonal** (v6) as the music theory engine.
 
 ### Routing
 
@@ -25,15 +25,15 @@ npm run test:unit    # Vitest unit tests
 - `/` — home (`+page.svelte`)
 - `/guitar-theory` — fretboard explorer (`guitar-theory/+page.svelte`)
 
-### Global SCSS injection
+### SCSS and design tokens
 
-`svelte.config.js` injects `src/routes/styles/main.scss` into every component automatically via `additionalData`. This means all SCSS variables and CSS custom properties are available in every `<style lang="scss">` block without explicit imports.
+Global styles (normalize.css reset, `:root` CSS custom properties, `body`) are loaded once via `+layout.svelte`'s `import './styles/main.scss'`. Component `<style lang="scss">` blocks do not need any explicit imports — they use CSS custom properties (`var(--accent-note)` etc.) which are always available globally.
 
 The design token source of truth is `src/routes/styles/_styles.scss` — SCSS variables are defined there and mirrored as CSS custom properties in `:root`. Always define new tokens in both places.
 
 ### State management
 
-`src/stores.ts` holds two global writable stores: `key` (current musical key) and `quality` (scale type). Components subscribe to these directly — there is no derived state layer.
+`src/stores.ts` holds Svelte writable stores for all three tools. Components read stores with the `$store` reactive syntax and write via `.set()`. Page-level reactive derivations use the `$derived()` rune.
 
 ### Music theory logic
 
@@ -58,7 +58,17 @@ The fretboard is fixed at 1200px wide (Strings) / 1250px container (page) — no
 2. Add to the `qualities` array in `helpers.ts`
 3. `getClassName()` passes the quality string directly to tonal's `Scale.get()` — tonal must recognise the string (e.g. `"dorian"`, `"phrygian"`, `"major pentatonic"`)
 
+### Svelte 5 patterns used
+
+- Props: `let { prop = default }: Props = $props()`
+- Local reactive state: `let x = $state(value)`
+- Derived values: `let y = $derived(expr)` — re-runs when any reactive dependency changes
+- Event handlers: `onclick={handler}` (not `on:click`)
+- Layout slot: `{@render children()}` (not `<slot />`)
+- `$app/state` (not `$app/stores`) for `page`
+
 ### Known issues / notes
 
 - `convertFlatsToSharps()` in `helpers.ts` has a stray `console.log` that prints scale notes on every render
 - The `$black` and `$key-color` SCSS variables were removed in the latest refactor; don't re-add them
+- `src/routes/styles/main.scss` uses Sass `@import` (deprecated in Dart Sass 3); the warning is cosmetic

@@ -11,7 +11,7 @@
 
 	<div class="tools">
 		<a href="/guitar-theory" class="tool-card">
-			<div class="card-accent cyan" />
+			<div class="card-accent cyan"></div>
 			<h2>Fretboard Explorer</h2>
 			<p>
 				Visualise scales and modes across the full neck. All 7 modes, pentatonics, and blues —
@@ -21,7 +21,7 @@
 		</a>
 
 		<a href="/chord-scale" class="tool-card">
-			<div class="card-accent rose" />
+			<div class="card-accent rose"></div>
 			<h2>Chord-Scale</h2>
 			<p>
 				Pick any chord and see which notes work. Chord tones, scale tensions, and avoid notes —
@@ -31,7 +31,7 @@
 		</a>
 
 		<a href="/diatonic" class="tool-card">
-			<div class="card-accent mixed" />
+			<div class="card-accent mixed"></div>
 			<h2>Diatonic Chords</h2>
 			<p>
 				Explore every chord in a key. Click a Roman numeral and see its tones across the neck

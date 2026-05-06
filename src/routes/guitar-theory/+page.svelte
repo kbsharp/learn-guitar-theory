@@ -5,12 +5,12 @@
 	import { key, quality } from '../../stores';
 	import { getClassName, currentTonic, getScaleDegree, convertFlatToSharp } from './helpers';
 
-	let showDegrees = false;
+	let showDegrees = $state(false);
 
-	$: tonic = currentTonic($key);
-	$: getNoteClass = (note: string) => getClassName(note, $key, tonic, $quality);
-	$: getNoteLabel = (note: string) =>
-		showDegrees ? getScaleDegree(note, tonic) : convertFlatToSharp(note);
+	let tonic = $derived(currentTonic($key));
+	let getNoteClass = $derived((note: string) => getClassName(note, $key, tonic, $quality));
+	let getNoteLabel = $derived((note: string) =>
+		showDegrees ? getScaleDegree(note, tonic) : convertFlatToSharp(note));
 </script>
 
 <svelte:head>
@@ -23,7 +23,7 @@
 		<button
 			class="toggle-btn"
 			class:active={showDegrees}
-			on:click={() => (showDegrees = !showDegrees)}
+			onclick={() => (showDegrees = !showDegrees)}
 		>
 			{showDegrees ? 'Degrees' : 'Notes'}
 		</button>

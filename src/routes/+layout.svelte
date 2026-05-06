@@ -1,13 +1,16 @@
-<script>
+<script lang="ts">
+	import type { Snippet } from 'svelte';
 	import Header from './Header.svelte';
 	import './styles/main.scss';
+
+	let { children }: { children: Snippet } = $props();
 </script>
 
 <div class="app">
 	<Header />
 
 	<main>
-		<slot />
+		{@render children()}
 	</main>
 
 	<footer>

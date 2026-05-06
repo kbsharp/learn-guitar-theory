@@ -9,11 +9,11 @@
 	} from './helpers';
 	import { diatonicKey, diatonicMode, selectedDiatonicChord } from '../../stores';
 
-	$: chords = getDiatonicChords($diatonicKey, $diatonicMode as DiatonicMode);
-	$: scaleNotes = getScaleNotes($diatonicKey, $diatonicMode as DiatonicMode);
-	$: getNoteClass = (note: string) =>
-		getDiatonicNoteClass(note, $selectedDiatonicChord, scaleNotes);
-	$: getNoteLabel = (note: string) => note;
+	let chords = $derived(getDiatonicChords($diatonicKey, $diatonicMode as DiatonicMode));
+	let scaleNotes = $derived(getScaleNotes($diatonicKey, $diatonicMode as DiatonicMode));
+	let getNoteClass = $derived((note: string) =>
+		getDiatonicNoteClass(note, $selectedDiatonicChord, scaleNotes));
+	const getNoteLabel = (note: string) => note;
 
 	function selectChord(chordName: string) {
 		selectedDiatonicChord.set($selectedDiatonicChord === chordName ? null : chordName);
@@ -47,7 +47,7 @@
 					<button
 						class="btn-key"
 						class:active={$diatonicKey === k}
-						on:click={() => { diatonicKey.set(k); selectedDiatonicChord.set(null); }}
+						onclick={() => { diatonicKey.set(k); selectedDiatonicChord.set(null); }}
 					>
 						{k}
 					</button>
@@ -61,14 +61,14 @@
 				<button
 					class="btn-mode"
 					class:active={$diatonicMode === 'major'}
-					on:click={() => switchMode('major')}
+					onclick={() => switchMode('major')}
 				>
 					Major
 				</button>
 				<button
 					class="btn-mode"
 					class:active={$diatonicMode === 'minor'}
-					on:click={() => switchMode('minor')}
+					onclick={() => switchMode('minor')}
 				>
 					Minor
 				</button>
@@ -82,7 +82,7 @@
 					<button
 						class="btn-chord"
 						class:active={$selectedDiatonicChord === chord.name}
-						on:click={() => selectChord(chord.name)}
+						onclick={() => selectChord(chord.name)}
 					>
 						<span class="roman">{chord.roman}</span>
 						<span class="chord-name">{chord.name}</span>
@@ -94,11 +94,11 @@
 
 	<div class="legend">
 		<div class="legend-item">
-			<span class="legend-dot chord-tone" />
+			<span class="legend-dot chord-tone"></span>
 			<span>Chord tone</span>
 		</div>
 		<div class="legend-item">
-			<span class="legend-dot scale-tone" />
+			<span class="legend-dot scale-tone"></span>
 			<span>Scale tone</span>
 		</div>
 	</div>
