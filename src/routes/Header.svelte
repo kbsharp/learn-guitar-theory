@@ -15,6 +15,9 @@
 		<a href="/diatonic" class:active={page.url.pathname.startsWith('/diatonic')}>
 			Diatonic
 		</a>
+		<a href="/caged" class:active={page.url.pathname.startsWith('/caged')}>
+			CAGED
+		</a>
 	</nav>
 </header>
 

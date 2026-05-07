@@ -16,3 +16,7 @@ export const chordQuality: Writable<ChordType> = writable('maj7');
 export const diatonicKey: Writable<string> = writable('C');
 export const diatonicMode: Writable<DiatonicMode> = writable('major');
 export const selectedDiatonicChord: Writable<string | null> = writable(null);
+
+// CAGED System
+export const cagedKey: Writable<string> = writable('C');
+export const cagedQuality: Writable<'major' | 'minor'> = writable('major');
