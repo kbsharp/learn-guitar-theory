@@ -109,14 +109,15 @@
 		margin: auto;
 		width: 1250px;
 		padding-top: 48px;
-		padding-bottom: 64px;
+		padding-bottom: 80px;
 	}
 
 	.page-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		margin-bottom: 28px;
+		min-height: 40px;
+		margin-bottom: 32px;
 	}
 
 	.page-title {
@@ -138,8 +139,8 @@
 	.controls {
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
-		margin-top: 40px;
+		gap: 28px;
+		margin-top: 52px;
 	}
 
 	.control-group {
@@ -153,7 +154,7 @@
 		letter-spacing: 0.15em;
 		text-transform: uppercase;
 		color: var(--text-muted);
-		margin-bottom: 10px;
+		margin-bottom: 14px;
 		font-weight: 600;
 	}
 
@@ -263,7 +264,7 @@
 		display: flex;
 		justify-content: center;
 		gap: 24px;
-		margin-top: 24px;
+		margin-top: 36px;
 	}
 
 	.legend-item {

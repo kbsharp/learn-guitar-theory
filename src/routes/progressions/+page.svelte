@@ -112,14 +112,15 @@
 		margin: auto;
 		width: 1250px;
 		padding-top: 48px;
-		padding-bottom: 64px;
+		padding-bottom: 80px;
 	}
 
 	.page-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		margin-bottom: 28px;
+		min-height: 40px;
+		margin-bottom: 32px;
 	}
 
 	.page-title {
@@ -153,8 +154,8 @@
 	.progression {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		gap: 12px;
-		margin-top: 40px;
+		gap: 16px;
+		margin-top: 52px;
 	}
 
 	.chord-card {
@@ -269,7 +270,7 @@
 		display: flex;
 		justify-content: center;
 		gap: 24px;
-		margin-top: 24px;
+		margin-top: 36px;
 	}
 
 	.legend-item {
