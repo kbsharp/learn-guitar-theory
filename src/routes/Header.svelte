@@ -18,6 +18,9 @@
 		<a href="/caged" class:active={page.url.pathname.startsWith('/caged')}>
 			CAGED
 		</a>
+		<a href="/progressions" class:active={page.url.pathname.startsWith('/progressions')}>
+			Progressions
+		</a>
 	</nav>
 </header>
 
