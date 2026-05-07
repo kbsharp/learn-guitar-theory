@@ -295,7 +295,6 @@
 			font-size: 10px;
 			font-weight: 500;
 			letter-spacing: 0.06em;
-			opacity: 0.7;
 		}
 
 		&:hover:not(.active):not(.all) {
@@ -306,10 +305,6 @@
 			background: var(--accent-tonic);
 			color: var(--bg-base);
 			box-shadow: 0 0 12px 2px rgba(240, 56, 96, 0.3);
-
-			.shape-fret {
-				opacity: 0.8;
-			}
 		}
 	}
 

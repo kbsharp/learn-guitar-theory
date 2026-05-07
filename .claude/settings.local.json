@@ -11,7 +11,8 @@
       "Bash(npx svelte-migrate@latest *)",
       "Bash(del \"c:\\\\Users\\\\Kevin\\\\Desktop\\\\dev\\\\learn-guitar-theory\\\\.eslintrc.cjs\")",
       "Bash(npm install *)",
-      "Bash(npx svelte-kit *)"
+      "Bash(npx svelte-kit *)",
+      "Bash(npx playwright *)"
     ]
   }
 }

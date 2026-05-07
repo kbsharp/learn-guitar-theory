@@ -57,18 +57,22 @@
 
 	<div class="progression">
 		{#each progression as slot, i}
-			<button
-				class="chord-card"
-				class:active={activeSlot === i}
-				onclick={() => (activeSlot = i)}
-			>
-				<span class="slot-number">{i + 1}</span>
-				<span class="chord-label">{getChordName(slot.root, slot.quality)}</span>
-				<span class="scale-label">→ {getRecommendedScaleName(slot.quality)}</span>
+			<div class="chord-card" class:active={activeSlot === i}>
+				<button
+					type="button"
+					class="card-header"
+					aria-pressed={activeSlot === i}
+					onclick={() => (activeSlot = i)}
+				>
+					<span class="slot-number">{i + 1}</span>
+					<span class="chord-label">{getChordName(slot.root, slot.quality)}</span>
+					<span class="scale-label">→ {getRecommendedScaleName(slot.quality)}</span>
+				</button>
 
-				<div class="slot-controls" role="presentation" onclick={(e) => e.stopPropagation()}>
+				<div class="slot-controls">
 					<select
 						class="select-root"
+						aria-label="Root note for slot {i + 1}"
 						value={slot.root}
 						onchange={(e) => setRoot(i, (e.target as HTMLSelectElement).value)}
 					>
@@ -78,6 +82,7 @@
 					</select>
 					<select
 						class="select-quality"
+						aria-label="Chord quality for slot {i + 1}"
 						value={slot.quality}
 						onchange={(e) => setQuality(i, (e.target as HTMLSelectElement).value as ChordType)}
 					>
@@ -86,7 +91,7 @@
 						{/each}
 					</select>
 				</div>
-			</button>
+			</div>
 		{/each}
 	</div>
 
@@ -155,19 +160,11 @@
 	.chord-card {
 		display: flex;
 		flex-direction: column;
-		align-items: flex-start;
-		gap: 6px;
 		background: var(--bg-surface);
 		border: 1px solid rgba(255, 255, 255, 0.06);
 		border-radius: var(--radius-md);
-		padding: 20px;
-		cursor: pointer;
+		overflow: hidden;
 		transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-		text-align: left;
-		font-family: inherit;
-		color: inherit;
-		width: 100%;
-		box-sizing: border-box;
 
 		&:hover:not(.active) {
 			border-color: rgba(255, 255, 255, 0.12);
@@ -177,6 +174,28 @@
 		&.active {
 			border-color: var(--accent-note);
 			box-shadow: 0 0 16px rgba(12, 207, 223, 0.12);
+		}
+	}
+
+	.card-header {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 6px;
+		background: transparent;
+		border: none;
+		padding: 20px 20px 0;
+		cursor: pointer;
+		text-align: left;
+		font-family: inherit;
+		color: inherit;
+		width: 100%;
+		box-sizing: border-box;
+
+		&:focus-visible {
+			outline: 2px solid var(--accent-note);
+			outline-offset: -2px;
+			border-radius: var(--radius-md) var(--radius-md) 0 0;
 		}
 	}
 
@@ -201,14 +220,15 @@
 		font-size: 11px;
 		color: var(--text-muted);
 		letter-spacing: 0.04em;
-		margin-bottom: 12px;
+		margin-bottom: 0;
 	}
 
 	.slot-controls {
 		display: flex;
 		gap: 6px;
+		padding: 12px 20px 20px;
 		width: 100%;
-		margin-top: auto;
+		box-sizing: border-box;
 	}
 
 	.select-root,

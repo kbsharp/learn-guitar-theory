@@ -37,7 +37,7 @@
 		font-size: 11px;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
-		color: #3d4d68;
+		color: var(--text-muted);
 	}
 
 	footer p {

@@ -21,7 +21,7 @@ $color-dot:    #c4b98a;
 
 // ── Text ──────────────────────────────────────────────────
 $text-primary: #dde4f0;
-$text-muted:   #3d4d68;
+$text-muted:   #748da4; /* lifted from #3d4d68 — passes 4.5:1 on both bg-base and bg-surface */
 $white:        #fff;
 
 // ── Radius tokens ─────────────────────────────────────────
