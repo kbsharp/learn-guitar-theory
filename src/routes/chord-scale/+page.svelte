@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
 	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
+	import HelpTip from '$lib/components/HelpTip.svelte';
 	import {
 		chordRoots,
 		chordTypes,
@@ -33,6 +34,12 @@
 			<span class="scale-label">→ {scaleName}</span>
 		</div>
 	</div>
+
+	<p class="page-intro">
+		Pick a chord type to see which notes work over it when improvising. <strong>Pink</strong> notes
+		are chord tones — anchor your phrases here. <strong>Cyan</strong> notes extend the scale and
+		work best as passing notes between them.
+	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} />
 
@@ -74,10 +81,18 @@
 		<div class="legend-item">
 			<span class="legend-dot chord-tone"></span>
 			<span>Chord tone</span>
+			<HelpTip
+				term="Chord tone"
+				definition="A note belonging to the chord itself — root, 3rd, 5th, or 7th. These are your anchor notes: start and end phrases here and you'll always sound intentional. The pink glow shows you every chord tone across the whole neck."
+			/>
 		</div>
 		<div class="legend-item">
 			<span class="legend-dot scale-tone"></span>
 			<span>Scale tone</span>
+			<HelpTip
+				term="Scale tone"
+				definition="A note from the compatible scale that isn't part of the chord. Use these for movement and colour between chord tones — they work best as passing notes. Stopping on them mid-phrase can sound unresolved, so treat them as connectors, not destinations."
+			/>
 		</div>
 	</div>
 </div>
@@ -95,7 +110,20 @@
 		align-items: center;
 		justify-content: space-between;
 		min-height: 40px;
-		margin-bottom: 32px;
+		margin-bottom: 20px;
+	}
+
+	.page-intro {
+		font-size: 12px;
+		line-height: 1.7;
+		color: var(--text-muted);
+		margin: 0 0 28px;
+		opacity: 0.75;
+
+		strong {
+			color: var(--text-primary);
+			font-weight: 600;
+		}
 	}
 
 	.page-title {
@@ -217,6 +245,10 @@
 		font-size: 11px;
 		color: var(--text-muted);
 		letter-spacing: 0.06em;
+
+		:global(.help-tip) {
+			margin-left: -2px;
+		}
 	}
 
 	.legend-dot {

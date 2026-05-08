@@ -100,6 +100,12 @@ Classes applied to fret notes: `hide-note` (invisible), `in-scale` (cyan glow), 
 
 ---
 
+## Self-updating instructions
+
+**Always update this file when you discover something worth documenting** — a new architectural pattern, a design decision, a constraint, or a reusable convention. Do not wait to be asked. If you establish a new component pattern, add it here. If you learn something about how the app should behave for guitarists, add it here.
+
+---
+
 ## Explanation System (roadmap priority #1)
 
 The explanation system adds context-aware prose to each tool so the app teaches, not just displays.
@@ -122,6 +128,46 @@ The explanation system adds context-aware prose to each tool so the app teaches,
 - A shared `<ExplanationPanel>` component: `src/lib/components/ExplanationPanel.svelte`
 - Displayed below the controls, above the fretboard
 - Use `$derived()` to reactively select the right explanation from current state
+
+---
+
+## HelpTip system
+
+The `HelpTip` component (`src/lib/components/HelpTip.svelte`) provides inline contextual help without cluttering the interface. It renders a small `?` icon that opens a popover on click.
+
+**Props**: `term: string`, `definition: string`
+
+**Use it next to**: legend items, group labels, or any term a beginner might not know. Do not add it to every element — only where confusion is likely. Advanced users ignore the icons; beginners rely on them.
+
+**Pattern**: the `term` and `definition` values should come from `src/lib/glossary.ts` for consistency, or be passed inline for short tool-specific context.
+
+## Glossary
+
+`src/lib/glossary.ts` is the single source of truth for all music theory term definitions. The `Glossary` component (`src/lib/components/Glossary.svelte`) renders a searchable modal accessible from the site header on every page.
+
+**When adding a new term**: add it to `glossary.ts` in the appropriate category (`concept | chord | scale | interval`). Do not write definitions inline in components — the glossary is the canonical place.
+
+**Current categories**: Concepts, Chord types, Scales & modes, Intervals & notation.
+
+## Three-layer explanation approach
+
+Every tool page should have three layers of explanation, increasing in depth:
+
+1. **Page intro** (always visible, 2–3 sentences, muted style) — what the concept IS and what to DO with what you're seeing. Tells a beginner how to use the tool before they touch it. Add as a `<p class="page-intro">` below the page header.
+
+2. **HelpTip icons** (hidden by default, click to reveal) — on legend items and confusing terms. Practical: what does "chord tone" mean for your playing, not just what it is theoretically.
+
+3. **ExplanationPanel** (always visible, updates reactively) — per-selection "why does this scale work here." Lives between the controls and legend. Source in a co-located `explanations.ts` per route.
+
+This layering means advanced users see a clean interface, intermediates can hover on unfamiliar terms, and beginners have everything they need without the page being overwhelming.
+
+## "What to DO" rule
+
+Every explanation on this site — whether in the page intro, HelpTip, or ExplanationPanel — must tell the guitarist what to *do* with the information, not just what something *is*. The test: could a guitarist use this sentence while holding a guitar? If it's purely theoretical, rewrite it.
+
+Examples:
+- Bad: "Chord tones are the notes belonging to the chord."
+- Good: "Chord tones are your anchor notes — start and end phrases here and you'll always sound intentional."
 
 ---
 

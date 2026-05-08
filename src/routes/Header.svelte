@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import Glossary from '$lib/components/Glossary.svelte';
 </script>
 
 <header>
@@ -21,6 +22,7 @@
 		<a href="/progressions" class:active={page.url.pathname.startsWith('/progressions')}>
 			Progressions
 		</a>
+		<Glossary />
 	</nav>
 </header>
 
