@@ -1,42 +1,70 @@
 <script lang="ts">
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
+	import CircleOfFifths from './CircleOfFifths.svelte';
 	import {
-		chordRoots,
-		chordTypes,
-		chordTypeLabels,
-		getChordScaleClass,
-		getChordName,
-		getRecommendedScaleName,
-		type ChordType
-	} from '../chord-scale/helpers';
+		PRESETS,
+		getDiatonicChords,
+		getSlotChord,
+		getProgressionNoteClass,
+		type Preset
+	} from './helpers';
 
-	interface Slot {
-		root: string;
-		quality: ChordType;
-	}
-
-	let progression = $state<Slot[]>([
-		{ root: 'C', quality: 'maj7' },
-		{ root: 'A', quality: 'm7' },
-		{ root: 'F', quality: 'maj7' },
-		{ root: 'G', quality: '7' }
-	]);
-
+	let progKey = $state('C');
+	let mode = $state<'major' | 'minor'>('major');
+	let progression = $state<[string, string, string, string]>(['I', 'V', 'vi', 'IV']);
 	let activeSlot = $state(0);
+	let activePreset = $state<string>('Pop Standard');
 
-	let active = $derived(progression[activeSlot]);
-	let activeChordName = $derived(getChordName(active.root, active.quality));
-	let suggestedScale = $derived(getRecommendedScaleName(active.quality));
+	let diatonicChords = $derived(getDiatonicChords(progKey, mode));
+	let visiblePresets = $derived(PRESETS.filter((p) => p.mode === mode));
+
+	let activeChordName = $derived(getSlotChord(progression[activeSlot], progKey, mode));
+	let activeRoman = $derived(progression[activeSlot]);
+
 	let getNoteClass = $derived((note: string) =>
-		getChordScaleClass(note, active.root, active.quality)
+		getProgressionNoteClass(note, activeChordName, progKey, mode)
 	);
 	const getNoteLabel = (note: string) => note;
 
-	function setRoot(index: number, root: string) {
-		progression[index] = { ...progression[index], root };
+	function selectPreset(preset: Preset) {
+		activePreset = preset.name;
+		mode = preset.mode;
+		progression = [...preset.romans];
+		activeSlot = 0;
 	}
-	function setQuality(index: number, quality: ChordType) {
-		progression[index] = { ...progression[index], quality };
+
+	function setSlotRoman(slot: number, roman: string) {
+		const next = [...progression] as [string, string, string, string];
+		next[slot] = roman;
+		progression = next;
+		activeSlot = slot;
+		activePreset = '';
+	}
+
+	function selectMajorKey(key: string) {
+		progKey = key;
+		mode = 'major';
+		resetToFirstPreset('major');
+	}
+
+	function selectMinorKey(key: string) {
+		progKey = key;
+		mode = 'minor';
+		resetToFirstPreset('minor');
+	}
+
+	function resetToFirstPreset(m: 'major' | 'minor') {
+		const first = PRESETS.find((p) => p.mode === m);
+		if (first) {
+			activePreset = first.name;
+			progression = [...first.romans];
+			activeSlot = 0;
+		}
+	}
+
+	function toggleMode(m: 'major' | 'minor') {
+		mode = m;
+		resetToFirstPreset(m);
 	}
 </script>
 
@@ -48,51 +76,104 @@
 	<div class="page-header">
 		<p class="page-title">Progression Builder</p>
 		<div class="active-info">
-			<span class="active-chord">{activeChordName}</span>
-			<span class="active-scale">→ {suggestedScale}</span>
+			{#if activeChordName}
+				<span class="slot-indicator">Slot {activeSlot + 1}</span>
+				<span class="active-roman">{activeRoman}</span>
+				<span class="active-chord">{activeChordName}</span>
+			{/if}
 		</div>
 	</div>
 
 	<Fretboard {getNoteClass} {getNoteLabel} />
 
-	<div class="progression">
-		{#each progression as slot, i}
-			<div class="chord-card" class:active={activeSlot === i}>
+	<!-- Key selector + presets -->
+	<div class="builder">
+		<div class="circle-column">
+			<CircleOfFifths
+				selectedKey={progKey}
+				{mode}
+				onSelectMajor={selectMajorKey}
+				onSelectMinor={selectMinorKey}
+			/>
+			<div class="mode-toggle">
 				<button
-					type="button"
-					class="card-header"
-					aria-pressed={activeSlot === i}
+					class="btn-mode"
+					class:active={mode === 'major'}
+					onclick={() => toggleMode('major')}
+				>
+					Major
+				</button>
+				<button
+					class="btn-mode"
+					class:active={mode === 'minor'}
+					onclick={() => toggleMode('minor')}
+				>
+					Minor
+				</button>
+			</div>
+		</div>
+
+		<div class="presets-column">
+			<p class="section-label">Common Progressions</p>
+			<div class="preset-grid">
+				{#each visiblePresets as preset}
+					<button
+						class="preset-card"
+						class:active={activePreset === preset.name}
+						onclick={() => selectPreset(preset)}
+					>
+						<div class="preset-top">
+							<span class="preset-name">{preset.name}</span>
+							<span class="preset-feel">{preset.feel}</span>
+						</div>
+						<div class="preset-romans">
+							{#each preset.romans as roman}
+								<span class="preset-roman">{roman}</span>
+							{/each}
+						</div>
+					</button>
+				{/each}
+			</div>
+		</div>
+	</div>
+
+	<!-- Diatonic palette -->
+	<div class="palette-section">
+		<p class="section-label">Diatonic Chords in {progKey} {mode === 'minor' ? 'Minor' : 'Major'}</p>
+		<div class="palette">
+			{#each diatonicChords as chord}
+				<button
+					class="palette-chord"
+					onclick={() => setSlotRoman(activeSlot, chord.roman)}
+					title="Set slot {activeSlot + 1} to {chord.name}"
+				>
+					<span class="palette-roman">{chord.roman}</span>
+					<span class="palette-name">{chord.name}</span>
+				</button>
+			{/each}
+		</div>
+		<p class="palette-hint">Click a chord to place it in the active slot</p>
+	</div>
+
+	<!-- 4 progression slots -->
+	<div class="slots-section">
+		<p class="section-label">Your Progression</p>
+		<div class="slots">
+			{#each progression as roman, i}
+				{@const chordName = getSlotChord(roman, progKey, mode)}
+				<button
+					class="slot"
+					class:active={activeSlot === i}
 					onclick={() => (activeSlot = i)}
+					aria-pressed={activeSlot === i}
+					aria-label="Slot {i + 1}: {chordName}"
 				>
 					<span class="slot-number">{i + 1}</span>
-					<span class="chord-label">{getChordName(slot.root, slot.quality)}</span>
-					<span class="scale-label">→ {getRecommendedScaleName(slot.quality)}</span>
+					<span class="slot-roman">{roman}</span>
+					<span class="slot-chord">{chordName}</span>
 				</button>
-
-				<div class="slot-controls">
-					<select
-						class="select-root"
-						aria-label="Root note for slot {i + 1}"
-						value={slot.root}
-						onchange={(e) => setRoot(i, (e.target as HTMLSelectElement).value)}
-					>
-						{#each chordRoots as root}
-							<option value={root}>{root}</option>
-						{/each}
-					</select>
-					<select
-						class="select-quality"
-						aria-label="Chord quality for slot {i + 1}"
-						value={slot.quality}
-						onchange={(e) => setQuality(i, (e.target as HTMLSelectElement).value as ChordType)}
-					>
-						{#each chordTypes as ct}
-							<option value={ct}>{chordTypeLabels[ct]}</option>
-						{/each}
-					</select>
-				</div>
-			</div>
-		{/each}
+			{/each}
+		</div>
 	</div>
 
 	<div class="legend">
@@ -138,6 +219,21 @@
 		gap: 10px;
 	}
 
+	.slot-indicator {
+		font-size: 10px;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--text-muted);
+	}
+
+	.active-roman {
+		font-size: 12px;
+		font-weight: 700;
+		color: var(--accent-note);
+		letter-spacing: 0.06em;
+	}
+
 	.active-chord {
 		font-size: 14px;
 		font-weight: 700;
@@ -145,26 +241,216 @@
 		letter-spacing: 0.04em;
 	}
 
-	.active-scale {
-		font-size: 12px;
-		color: var(--text-muted);
-		letter-spacing: 0.06em;
-	}
-
-	.progression {
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 16px;
+	// ─── Builder row ────────────────────────────────────────────
+	.builder {
+		display: flex;
+		gap: 52px;
 		margin-top: 52px;
+		align-items: flex-start;
 	}
 
-	.chord-card {
+	.circle-column {
 		display: flex;
 		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+		flex-shrink: 0;
+	}
+
+	.mode-toggle {
+		display: flex;
+		gap: 6px;
+	}
+
+	.btn-mode {
+		background: transparent;
+		border: 1px solid var(--color-fret);
+		color: var(--text-muted);
+		border-radius: var(--radius-sm);
+		padding: 7px 22px;
+		font-family: inherit;
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		&:hover:not(.active) {
+			border-color: var(--text-muted);
+			color: var(--text-primary);
+		}
+
+		&.active {
+			background: rgba(255, 255, 255, 0.06);
+			border-color: var(--text-primary);
+			color: var(--text-primary);
+		}
+	}
+
+	.presets-column {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.section-label {
+		font-size: 10px;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: var(--text-muted);
+		font-weight: 600;
+		margin: 0 0 14px;
+	}
+
+	.preset-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+		gap: 10px;
+	}
+
+	.preset-card {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
 		background: var(--bg-surface);
 		border: 1px solid rgba(255, 255, 255, 0.06);
 		border-radius: var(--radius-md);
-		overflow: hidden;
+		padding: 14px 16px;
+		cursor: pointer;
+		text-align: left;
+		font-family: inherit;
+		color: inherit;
+		transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+
+		&:hover:not(.active) {
+			border-color: rgba(255, 255, 255, 0.14);
+			background: rgba(255, 255, 255, 0.02);
+		}
+
+		&.active {
+			border-color: var(--accent-note);
+			box-shadow: 0 0 14px rgba(12, 207, 223, 0.1);
+		}
+	}
+
+	.preset-top {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 8px;
+	}
+
+	.preset-name {
+		font-size: 13px;
+		font-weight: 700;
+		color: var(--text-primary);
+		letter-spacing: 0.01em;
+	}
+
+	.preset-feel {
+		font-size: 9px;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--text-muted);
+		white-space: nowrap;
+	}
+
+	.preset-romans {
+		display: flex;
+		gap: 8px;
+	}
+
+	.preset-roman {
+		font-size: 13px;
+		font-weight: 700;
+		color: var(--accent-note);
+		letter-spacing: 0.04em;
+		min-width: 24px;
+		text-align: center;
+
+		.preset-card.active & {
+			color: var(--accent-note);
+		}
+	}
+
+	// ─── Diatonic palette ────────────────────────────────────────
+	.palette-section {
+		margin-top: 48px;
+	}
+
+	.palette {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.palette-chord {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 5px;
+		background: transparent;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: var(--radius-sm);
+		padding: 10px 18px;
+		cursor: pointer;
+		font-family: inherit;
+		color: inherit;
+		transition: border-color 0.2s ease, background 0.2s ease;
+
+		&:hover {
+			border-color: var(--accent-tonic);
+			background: rgba(240, 56, 96, 0.06);
+		}
+	}
+
+	.palette-roman {
+		font-size: 13px;
+		font-weight: 700;
+		color: var(--accent-tonic);
+		letter-spacing: 0.04em;
+		line-height: 1;
+	}
+
+	.palette-name {
+		font-size: 11px;
+		font-weight: 500;
+		color: var(--text-muted);
+		letter-spacing: 0.02em;
+	}
+
+	.palette-hint {
+		margin: 10px 0 0;
+		font-size: 10px;
+		color: var(--text-muted);
+		letter-spacing: 0.06em;
+		opacity: 0.7;
+	}
+
+	// ─── Progression slots ───────────────────────────────────────
+	.slots-section {
+		margin-top: 48px;
+	}
+
+	.slots {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 12px;
+	}
+
+	.slot {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 6px;
+		background: var(--bg-surface);
+		border: 1px solid rgba(255, 255, 255, 0.06);
+		border-radius: var(--radius-md);
+		padding: 20px 22px;
+		cursor: pointer;
+		text-align: left;
+		font-family: inherit;
+		color: inherit;
 		transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 
 		&:hover:not(.active) {
@@ -176,27 +462,10 @@
 			border-color: var(--accent-note);
 			box-shadow: 0 0 16px rgba(12, 207, 223, 0.12);
 		}
-	}
-
-	.card-header {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 6px;
-		background: transparent;
-		border: none;
-		padding: 20px 20px 0;
-		cursor: pointer;
-		text-align: left;
-		font-family: inherit;
-		color: inherit;
-		width: 100%;
-		box-sizing: border-box;
 
 		&:focus-visible {
 			outline: 2px solid var(--accent-note);
 			outline-offset: -2px;
-			border-radius: var(--radius-md) var(--radius-md) 0 0;
 		}
 	}
 
@@ -206,66 +475,24 @@
 		letter-spacing: 0.12em;
 		text-transform: uppercase;
 		color: var(--text-muted);
-		margin-bottom: 4px;
 	}
 
-	.chord-label {
-		font-size: 22px;
+	.slot-roman {
+		font-size: 28px;
 		font-weight: 700;
-		color: var(--text-primary);
+		color: var(--accent-note);
 		letter-spacing: 0.02em;
 		line-height: 1;
 	}
 
-	.scale-label {
-		font-size: 11px;
-		color: var(--text-muted);
-		letter-spacing: 0.04em;
-		margin-bottom: 0;
-	}
-
-	.slot-controls {
-		display: flex;
-		gap: 6px;
-		padding: 12px 20px 20px;
-		width: 100%;
-		box-sizing: border-box;
-	}
-
-	.select-root,
-	.select-quality {
-		background: rgba(255, 255, 255, 0.04);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: var(--radius-sm);
-		color: var(--text-primary);
-		font-family: inherit;
-		font-size: 12px;
+	.slot-chord {
+		font-size: 13px;
 		font-weight: 600;
-		padding: 6px 8px;
-		cursor: pointer;
-		transition: border-color 0.2s ease;
-		appearance: none;
-		-webkit-appearance: none;
-
-		&:hover,
-		&:focus {
-			border-color: var(--accent-note);
-			outline: none;
-		}
-
-		option {
-			background: var(--bg-surface);
-		}
+		color: var(--text-primary);
+		letter-spacing: 0.02em;
 	}
 
-	.select-root {
-		width: 72px;
-	}
-
-	.select-quality {
-		flex: 1;
-	}
-
+	// ─── Legend ──────────────────────────────────────────────────
 	.legend {
 		display: flex;
 		justify-content: center;
