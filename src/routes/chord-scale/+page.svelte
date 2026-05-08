@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
+	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
 	import {
 		chordRoots,
 		chordTypes,
@@ -9,6 +10,7 @@
 		getRecommendedScaleName,
 		type ChordType
 	} from './helpers';
+	import { explanations } from './explanations';
 	import { chordRoot, chordQuality } from '../../stores';
 
 	let getNoteClass = $derived((note: string) =>
@@ -16,6 +18,7 @@
 	const getNoteLabel = (note: string) => note;
 	let chordName = $derived(getChordName($chordRoot, $chordQuality as ChordType));
 	let scaleName = $derived(getRecommendedScaleName($chordQuality as ChordType));
+	let explanation = $derived(explanations[$chordQuality as ChordType]);
 </script>
 
 <svelte:head>
@@ -64,6 +67,8 @@
 			</div>
 		</div>
 	</div>
+
+	<ExplanationPanel context={explanation.context} body={explanation.body} />
 
 	<div class="legend">
 		<div class="legend-item">

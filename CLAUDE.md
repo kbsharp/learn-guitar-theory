@@ -15,6 +15,20 @@ npm run test         # Playwright e2e tests
 npm run test:unit    # Vitest unit tests
 ```
 
+## Product Vision
+
+**Goal**: Turn the fretboard from a grid of shapes into a system a guitarist can *reason about*.
+
+Every feature must pass this test: *does this help a guitarist understand something they were confused about, or hear something they couldn't hear before?* Pretty visuals are acceptable only when they serve comprehension.
+
+**Target audience**: All skill levels, genre-agnostic. A beginner wanting to understand why their Em pentatonic works over everything, and a jazz player mapping chord-scale relationships, should both find value.
+
+**Full product roadmap (prioritised)**:
+1. **Explanations** — Context-aware "why" copy on every tool. Not tooltips. Sentences that explain *why Dorian over m7*, *why these 5 CAGED positions cover the neck*, *what the Circle of Fifths tells you*. This is the highest-leverage gap vs other guitar theory sites.
+2. **Mobile** — Responsive fretboard. Guitarists look this up while holding a guitar. Fixed 1200px kills most real-world use.
+3. **Audio** — Hear the scale/chord. The bridge between abstract shapes and actual sound.
+4. **Practice mode** — Active exercises (interval recall, chord identification). Passive reference → active skill-building.
+
 ## Architecture
 
 **SvelteKit** (v2) with file-based routing, **Svelte 5** (runes mode), **TypeScript**, **SCSS** via `vitePreprocess`, and **tonal** (v6) as the music theory engine.
@@ -23,7 +37,11 @@ npm run test:unit    # Vitest unit tests
 
 `src/routes/` uses SvelteKit conventions. Current routes:
 - `/` — home (`+page.svelte`)
-- `/guitar-theory` — fretboard explorer (`guitar-theory/+page.svelte`)
+- `/guitar-theory` — Fretboard Explorer: key + scale/mode selector, 5 box positions, note/degree toggle
+- `/chord-scale` — Chord-Scale Relationships: select chord type, see compatible scale highlighted
+- `/diatonic` — Diatonic Chords: explore all 7 chords in a key, see tones on fretboard
+- `/caged` — CAGED System: 5 major/minor chord shapes with fret positions
+- `/progressions` — Progression Builder: 4-slot composer with Circle of Fifths and 12 presets
 
 ### SCSS and design tokens
 
@@ -33,28 +51,41 @@ The design token source of truth is `src/routes/styles/_styles.scss` — SCSS va
 
 ### State management
 
-`src/stores.ts` holds Svelte writable stores for all three tools. Components read stores with the `$store` reactive syntax and write via `.set()`. Page-level reactive derivations use the `$derived()` rune.
+`src/stores.ts` holds Svelte writable stores for all tools. Components read stores with the `$store` reactive syntax and write via `.set()`. Page-level reactive derivations use the `$derived()` rune.
+
+Store groups by tool:
+- **Fretboard Explorer**: `key`, `quality`
+- **Chord-Scale**: `chordRoot`, `chordQuality`
+- **Diatonic**: `diatonicKey`, `diatonicMode`, `selectedDiatonicChord`
+- **CAGED**: `cagedKey`, `cagedQuality`
+- **Progressions**: `progKey`, `progMode`, `progression` (4-chord array), `activeSlot`
 
 ### Music theory logic
 
-`src/routes/guitar-theory/helpers.ts` is the core logic file:
-- `getClassName(note, key, tonic, quality)` — determines which CSS class to apply to each fret note (`hide-note` / `in-scale` / `tonic`)
-- Uses `Scale.get()` from tonal to resolve scale membership
-- All note comparisons use sharps internally; `convertFlatToSharp()` normalises flat notation before comparison
+Each route has a co-located `helpers.ts`:
+- `guitar-theory/helpers.ts` — `getClassName()`, `getScaleDegree()`, `computeScalePositions()`, `convertFlatToSharp()`
+- `chord-scale/helpers.ts` — `getChordScaleClass()`, `chordToScale` map
+- `diatonic/helpers.ts` — `getDiatonicChords()`, `getDiatonicNoteClass()`
+- `caged/helpers.ts` — `computeCAGEDShapes()`, `getCAGEDNoteClass()`
+- `progressions/helpers.ts` — `getSlotChord()`, `getProgressionNoteClass()`, preset definitions
 
-`src/routes/guitar-theory/strings.ts` generates the 6-string chromatic note arrays using `Range.chromatic()` from tonal (sharps only, octave numbers stripped).
+All note comparisons use sharps internally; `convertFlatToSharp()` normalises flat notation before comparison. Tonal's `Scale.get()` and `Chord.get()` are the source of truth for scale membership and chord tones.
+
+`src/lib/strings.ts` generates the 6-string chromatic note arrays using `Range.chromatic()` from tonal (sharps only, octave numbers stripped).
 
 ### Fretboard rendering
 
-Three-layer composition inside `Fretboard.svelte`:
-1. `Frets.svelte` — absolutely positioned grid of 25 fret dividers + inlay dots
-2. `Strings.svelte` — 6 strings × 25 notes; each note is a `<p>` element with a class driven by `getClassName()`; string graphics are sibling `<div>` elements positioned absolutely
+Three-layer composition inside `src/lib/components/Fretboard/Fretboard.svelte`:
+1. `Frets.svelte` — absolutely positioned grid of 25 fret dividers + inlay dots (frets 3,5,7,9,12,…)
+2. `Strings.svelte` — 6 strings × 25 notes; each note is a `<p>` element with class driven by a callback; string graphics are sibling `<div>` elements
 
-The fretboard is fixed at 1200px wide (Strings) / 1250px container (page) — not responsive.
+The fretboard is fixed at 1200px wide — **intentionally not responsive yet** (mobile is roadmap item #2).
+
+Classes applied to fret notes: `hide-note` (invisible), `in-scale` (cyan glow), `tonic` (pink glow), `dim-note` (15% opacity outside position range).
 
 ### Adding new scales or qualities
 
-1. Add to the `Quality` enum in `helpers.ts`
+1. Add to the `Quality` enum in `guitar-theory/helpers.ts`
 2. Add to the `qualities` array in `helpers.ts`
 3. `getClassName()` passes the quality string directly to tonal's `Scale.get()` — tonal must recognise the string (e.g. `"dorian"`, `"phrygian"`, `"major pentatonic"`)
 
@@ -67,8 +98,66 @@ The fretboard is fixed at 1200px wide (Strings) / 1250px container (page) — no
 - Layout slot: `{@render children()}` (not `<slot />`)
 - `$app/state` (not `$app/stores`) for `page`
 
-### Known issues / notes
+---
 
-- `convertFlatsToSharps()` in `helpers.ts` has a stray `console.log` that prints scale notes on every render
+## Explanation System (roadmap priority #1)
+
+The explanation system adds context-aware prose to each tool so the app teaches, not just displays.
+
+**Design rules:**
+- 2–3 sentences max per explanation. Guitarists want context, not lectures.
+- Explain the *why*, not the *what* — the UI already shows the what.
+- Write for the intermediate guitarist who knows the shapes but not the theory behind them.
+- Explanation copy lives in a co-located `explanations.ts` file per route, not inline in components.
+
+**Content to write per tool:**
+- **Chord-Scale**: why each chord type maps to its scale (e.g. "Dorian works over m7 because it contains the b7 but avoids the b6, keeping the chord's character without clashing"). This is the richest tool for explanations — it was the original pain point.
+- **Fretboard Explorer**: what each mode sounds like and when to use it (e.g. "Mixolydian is major with a b7 — the 'rock' mode, works over dominant 7th chords").
+- **Diatonic Chords**: why chords built on scale degrees have their quality (e.g. "The IV chord is always major in a major key because of the interval pattern of the scale").
+- **CAGED**: why 5 shapes cover the whole neck and how they connect.
+- **Progressions**: what each preset progression communicates emotionally/harmonically.
+
+**Implementation approach:**
+- A typed `Record<Quality | ChordType, Explanation>` object in each `explanations.ts`
+- A shared `<ExplanationPanel>` component: `src/lib/components/ExplanationPanel.svelte`
+- Displayed below the controls, above the fretboard
+- Use `$derived()` to reactively select the right explanation from current state
+
+---
+
+## Audio Integration (roadmap priority #3)
+
+Use **Tone.js** (`npm install tone`) for audio playback.
+
+**Planned interactions:**
+- Click any lit fret note to hear it
+- "Play scale" button plays notes ascending then descending
+- "Play chord" strums the chord tones bottom-to-top with a brief strum timing offset
+
+**Notes:**
+- AudioContext must be resumed on first user gesture (browser security requirement)
+- Use a guitar-like synth: `Tone.PluckSynth` for plucked strings, or a `Tone.PolySynth` with AM/FM oscillator for chords
+- Fret notes have MIDI pitch data available through tonal's `Note.midi()` — use that for Tone.js frequency input
+
+---
+
+## Mobile Strategy (roadmap priority #2)
+
+The fretboard is the core problem. Options when implementing:
+- **Horizontal scroll**: wrap fretboard in a scrollable container, keep 1200px inner width, add scroll-shadow indicators
+- **Compact mode**: at <768px, render fewer frets (e.g. frets 0–12 only) with larger note circles
+- **Portrait fretboard**: rotate to show strings as columns (unusual but better on portrait phones)
+
+Recommendation: **horizontal scroll first** (least redesign, ships fast), then explore compact mode based on user feedback.
+
+Controls (key selector, chord buttons, etc.) must stack vertically on mobile and be at least 44px tall for touch targets.
+
+---
+
+## Known Issues / Notes
+
+- `convertFlatsToSharps()` in `guitar-theory/helpers.ts` has a stray `console.log` that prints scale notes on every render — remove it
 - The `$black` and `$key-color` SCSS variables were removed in the latest refactor; don't re-add them
 - `src/routes/styles/main.scss` uses Sass `@import` (deprecated in Dart Sass 3); the warning is cosmetic
+- `tests/test.ts` has a stale test looking for an `/about` page that doesn't exist — either delete or repurpose
+- `@neoconfetti/svelte` is installed but unused — remove when cleaning up deps
