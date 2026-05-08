@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
+	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
+	import HelpTip from '$lib/components/HelpTip.svelte';
 	import {
 		diatonicKeys,
 		getDiatonicChords,
@@ -7,6 +9,7 @@
 		getDiatonicNoteClass,
 		type DiatonicMode
 	} from './helpers';
+	import { diatonicExplanations } from './explanations';
 	import { diatonicKey, diatonicMode, selectedDiatonicChord } from '../../stores';
 
 	let chords = $derived(getDiatonicChords($diatonicKey, $diatonicMode as DiatonicMode));
@@ -14,6 +17,11 @@
 	let getNoteClass = $derived((note: string) =>
 		getDiatonicNoteClass(note, $selectedDiatonicChord, scaleNotes));
 	const getNoteLabel = (note: string) => note;
+
+	let selectedIndex = $derived(
+		$selectedDiatonicChord ? chords.findIndex((c) => c.name === $selectedDiatonicChord) : -1
+	);
+	let explanation = $derived(diatonicExplanations[selectedIndex] ?? diatonicExplanations[-1]);
 
 	function selectChord(chordName: string) {
 		selectedDiatonicChord.set($selectedDiatonicChord === chordName ? null : chordName);
@@ -36,6 +44,12 @@
 			<span class="selected-label">{$selectedDiatonicChord}</span>
 		{/if}
 	</div>
+
+	<p class="page-intro">
+		Every key has 7 chords built from its scale — click any chord to light up its tones on the
+		fretboard. Each chord has a function: some create stability, others create tension that drives
+		the progression forward.
+	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} />
 
@@ -76,7 +90,13 @@
 		</div>
 
 		<div class="control-group">
-			<span class="group-label">Chords</span>
+			<div class="label-with-help">
+				<span class="group-label">Chords</span>
+				<HelpTip
+					term="Diatonic chords"
+					definition="Chords built only from notes in the key's scale. The quality of each chord (major, minor, diminished) is determined by the scale's interval pattern — it's the same in every key. Once you know the pattern, you know which chords 'belong' together in any key."
+				/>
+			</div>
 			<div class="chord-grid">
 				{#each chords as chord}
 					<button
@@ -92,14 +112,24 @@
 		</div>
 	</div>
 
+	<ExplanationPanel context={explanation.context} body={explanation.body} />
+
 	<div class="legend">
 		<div class="legend-item">
 			<span class="legend-dot chord-tone"></span>
 			<span>Chord tone</span>
+			<HelpTip
+				term="Chord tone"
+				definition="A note belonging to the selected chord. These are the notes that define the chord's sound — anchor your phrases here and you'll always sound intentional."
+			/>
 		</div>
 		<div class="legend-item">
 			<span class="legend-dot scale-tone"></span>
 			<span>Scale tone</span>
+			<HelpTip
+				term="Scale tone"
+				definition="A note from the key's scale that isn't part of the selected chord. Use these to connect between chord tones — they work best as passing notes rather than resting points."
+			/>
 		</div>
 	</div>
 </div>
@@ -117,7 +147,25 @@
 		align-items: center;
 		justify-content: space-between;
 		min-height: 40px;
-		margin-bottom: 32px;
+		margin-bottom: 20px;
+	}
+
+	.page-intro {
+		font-size: 12px;
+		line-height: 1.7;
+		color: var(--text-muted);
+		margin: 0 0 28px;
+		opacity: 0.75;
+	}
+
+	.label-with-help {
+		display: flex;
+		align-items: center;
+		margin-bottom: 14px;
+
+		.group-label {
+			margin-bottom: 0;
+		}
 	}
 
 	.page-title {
@@ -274,6 +322,10 @@
 		font-size: 11px;
 		color: var(--text-muted);
 		letter-spacing: 0.06em;
+
+		:global(.help-tip) {
+			margin-left: -2px;
+		}
 	}
 
 	.legend-dot {

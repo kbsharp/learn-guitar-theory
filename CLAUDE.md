@@ -116,18 +116,18 @@ The explanation system adds context-aware prose to each tool so the app teaches,
 - Write for the intermediate guitarist who knows the shapes but not the theory behind them.
 - Explanation copy lives in a co-located `explanations.ts` file per route, not inline in components.
 
-**Content to write per tool:**
-- **Chord-Scale**: why each chord type maps to its scale (e.g. "Dorian works over m7 because it contains the b7 but avoids the b6, keeping the chord's character without clashing"). This is the richest tool for explanations — it was the original pain point.
-- **Fretboard Explorer**: what each mode sounds like and when to use it (e.g. "Mixolydian is major with a b7 — the 'rock' mode, works over dominant 7th chords").
-- **Diatonic Chords**: why chords built on scale degrees have their quality (e.g. "The IV chord is always major in a major key because of the interval pattern of the scale").
-- **CAGED**: why 5 shapes cover the whole neck and how they connect.
-- **Progressions**: what each preset progression communicates emotionally/harmonically.
+**Explanation content is complete for all tools except Progressions.** Each tool has a co-located `explanations.ts` with typed content and a reactive `$derived` lookup in the page.
+
+- `chord-scale/explanations.ts` — keyed by `ChordType`
+- `guitar-theory/explanations.ts` — keyed by `Quality` enum value
+- `diatonic/explanations.ts` — keyed by degree index (-1 = no selection, 0–6 = degree)
+- `caged/explanations.ts` — keyed by lowercase shape name or `'all'`
 
 **Implementation approach:**
-- A typed `Record<Quality | ChordType, Explanation>` object in each `explanations.ts`
+- A typed `Record` in each `explanations.ts`
 - A shared `<ExplanationPanel>` component: `src/lib/components/ExplanationPanel.svelte`
-- Displayed below the controls, above the fretboard
-- Use `$derived()` to reactively select the right explanation from current state
+- Placed below controls, above the legend
+- Driven by `$derived()` from current selection state
 
 ---
 
@@ -160,6 +160,18 @@ Every tool page should have three layers of explanation, increasing in depth:
 3. **ExplanationPanel** (always visible, updates reactively) — per-selection "why does this scale work here." Lives between the controls and legend. Source in a co-located `explanations.ts` per route.
 
 This layering means advanced users see a clean interface, intermediates can hover on unfamiliar terms, and beginners have everything they need without the page being overwhelming.
+
+## Page-level patterns (established across all tool pages)
+
+Every tool page follows this structure (except Progressions, not yet updated):
+1. `.page-header` — tool name left, status/toggle right, `margin-bottom: 20px`
+2. `.page-intro` — 2–3 sentence `<p>`, `font-size: 12px`, `opacity: 0.75`, `margin-bottom: 28px`
+3. `<Fretboard />` — the visual
+4. `.controls` — key/root/scale/chord selectors, `margin-top: 52px`
+5. `<ExplanationPanel />` — reactive per-selection explanation
+6. `.legend` — colour key with `<HelpTip>` on each item
+
+Labels with HelpTips use a `.label-with-help` wrapper (`display: flex; align-items: center`) to keep the `?` inline with the label. The `.group-label` inside loses its own `margin-bottom` since `.label-with-help` handles spacing.
 
 ## "What to DO" rule
 

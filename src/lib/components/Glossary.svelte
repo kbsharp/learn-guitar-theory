@@ -70,20 +70,22 @@
 		aria-label="Music theory glossary"
 	>
 		<div class="dialog-inner">
-			<div class="dialog-header">
-				<span class="dialog-title">Glossary</span>
-				<button class="close-btn" type="button" onclick={closeGlossary} aria-label="Close glossary"
-					>✕</button
-				>
-			</div>
+			<div class="dialog-chrome">
+				<div class="dialog-header">
+					<span class="dialog-title">Glossary</span>
+					<button class="close-btn" type="button" onclick={closeGlossary} aria-label="Close glossary"
+						>✕</button
+					>
+				</div>
 
-			<input
-				class="search"
-				type="search"
-				placeholder="Search terms..."
-				bind:value={query}
-				aria-label="Search glossary"
-			/>
+				<input
+					class="search"
+					type="search"
+					placeholder="Search terms..."
+					bind:value={query}
+					aria-label="Search glossary"
+				/>
+			</div>
 
 			<div class="terms-list">
 				{#if grouped}
@@ -163,32 +165,40 @@
 		max-height: 80vh;
 		display: flex;
 		flex-direction: column;
+		overflow: hidden;
 		box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+	}
+
+	/* Fixed chrome — never scrolls */
+	.dialog-chrome {
+		flex-shrink: 0;
+		padding: 22px 24px 18px;
+		border-bottom: 1px solid var(--color-fret);
+		background: var(--bg-surface);
 	}
 
 	.dialog-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 20px 24px 0;
-		flex-shrink: 0;
+		margin-bottom: 16px;
 	}
 
 	.dialog-title {
-		font-size: 11px;
+		font-size: 15px;
 		font-weight: 700;
-		letter-spacing: 0.14em;
-		text-transform: uppercase;
-		color: var(--accent-note);
+		letter-spacing: 0.02em;
+		color: var(--text-primary);
 	}
 
 	.close-btn {
 		background: transparent;
 		border: none;
 		color: var(--text-muted);
-		font-size: 14px;
+		font-size: 16px;
 		cursor: pointer;
 		padding: 4px 8px;
+		margin-right: -8px;
 		border-radius: var(--radius-sm);
 		transition: color 0.15s ease;
 		line-height: 1;
@@ -199,7 +209,8 @@
 	}
 
 	.search {
-		margin: 16px 24px 0;
+		width: 100%;
+		box-sizing: border-box;
 		background: var(--bg-base);
 		border: 1px solid var(--color-fret);
 		border-radius: var(--radius-sm);
@@ -209,11 +220,10 @@
 		padding: 10px 14px;
 		outline: none;
 		transition: border-color 0.15s ease;
-		flex-shrink: 0;
 
 		&::placeholder {
 			color: var(--text-muted);
-			opacity: 0.6;
+			opacity: 0.5;
 		}
 
 		&:focus {
@@ -221,24 +231,25 @@
 		}
 	}
 
+	/* Scrollable content area */
 	.terms-list {
 		overflow-y: auto;
-		padding: 16px 24px 24px;
+		padding: 8px 12px 24px;
 		display: flex;
 		flex-direction: column;
-		gap: 2px;
 	}
 
 	.category-label {
-		font-size: 9px;
+		font-size: 10px;
 		font-weight: 700;
-		letter-spacing: 0.16em;
+		letter-spacing: 0.14em;
 		text-transform: uppercase;
-		color: var(--text-muted);
-		margin: 18px 0 8px;
+		color: var(--accent-note);
+		opacity: 0.6;
+		margin: 24px 12px 4px;
 
 		&:first-child {
-			margin-top: 0;
+			margin-top: 12px;
 		}
 	}
 
@@ -254,17 +265,17 @@
 
 	.term-name {
 		display: block;
-		font-size: 12px;
+		font-size: 13px;
 		font-weight: 700;
 		color: var(--text-primary);
-		margin-bottom: 4px;
-		letter-spacing: 0.02em;
+		margin-bottom: 5px;
+		letter-spacing: 0.01em;
 	}
 
 	.term-def {
 		margin: 0;
 		font-size: 12px;
-		line-height: 1.6;
+		line-height: 1.65;
 		color: var(--text-muted);
 	}
 
@@ -272,7 +283,7 @@
 		font-size: 12px;
 		color: var(--text-muted);
 		text-align: center;
-		padding: 24px 0;
+		padding: 32px 0;
 		margin: 0;
 	}
 </style>

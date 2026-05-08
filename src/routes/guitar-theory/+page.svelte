@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
+	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
+	import HelpTip from '$lib/components/HelpTip.svelte';
 	import Keys from './Keys.svelte';
 	import Qualities from './Qualities.svelte';
 	import { key, quality } from '../../stores';
@@ -8,8 +10,10 @@
 		currentTonic,
 		getScaleDegree,
 		convertFlatToSharp,
-		computeScalePositions
+		computeScalePositions,
+		type Quality as QualityType
 	} from './helpers';
+	import { scaleExplanations } from './explanations';
 
 	let showDegrees = $state(false);
 	let selectedPosition = $state<number | null>(null);
@@ -30,6 +34,7 @@
 	let getNoteClass = $derived((note: string) => getClassName(note, $key, tonic, $quality));
 	let getNoteLabel = $derived((note: string) =>
 		showDegrees ? getScaleDegree(note, tonic) : convertFlatToSharp(note));
+	let explanation = $derived(scaleExplanations[$quality as QualityType]);
 </script>
 
 <svelte:head>
@@ -39,14 +44,26 @@
 <div class="container">
 	<div class="page-header">
 		<p class="page-title">Fretboard Explorer</p>
-		<button
-			class="toggle-btn"
-			class:active={showDegrees}
-			onclick={() => (showDegrees = !showDegrees)}
-		>
-			{showDegrees ? 'Degrees' : 'Notes'}
-		</button>
+		<div class="header-right">
+			<button
+				class="toggle-btn"
+				class:active={showDegrees}
+				onclick={() => (showDegrees = !showDegrees)}
+			>
+				{showDegrees ? 'Degrees' : 'Notes'}
+			</button>
+			<HelpTip
+				term="Scale degrees"
+				definition="Interval numbers relative to the root: 1 (root), b3, 3, b7, 7, etc. Seeing degrees instead of note names shows you why a scale has its character — the b7 is what makes Mixolydian bluesy, the ♯4 is what makes Lydian float. Useful for applying the scale in any key."
+			/>
+		</div>
 	</div>
+
+	<p class="page-intro">
+		Select a key and scale to see every available note across the neck. Use the position buttons to
+		focus on a 4-fret box — the way you'd actually practise. <strong>Pink</strong> is the root,
+		<strong>cyan</strong> notes are in the scale.
+	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} />
 
@@ -60,7 +77,13 @@
 			<Qualities />
 		</div>
 		<div class="control-group">
-			<span class="group-label">Position</span>
+			<div class="label-with-help">
+				<span class="group-label">Position</span>
+				<HelpTip
+					term="Positions"
+					definition="A 4-fret window that shows one manageable chunk of the scale. Every scale has 5 positions that together cover the whole neck without gaps. Practise each one until you can move between them without thinking — that's when the neck stops feeling like separate boxes."
+				/>
+			</div>
 			<div class="btn-row">
 				<button
 					class="btn-position"
@@ -81,6 +104,10 @@
 			</div>
 		</div>
 	</div>
+
+	{#if explanation}
+		<ExplanationPanel context={explanation.context} body={explanation.body} />
+	{/if}
 </div>
 
 <style lang="scss">
@@ -96,7 +123,7 @@
 		align-items: center;
 		justify-content: space-between;
 		min-height: 40px;
-		margin-bottom: 32px;
+		margin-bottom: 20px;
 	}
 
 	.page-title {
@@ -106,6 +133,34 @@
 		color: var(--text-muted);
 		margin: 0;
 		font-weight: 500;
+	}
+
+	.header-right {
+		display: flex;
+		align-items: center;
+	}
+
+	.page-intro {
+		font-size: 12px;
+		line-height: 1.7;
+		color: var(--text-muted);
+		margin: 0 0 28px;
+		opacity: 0.75;
+
+		strong {
+			color: var(--text-primary);
+			font-weight: 600;
+		}
+	}
+
+	.label-with-help {
+		display: flex;
+		align-items: center;
+		margin-bottom: 14px;
+
+		.group-label {
+			margin-bottom: 0;
+		}
 	}
 
 	.toggle-btn {

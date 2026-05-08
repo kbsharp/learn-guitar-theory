@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
+	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
+	import HelpTip from '$lib/components/HelpTip.svelte';
 	import {
 		cagedRoots,
 		computeCAGEDShapes,
@@ -7,6 +9,7 @@
 		getCAGEDNoteClass,
 		type CAGEDQuality
 	} from './helpers';
+	import { cagedExplanations } from './explanations';
 	import { cagedKey, cagedQuality } from '../../stores';
 
 	let selectedShape = $state<string | null>(null);
@@ -32,6 +35,9 @@
 	const getNoteLabel = (note: string) => note;
 
 	let chordName = $derived(`${$cagedKey}${$cagedQuality === 'minor' ? 'm' : ''}`);
+	let explanation = $derived(
+		cagedExplanations[selectedShape?.toLowerCase() ?? 'all'] ?? cagedExplanations['all']
+	);
 </script>
 
 <svelte:head>
@@ -48,6 +54,12 @@
 			{/if}
 		</div>
 	</div>
+
+	<p class="page-intro">
+		Every major or minor chord can be played in 5 positions across the neck, each based on a
+		familiar open chord shape. The shapes connect end-to-end with no gaps — learning them means
+		you always have chord tones nearby, no matter where you are on the fretboard.
+	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} />
 
@@ -88,7 +100,13 @@
 		</div>
 
 		<div class="control-group">
-			<span class="group-label">Shape</span>
+			<div class="label-with-help">
+				<span class="group-label">Shape</span>
+				<HelpTip
+					term="CAGED shapes"
+					definition="Each shape is named after an open chord (C, A, G, E, D) whose fingering it resembles when moved up the neck. Five shapes cover the entire fretboard — there are no gaps between them. Select one to focus on that position and see the highlighted fret range."
+				/>
+			</div>
 			<div class="btn-row">
 				<button
 					class="btn-shape all"
@@ -111,14 +129,24 @@
 		</div>
 	</div>
 
+	<ExplanationPanel context={explanation.context} body={explanation.body} />
+
 	<div class="legend">
 		<div class="legend-item">
 			<span class="legend-dot root"></span>
 			<span>Root</span>
+			<HelpTip
+				term="Root note"
+				definition="The note the chord is named after and built from. In the CAGED system, locating the root within each shape is key — once you know where the root sits, you can move any shape to any key instantly."
+			/>
 		</div>
 		<div class="legend-item">
 			<span class="legend-dot chord-tone"></span>
 			<span>Chord tone</span>
+			<HelpTip
+				term="Chord tone"
+				definition="The 3rd and 5th of the chord. Together with the root they define the chord's sound. When soloing, targeting these notes — especially the 3rd — is what makes a line sound like it belongs over the chord rather than just being scale notes."
+			/>
 		</div>
 	</div>
 </div>
@@ -136,7 +164,25 @@
 		align-items: center;
 		justify-content: space-between;
 		min-height: 40px;
-		margin-bottom: 32px;
+		margin-bottom: 20px;
+	}
+
+	.page-intro {
+		font-size: 12px;
+		line-height: 1.7;
+		color: var(--text-muted);
+		margin: 0 0 28px;
+		opacity: 0.75;
+	}
+
+	.label-with-help {
+		display: flex;
+		align-items: center;
+		margin-bottom: 14px;
+
+		.group-label {
+			margin-bottom: 0;
+		}
 	}
 
 	.page-title {
@@ -323,6 +369,10 @@
 		font-size: 11px;
 		color: var(--text-muted);
 		letter-spacing: 0.06em;
+
+		:global(.help-tip) {
+			margin-left: -2px;
+		}
 	}
 
 	.legend-dot {
