@@ -227,6 +227,11 @@
 	padding: 0 24px;
 	margin-top: -60px; /* shift text up from vertical center so fretboard shows below */
 
+	@media (max-width: 768px) {
+		margin-top: -20px;
+		padding: 0 20px;
+	}
+
 	.eyebrow {
 		display: block;
 		font-size: 10px;
@@ -478,6 +483,10 @@
 	max-width: 1100px;
 	margin: 0 auto;
 	padding: 80px 32px 32px;
+
+	@media (max-width: 768px) {
+		padding: 48px 16px 16px;
+	}
 }
 
 .feature-row {
@@ -486,6 +495,12 @@
 	align-items: center;
 	gap: 40px;
 	padding: 40px 0;
+
+	@media (max-width: 768px) {
+		grid-template-columns: 40px 1fr auto;
+		gap: 16px;
+		padding: 28px 0;
+	}
 	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 	text-decoration: none;
 	color: inherit;
@@ -561,6 +576,10 @@
 	color: rgba(221, 228, 240, 0.85);
 	margin: 0;
 	transition: color 0.25s ease;
+
+	@media (max-width: 768px) {
+		font-size: 17px;
+	}
 }
 
 .feature-desc {
@@ -592,6 +611,12 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 24px;
+
+	@media (max-width: 768px) {
+		flex-direction: column;
+		align-items: flex-start;
+		padding: 40px 16px 64px;
+	}
 }
 
 .bottom-label {

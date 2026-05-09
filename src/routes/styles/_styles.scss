@@ -28,6 +28,11 @@ $white:        #fff;
 $radius-sm: 6px;
 $radius-md: 12px;
 
+// ── Breakpoints ───────────────────────────────────────────
+$bp-tablet: 1024px;
+$bp-mobile: 768px;
+$bp-small:  480px;
+
 :root {
     --font-body:     #{$font-body};
 
@@ -58,4 +63,11 @@ body {
     background-attachment: fixed;
     background-color: var(--bg-base);
     background-size: 100vw 100vh;
+}
+
+// ── Mobile touch targets ───────────────────────────────────
+@media (max-width: 768px) {
+    button {
+        min-height: 44px;
+    }
 }

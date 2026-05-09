@@ -90,6 +90,15 @@
 		padding: 12px 14px;
 		z-index: 200;
 		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+		@media (max-width: 768px) {
+			position: fixed;
+			bottom: 16px;
+			left: 16px;
+			right: 16px;
+			width: auto;
+			transform: none;
+		}
 	}
 
 	.popover-term {

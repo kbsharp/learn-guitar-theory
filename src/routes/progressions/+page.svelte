@@ -190,10 +190,21 @@
 
 <style lang="scss">
 	.container {
-		margin: auto;
-		width: 1250px;
+		max-width: 1250px;
+		width: 100%;
+		margin: 0 auto;
 		padding-top: 48px;
 		padding-bottom: 80px;
+
+		@media (max-width: 1300px) {
+			padding-left: 32px;
+			padding-right: 32px;
+			box-sizing: border-box;
+		}
+
+		@media (max-width: 768px) {
+			padding: 24px 16px 48px;
+		}
 	}
 
 	.page-header {
