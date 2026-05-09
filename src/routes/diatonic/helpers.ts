@@ -1,4 +1,5 @@
 import { Key, Chord, Scale } from 'tonal';
+import { convertFlatToSharp } from '$lib/music';
 
 export const diatonicKeys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
@@ -12,20 +13,6 @@ export interface DiatonicChord {
 	name: string;
 }
 
-function convertFlatToSharp(note: string): string {
-	switch (note) {
-		case 'Ab': return 'G#';
-		case 'Bb': return 'A#';
-		case 'Bbb': return 'A#';
-		case 'Cb': return 'B';
-		case 'Db': return 'C#';
-		case 'Eb': return 'D#';
-		case 'Ebb': return 'D#';
-		case 'Fb': return 'E';
-		case 'Gb': return 'F#';
-		default: return note;
-	}
-}
 
 export function getDiatonicChords(root: string, mode: DiatonicMode): DiatonicChord[] {
 	try {

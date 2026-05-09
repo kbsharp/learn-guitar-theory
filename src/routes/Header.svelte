@@ -10,9 +10,9 @@
 	}
 
 	const themes: { id: Theme; label: string; accent: string }[] = [
-		{ id: 'void',      label: 'Void',      accent: '#0ccfdf' },
-		{ id: 'parchment', label: 'Parchment', accent: '#0a8ea8' },
-		{ id: 'ember',     label: 'Ember',     accent: '#e8a418' },
+		{ id: 'void',     label: 'Void',     accent: '#0ccfdf' },
+		{ id: 'midnight', label: 'Midnight', accent: '#39d353' },
+		{ id: 'chalk',    label: 'Chalk',    accent: '#0057ff' },
 	];
 
 	$effect(() => {
@@ -43,20 +43,38 @@
 			Progressions
 		</a>
 		<Glossary />
-	</nav>
 
-	<div class="header-right">
-		<div class="theme-switcher" aria-label="Colour theme">
+		<div class="mobile-theme-switcher" role="group" aria-label="Colour theme">
 			{#each themes as t}
 				<button
-					class="swatch"
+					class="theme-option"
 					class:active={$theme === t.id}
-					onclick={() => theme.set(t.id)}
-					title={t.label}
+					onclick={() => { theme.set(t.id); closeMenu(); }}
 					aria-label="Switch to {t.label} theme"
 					aria-pressed={$theme === t.id}
 					style="--swatch-color: {t.accent}"
-				></button>
+				>
+					<span class="dot"></span>
+					{t.label}
+				</button>
+			{/each}
+		</div>
+	</nav>
+
+	<div class="header-right">
+		<div class="theme-switcher" role="group" aria-label="Colour theme">
+			{#each themes as t}
+				<button
+					class="theme-option"
+					class:active={$theme === t.id}
+					onclick={() => theme.set(t.id)}
+					aria-label="Switch to {t.label} theme"
+					aria-pressed={$theme === t.id}
+					style="--swatch-color: {t.accent}"
+				>
+					<span class="dot"></span>
+					{t.label}
+				</button>
 			{/each}
 		</div>
 
@@ -93,7 +111,7 @@
 		padding: 0 32px;
 		height: 56px;
 		background: var(--bg-surface);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+		border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent);
 		position: sticky;
 		top: 0;
 		z-index: 100;
@@ -133,7 +151,7 @@
 			gap: 2px;
 			padding: 12px 12px 20px;
 			background: var(--bg-surface);
-			border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+			border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent);
 			z-index: 99;
 			transition: background-color 0.4s ease;
 
@@ -171,6 +189,18 @@
 		}
 	}
 
+	.mobile-theme-switcher {
+		display: none;
+		gap: 4px;
+		padding: 8px 14px;
+		margin-top: 4px;
+		border-top: 1px solid color-mix(in srgb, var(--text-primary) 8%, transparent);
+
+		@media (max-width: 768px) {
+			display: flex;
+		}
+	}
+
 	// ── Theme switcher ────────────────────────────────────────────
 	.header-right {
 		display: flex;
@@ -181,33 +211,60 @@
 	.theme-switcher {
 		display: flex;
 		align-items: center;
-		gap: 6px;
+		gap: 2px;
+		padding: 3px;
+		background: color-mix(in srgb, var(--text-primary) 5%, transparent);
+		border: 1px solid color-mix(in srgb, var(--text-primary) 9%, transparent);
+		border-radius: 20px;
+		transition: background 0.4s ease, border-color 0.4s ease;
+
+		@media (max-width: 768px) {
+			display: none;
+		}
 	}
 
-	.swatch {
-		width: 10px;
-		height: 10px;
-		min-height: unset; // override global 44px mobile rule
-		border-radius: 50%;
-		border: none;
-		padding: 0;
+	.theme-option {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		padding: 4px 10px;
+		border-radius: 16px;
+		font-size: 10px;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--text-muted);
 		cursor: pointer;
-		background: var(--swatch-color);
-		opacity: 0.45;
-		transition: opacity 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+		border: none;
+		background: transparent;
+		min-height: unset;
+		white-space: nowrap;
+		transition: background 0.18s ease, color 0.18s ease;
 
-		&:hover {
-			opacity: 0.75;
-			transform: scale(1.2);
+		.dot {
+			width: 6px;
+			height: 6px;
+			border-radius: 50%;
+			background: var(--swatch-color);
+			flex-shrink: 0;
+			transition: transform 0.18s ease, opacity 0.18s ease;
+			opacity: 0.5;
+		}
+
+		&:hover:not(.active) {
+			color: var(--text-primary);
+
+			.dot { opacity: 0.8; }
 		}
 
 		&.active {
-			opacity: 1;
-			// Ring: gap + outline using box-shadow
-			box-shadow:
-				0 0 0 2px var(--bg-surface),
-				0 0 0 3.5px var(--swatch-color);
-			transform: scale(1.1);
+			background: color-mix(in srgb, var(--text-primary) 9%, transparent);
+			color: var(--text-primary);
+
+			.dot {
+				opacity: 1;
+				transform: scale(1.2);
+			}
 		}
 	}
 

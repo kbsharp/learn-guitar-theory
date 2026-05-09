@@ -1,4 +1,5 @@
 import { Chord, Scale } from 'tonal';
+import { convertFlatToSharp } from '$lib/music';
 
 export const chordRoots = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
@@ -26,20 +27,6 @@ const chordToScale: Record<ChordType, string> = {
 	dim: 'diminished'
 };
 
-function convertFlatToSharp(note: string): string {
-	switch (note) {
-		case 'Ab': return 'G#';
-		case 'Bb': return 'A#';
-		case 'Bbb': return 'A#';
-		case 'Cb': return 'B';
-		case 'Db': return 'C#';
-		case 'Eb': return 'D#';
-		case 'Ebb': return 'D#';
-		case 'Fb': return 'E';
-		case 'Gb': return 'F#';
-		default: return note;
-	}
-}
 
 export function getChordScaleClass(note: string, root: string, chordType: ChordType): string {
 	const chordNotes = Chord.get(`${root}${chordType}`).notes.map(convertFlatToSharp);

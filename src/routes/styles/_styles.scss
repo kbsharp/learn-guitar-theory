@@ -48,54 +48,51 @@ $bp-small:  480px;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Theme: Parchment (warm light)
-// Aged sheet-music cream. Fretboard stays dark (rosewood) — the dark inner
-// board against warm parchment card feels intentionally vintage-modern.
-// Deep teal + crimson replace cyan + pink for contrast on a light ground.
+// Theme: Midnight (true dark)
+// Near-black with a faint blue cast. Electric green notes, coral roots.
+// Stage-monitor energy — reading a signal in a dark venue.
 // ─────────────────────────────────────────────────────────────────────────────
-[data-theme="parchment"] {
-    --bg-base:       #f5eed8;
-    --bg-surface:    #ede4c4;
-    --bg-fretboard:  #12100c;
+[data-theme="midnight"] {
+    --bg-base:       #050508;
+    --bg-surface:    #0c0c14;
+    --bg-fretboard:  #030304;
 
-    --accent-note:   #0a8ea8;
-    --accent-tonic:  #c4244e;
+    --accent-note:   #39d353;
+    --accent-tonic:  #ff6b35;
 
-    --color-fret:    #a89870;
-    --color-string:  #7a6248;
-    --color-dot:     #dccf98;
+    --color-fret:    #181824;
+    --color-string:  #2e2e42;
+    --color-dot:     #686890;
 
-    --text-primary:  #1a1208;
-    --text-muted:    #6a5840;
+    --text-primary:  #e8e8f0;
+    --text-muted:    #50506a;
 
-    // Scrollbar: warm tan → teal on hover
-    --scrollbar-thumb:       #a89870;
-    --scrollbar-thumb-hover: #0a8ea8;
+    --scrollbar-thumb:       #1e1e2e;
+    --scrollbar-thumb-hover: #39d353;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Theme: Ember (warm dark)
-// Tube-amp warmth. Deep brown-blacks, amber note highlights, ember-red roots.
-// Like the glow of lacquered mahogany or a studio at 2am.
+// Theme: Chalk (clean light)
+// Neutral zinc surfaces, dark rosewood fretboard. Electric blue notes, crimson
+// roots. Premium daytime mode — legible, high-contrast, no warmth gimmicks.
 // ─────────────────────────────────────────────────────────────────────────────
-[data-theme="ember"] {
-    --bg-base:       #0d0804;
-    --bg-surface:    #191008;
-    --bg-fretboard:  #0a0603;
+[data-theme="chalk"] {
+    --bg-base:       #f4f4f5;
+    --bg-surface:    #ffffff;
+    --bg-fretboard:  #1c1510;
 
-    --accent-note:   #e8a418;
-    --accent-tonic:  #e04220;
+    --accent-note:   #0057ff;
+    --accent-tonic:  #e5193c;
 
-    --color-fret:    #2c1c0c;
-    --color-string:  #4a3218;
-    --color-dot:     #c8a838;
+    --color-fret:    #d8c8a0;
+    --color-string:  #907050;
+    --color-dot:     #c8a868;
 
-    --text-primary:  #f0e4c8;
-    --text-muted:    #8a7050;
+    --text-primary:  #141414;
+    --text-muted:    #787878;
 
-    // Scrollbar: dark warm wood → amber on hover
-    --scrollbar-thumb:       #3d2a12;
-    --scrollbar-thumb-hover: #e8a418;
+    --scrollbar-thumb:       #d0d0d4;
+    --scrollbar-thumb-hover: #0057ff;
 }
 
 // ── Base styles ───────────────────────────────────────────

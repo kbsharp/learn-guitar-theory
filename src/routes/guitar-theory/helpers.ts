@@ -1,4 +1,5 @@
 import { Scale, Note } from 'tonal';
+import { convertFlatToSharp, convertFlatsToSharps } from '$lib/music';
 
 const LOW_E = ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#'];
 
@@ -113,30 +114,7 @@ export function getScaleDegree(note: string, tonic: string): string {
 	return labels[semitones];
 }
 
-export function convertFlatToSharp(note: string): string {
-	switch (note) {
-		case 'Ab':
-			return 'G#';
-		case 'Bb':
-		case 'Bbb':
-			return 'A#';
-		case 'Cb':
-			return 'B';
-		case 'Db':
-			return 'C#';
-		case 'Eb':
-		case 'Ebb':
-			return 'D#';
-		case 'Gb':
-			return 'F#';
-		default:
-			return note;
-	}
-}
-
-function convertFlatsToSharps(notes: string[]) {
-	return notes.map((note) => convertFlatToSharp(note));
-}
+export { convertFlatToSharp } from '$lib/music';
 
 function incluesNoteInScale(note: string, notes: string[]) {
 	return convertFlatsToSharps(notes).includes(note);

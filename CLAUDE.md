@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Non-negotiable code quality rules
+
+- **Never leave a file with an error in it.** After every edit run `npm run check` and fix any type errors before moving on. Do not leave broken files and continue to other tasks.
+- **Never write code that could break tests without first confirming tests still pass.** After any change to a `helpers.ts`, shared utility, config file, or component that existing tests cover, run `npm run test:unit -- --run` (unit) and/or `npm run check` before reporting the work as done. If a test breaks, fix it in the same step — do not leave a red suite.
+
 ## Commands
 
 ```bash
@@ -63,12 +68,14 @@ Store groups by tool:
 
 ### Music theory logic
 
+Shared utility: `src/lib/music.ts` — canonical `convertFlatToSharp()` and `convertFlatsToSharps()`. All helpers import from here; do not redefine these functions locally.
+
 Each route has a co-located `helpers.ts`:
-- `guitar-theory/helpers.ts` — `getClassName()`, `getScaleDegree()`, `computeScalePositions()`, `convertFlatToSharp()`
+- `guitar-theory/helpers.ts` — `getClassName()`, `getScaleDegree()`, `computeScalePositions()`, `currentTonic()`
 - `chord-scale/helpers.ts` — `getChordScaleClass()`, `chordToScale` map
-- `diatonic/helpers.ts` — `getDiatonicChords()`, `getDiatonicNoteClass()`
-- `caged/helpers.ts` — `computeCAGEDShapes()`, `getCAGEDNoteClass()`
-- `progressions/helpers.ts` — `getSlotChord()`, `getProgressionNoteClass()`, preset definitions
+- `diatonic/helpers.ts` — `getDiatonicChords()`, `getDiatonicNoteClass()`, `getScaleNotes()`
+- `caged/helpers.ts` — `computeCAGEDShapes()`, `getCAGEDNoteClass()`, `getChordTones()`
+- `progressions/helpers.ts` — `getSlotChord()`, `getProgressionNoteClass()`, `getFunctionLabel()`, `formatRoman()`, preset definitions
 
 All note comparisons use sharps internally; `convertFlatToSharp()` normalises flat notation before comparison. Tonal's `Scale.get()` and `Chord.get()` are the source of truth for scale membership and chord tones.
 
@@ -213,10 +220,51 @@ Controls (key selector, chord buttons, etc.) must stack vertically on mobile and
 
 ---
 
+## Testing
+
+### Unit tests (Vitest) — `npm run test:unit`
+
+Each `helpers.ts` has a co-located `helpers.test.ts`. The shared music utility also has `src/lib/music.test.ts`. Tests run in ~1s and are the first thing to check after any logic change.
+
+Tests cover: `convertFlatToSharp`, `getClassName`, `getScaleDegree`, `computeScalePositions`, `getDiatonicChords`, `getScaleNotes`, `getDiatonicNoteClass`, `computeCAGEDShapes`, `getChordTones`, `getCAGEDNoteClass`, `getSlotChord`, `getFunctionLabel`, `formatRoman`, `getBorrowedChords`.
+
+**Adding new helper functions**: write a co-located test before the function reaches the page. Pure functions (no DOM, no Svelte stores) only — keep tests free of mocking.
+
+### E2E tests (Playwright) — `npm run test`
+
+Playwright builds the app and runs against the preview server on port 4173. Four test files:
+
+| File | Covers |
+|------|--------|
+| `tests/test.ts` | Smoke — home page renders |
+| `tests/navigation.spec.ts` | All routes load, correct titles, active nav links, fretboard presence |
+| `tests/theme.spec.ts` | Theme switcher updates `data-theme`, persists in `localStorage`, aria-pressed state |
+| `tests/a11y.spec.ts` | WCAG 2.1 AA audit across all 6 routes × 3 themes (axe-core) |
+| `tests/interactions.spec.ts` | Key tool interactions: key change, chord selection, preset activation |
+
+**Themes are tested individually** in `a11y.spec.ts` — each theme is applied via `localStorage` before page load so the Svelte store picks it up correctly.
+
+**When adding a new route**: add it to the `routes` array in both `navigation.spec.ts` and `a11y.spec.ts`.
+
+---
+
+## CI / CD
+
+Hosted on **Vercel free tier** — Vercel's GitHub integration handles deployment automatically on push to `master`.
+
+**GitHub Actions** (`.github/workflows/ci.yml`) runs two jobs on every push and PR to `master`:
+
+1. **check** (fast, ~1 min): `svelte-check` → `lint` → `test:unit`. Runs on every push/PR. Fails fast before wasting build minutes.
+2. **e2e** (slower, ~4 min): builds the app then runs Playwright (chromium only). Uploads traces as artifacts on failure.
+
+Playwright traces are retained for 7 days — download from the Actions run to debug failing screenshots.
+
+**Never merge a PR with a failing `check` job.** The `e2e` job is the safety net; the `check` job is the gate.
+
+---
+
 ## Known Issues / Notes
 
-- `convertFlatsToSharps()` in `guitar-theory/helpers.ts` has a stray `console.log` that prints scale notes on every render — remove it
 - The `$black` and `$key-color` SCSS variables were removed in the latest refactor; don't re-add them
 - `src/routes/styles/main.scss` uses Sass `@import` (deprecated in Dart Sass 3); the warning is cosmetic
-- `tests/test.ts` has a stale test looking for an `/about` page that doesn't exist — either delete or repurpose
 - `@neoconfetti/svelte` is installed but unused — remove when cleaning up deps

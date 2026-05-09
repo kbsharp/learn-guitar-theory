@@ -1,11 +1,22 @@
-import type { PlaywrightTestConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
-const config: PlaywrightTestConfig = {
+export default defineConfig({
+	testDir: 'tests',
+	fullyParallel: true,
+	retries: process.env.CI ? 2 : 0,
+	reporter: process.env.CI ? 'github' : 'list',
+	timeout: 30_000,
+	use: {
+		baseURL: 'http://localhost:4173',
+		trace: 'on-first-retry',
+	},
+	projects: [
+		{ name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+	],
 	webServer: {
 		command: 'npm run build && npm run preview',
-		port: 4173
+		url: 'http://localhost:4173',
+		reuseExistingServer: !process.env.CI,
+		timeout: 120_000,
 	},
-	testDir: 'tests'
-};
-
-export default config;
+});

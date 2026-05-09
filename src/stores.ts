@@ -6,9 +6,9 @@ import type { ChordType } from './routes/chord-scale/helpers';
 import type { DiatonicMode } from './routes/diatonic/helpers';
 
 // ── Theme ─────────────────────────────────────────────────
-export type Theme = 'void' | 'parchment' | 'ember';
+export type Theme = 'void' | 'midnight' | 'chalk';
 
-const THEMES: Theme[] = ['void', 'parchment', 'ember'];
+const THEMES: Theme[] = ['void', 'midnight', 'chalk'];
 
 function isTheme(value: string | null): value is Theme {
 	return THEMES.includes(value as Theme);
