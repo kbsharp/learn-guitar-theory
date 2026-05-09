@@ -46,19 +46,6 @@
 			linear-gradient(to left,  rgba(0, 0, 0, 0.35), transparent) right no-repeat scroll;
 		background-size: 48px 100%, 48px 100%, 96px 100%, 96px 100%;
 
-		&::-webkit-scrollbar {
-			height: 4px;
-		}
-		&::-webkit-scrollbar-track {
-			background: transparent;
-		}
-		&::-webkit-scrollbar-thumb {
-			background: var(--color-fret);
-			border-radius: 2px;
-		}
-
-		scrollbar-width: thin;
-		scrollbar-color: var(--color-fret) transparent;
 	}
 
 	.fretboard {
