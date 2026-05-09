@@ -216,7 +216,7 @@
 	justify-content: center;
 	overflow: hidden;
 	background:
-		radial-gradient(ellipse 80% 60% at 50% 20%, rgba(12, 207, 223, 0.035) 0%, transparent 70%),
+		radial-gradient(ellipse 80% 60% at 50% 20%, color-mix(in srgb, var(--accent-note) 4%, transparent) 0%, transparent 70%),
 		var(--bg-base);
 }
 
@@ -318,7 +318,7 @@
 
 		&:hover {
 			background: #0fe8fb;
-			box-shadow: 0 0 32px rgba(12, 207, 223, 0.4);
+			box-shadow: 0 0 32px color-mix(in srgb, var(--accent-note) 40%, transparent);
 			svg { transform: translateX(3px); }
 		}
 	}
@@ -409,12 +409,12 @@
 	border-radius: 50%;
 	transform: translate(-50%, -50%);
 	background: var(--accent-note);
-	--note-glow: rgba(12, 207, 223, 0.8);
+	--note-glow: color-mix(in srgb, var(--accent-note) 80%, transparent);
 	animation: note-wave 9s ease-in-out infinite;
 
 	&.root {
 		background: var(--accent-tonic);
-		--note-glow: rgba(240, 56, 96, 0.8);
+		--note-glow: color-mix(in srgb, var(--accent-tonic) 80%, transparent);
 	}
 }
 
@@ -527,9 +527,9 @@
 		pointer-events: none;
 	}
 
-	&.accent-cyan::after  { background: rgba(12, 207, 223, 0.03); }
-	&.accent-rose::after  { background: rgba(240, 56, 96, 0.03); }
-	&.accent-mixed::after { background: linear-gradient(135deg, rgba(12, 207, 223, 0.03), rgba(240, 56, 96, 0.03)); }
+	&.accent-cyan::after  { background: color-mix(in srgb, var(--accent-note) 3%, transparent); }
+	&.accent-rose::after  { background: color-mix(in srgb, var(--accent-tonic) 3%, transparent); }
+	&.accent-mixed::after { background: linear-gradient(135deg, color-mix(in srgb, var(--accent-note) 3%, transparent), color-mix(in srgb, var(--accent-tonic) 3%, transparent)); }
 
 	&:hover {
 		&::after { opacity: 1; }
@@ -637,7 +637,7 @@
 	text-transform: uppercase;
 	color: var(--accent-note);
 	text-decoration: none;
-	border-bottom: 1px solid rgba(12, 207, 223, 0.3);
+	border-bottom: 1px solid color-mix(in srgb, var(--accent-note) 30%, transparent);
 	padding-bottom: 2px;
 	transition: border-color 0.2s ease, gap 0.2s ease;
 

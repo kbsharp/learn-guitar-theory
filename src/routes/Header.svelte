@@ -1,12 +1,19 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import Glossary from '$lib/components/Glossary.svelte';
+	import { theme, type Theme } from '../stores';
 
 	let menuOpen = $state(false);
 
 	function closeMenu() {
 		menuOpen = false;
 	}
+
+	const themes: { id: Theme; label: string; accent: string }[] = [
+		{ id: 'void',      label: 'Void',      accent: '#0ccfdf' },
+		{ id: 'parchment', label: 'Parchment', accent: '#0a8ea8' },
+		{ id: 'ember',     label: 'Ember',     accent: '#e8a418' },
+	];
 
 	$effect(() => {
 		document.body.style.overflow = menuOpen ? 'hidden' : '';
@@ -38,17 +45,33 @@
 		<Glossary />
 	</nav>
 
-	<button
-		class="hamburger"
-		class:open={menuOpen}
-		onclick={() => (menuOpen = !menuOpen)}
-		aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
-		aria-expanded={menuOpen}
-	>
-		<span></span>
-		<span></span>
-		<span></span>
-	</button>
+	<div class="header-right">
+		<div class="theme-switcher" aria-label="Colour theme">
+			{#each themes as t}
+				<button
+					class="swatch"
+					class:active={$theme === t.id}
+					onclick={() => theme.set(t.id)}
+					title={t.label}
+					aria-label="Switch to {t.label} theme"
+					aria-pressed={$theme === t.id}
+					style="--swatch-color: {t.accent}"
+				></button>
+			{/each}
+		</div>
+
+		<button
+			class="hamburger"
+			class:open={menuOpen}
+			onclick={() => (menuOpen = !menuOpen)}
+			aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
+			aria-expanded={menuOpen}
+		>
+			<span></span>
+			<span></span>
+			<span></span>
+		</button>
+	</div>
 </header>
 
 {#if menuOpen}
@@ -74,6 +97,7 @@
 		position: sticky;
 		top: 0;
 		z-index: 100;
+		transition: background-color 0.4s ease;
 
 		@media (max-width: 768px) {
 			padding: 0 16px;
@@ -87,7 +111,7 @@
 		text-transform: uppercase;
 		color: var(--accent-note);
 		text-decoration: none;
-		transition: opacity 0.2s ease;
+		transition: opacity 0.2s ease, color 0.4s ease;
 		flex-shrink: 0;
 
 		&:hover {
@@ -111,6 +135,7 @@
 			background: var(--bg-surface);
 			border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 			z-index: 99;
+			transition: background-color 0.4s ease;
 
 			&.open {
 				display: flex;
@@ -132,12 +157,12 @@
 
 		&:hover {
 			color: var(--text-primary);
-			background: rgba(255, 255, 255, 0.04);
+			background: color-mix(in srgb, var(--text-primary) 5%, transparent);
 		}
 
 		&.active {
 			color: var(--accent-note);
-			background: rgba(12, 207, 223, 0.08);
+			background: color-mix(in srgb, var(--accent-note) 8%, transparent);
 		}
 
 		@media (max-width: 768px) {
@@ -146,6 +171,47 @@
 		}
 	}
 
+	// ── Theme switcher ────────────────────────────────────────────
+	.header-right {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.theme-switcher {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.swatch {
+		width: 10px;
+		height: 10px;
+		min-height: unset; // override global 44px mobile rule
+		border-radius: 50%;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		background: var(--swatch-color);
+		opacity: 0.45;
+		transition: opacity 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+
+		&:hover {
+			opacity: 0.75;
+			transform: scale(1.2);
+		}
+
+		&.active {
+			opacity: 1;
+			// Ring: gap + outline using box-shadow
+			box-shadow:
+				0 0 0 2px var(--bg-surface),
+				0 0 0 3.5px var(--swatch-color);
+			transform: scale(1.1);
+		}
+	}
+
+	// ── Hamburger ─────────────────────────────────────────────────
 	.hamburger {
 		display: none;
 		flex-direction: column;
@@ -153,6 +219,7 @@
 		gap: 5px;
 		width: 40px;
 		height: 40px;
+		min-height: unset; // override global 44px mobile rule
 		padding: 8px;
 		background: transparent;
 		border: none;
@@ -171,7 +238,7 @@
 		}
 
 		&:hover {
-			background: rgba(255, 255, 255, 0.04);
+			background: color-mix(in srgb, var(--text-primary) 5%, transparent);
 			span { background: var(--text-primary); }
 		}
 

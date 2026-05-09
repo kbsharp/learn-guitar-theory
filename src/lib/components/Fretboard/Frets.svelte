@@ -53,7 +53,7 @@
 				transition: background-color 0.3s ease;
 
 				&.in-position {
-					background-color: rgba(12, 207, 223, 0.04);
+					background-color: color-mix(in srgb, var(--accent-note) 4%, transparent);
 				}
 
 				.dot {

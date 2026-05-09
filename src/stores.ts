@@ -1,8 +1,31 @@
 import { writable, type Writable } from 'svelte/store';
+import { browser } from '$app/environment';
 import type { Key } from './routes/guitar-theory/helpers';
 import { Key as Keys, Quality } from './routes/guitar-theory/helpers';
 import type { ChordType } from './routes/chord-scale/helpers';
 import type { DiatonicMode } from './routes/diatonic/helpers';
+
+// ── Theme ─────────────────────────────────────────────────
+export type Theme = 'void' | 'parchment' | 'ember';
+
+const THEMES: Theme[] = ['void', 'parchment', 'ember'];
+
+function isTheme(value: string | null): value is Theme {
+	return THEMES.includes(value as Theme);
+}
+
+const storedTheme = browser ? localStorage.getItem('theme') : null;
+const initialTheme: Theme = isTheme(storedTheme) ? storedTheme : 'void';
+
+const _theme = writable<Theme>(initialTheme);
+
+export const theme = {
+	subscribe: _theme.subscribe,
+	set(value: Theme) {
+		if (browser) localStorage.setItem('theme', value);
+		_theme.set(value);
+	}
+};
 
 // Fretboard Explorer
 export const key: Writable<Key> = writable(Keys.C);

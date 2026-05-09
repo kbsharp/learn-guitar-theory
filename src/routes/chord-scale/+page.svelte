@@ -208,13 +208,13 @@
 		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 
 		&:hover:not(.active) {
-			background: rgba(12, 207, 223, 0.1);
+			background: color-mix(in srgb, var(--accent-note) 10%, transparent);
 		}
 
 		&.active {
 			background: var(--accent-note);
 			color: var(--bg-base);
-			box-shadow: 0 0 12px 2px rgba(12, 207, 223, 0.3);
+			box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent-note) 30%, transparent);
 		}
 	}
 
@@ -232,13 +232,13 @@
 		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 
 		&:hover:not(.active) {
-			background: rgba(240, 56, 96, 0.1);
+			background: color-mix(in srgb, var(--accent-tonic) 10%, transparent);
 		}
 
 		&.active {
 			background: var(--accent-tonic);
 			color: var(--bg-base);
-			box-shadow: 0 0 12px 2px rgba(240, 56, 96, 0.3);
+			box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent-tonic) 30%, transparent);
 		}
 	}
 
@@ -269,12 +269,12 @@
 
 		&.chord-tone {
 			background: var(--accent-tonic);
-			box-shadow: 0 0 6px rgba(240, 56, 96, 0.5);
+			box-shadow: 0 0 6px color-mix(in srgb, var(--accent-tonic) 50%, transparent);
 		}
 
 		&.scale-tone {
 			background: var(--accent-note);
-			box-shadow: 0 0 6px rgba(12, 207, 223, 0.4);
+			box-shadow: 0 0 6px color-mix(in srgb, var(--accent-note) 40%, transparent);
 		}
 	}
 </style>

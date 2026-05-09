@@ -36,13 +36,13 @@
 			transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 
 			&:hover:not(.active) {
-				background: rgba(12, 207, 223, 0.1);
+				background: color-mix(in srgb, var(--accent-note) 10%, transparent);
 			}
 
 			&.active {
 				background: var(--accent-note);
 				color: var(--bg-base);
-				box-shadow: 0 0 12px 2px rgba(12, 207, 223, 0.3);
+				box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent-note) 30%, transparent);
 			}
 		}
 	}

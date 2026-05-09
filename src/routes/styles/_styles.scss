@@ -5,26 +5,7 @@
 // ── Typography ────────────────────────────────────────────
 $font-body: Montserrat, sans-serif;
 
-// ── Backgrounds (3 depth levels) ─────────────────────────
-$bg-base:      #090c12;
-$bg-surface:   #111520;
-$bg-fretboard: #0c0906;
-
-// ── Accents ───────────────────────────────────────────────
-$accent-note:  #0ccfdf;
-$accent-tonic: #f03860;
-
-// ── Structural ────────────────────────────────────────────
-$color-fret:   #1a2030;
-$color-string: #3d4a60;
-$color-dot:    #c4b98a;
-
-// ── Text ──────────────────────────────────────────────────
-$text-primary: #dde4f0;
-$text-muted:   #748da4; /* lifted from #3d4d68 — passes 4.5:1 on both bg-base and bg-surface */
-$white:        #fff;
-
-// ── Radius tokens ─────────────────────────────────────────
+// ── Radius tokens (constant across themes) ────────────────
 $radius-sm: 6px;
 $radius-md: 12px;
 
@@ -33,28 +14,91 @@ $bp-tablet: 1024px;
 $bp-mobile: 768px;
 $bp-small:  480px;
 
+// ── Constant tokens ───────────────────────────────────────
 :root {
-    --font-body:     #{$font-body};
-
-    --bg-base:       #{$bg-base};
-    --bg-surface:    #{$bg-surface};
-    --bg-fretboard:  #{$bg-fretboard};
-
-    --accent-note:   #{$accent-note};
-    --accent-tonic:  #{$accent-tonic};
-
-    --color-fret:    #{$color-fret};
-    --color-string:  #{$color-string};
-    --color-dot:     #{$color-dot};
-
-    --text-primary:  #{$text-primary};
-    --text-muted:    #{$text-muted};
-    --white:         #{$white};
-
-    --radius-sm:     #{$radius-sm};
-    --radius-md:     #{$radius-md};
+    --font-body:  #{$font-body};
+    --radius-sm:  #{$radius-sm};
+    --radius-md:  #{$radius-md};
+    --white:      #fff;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Theme: Void (default — dark navy)
+// The original palette. Deep space blue-black, cyan notes, pink root.
+// ─────────────────────────────────────────────────────────────────────────────
+:root,
+[data-theme="void"] {
+    --bg-base:       #090c12;
+    --bg-surface:    #111520;
+    --bg-fretboard:  #0c0906;
+
+    --accent-note:   #0ccfdf;
+    --accent-tonic:  #f03860;
+
+    --color-fret:    #1a2030;
+    --color-string:  #3d4a60;
+    --color-dot:     #c4b98a;
+
+    --text-primary:  #dde4f0;
+    --text-muted:    #748da4;
+
+    // Scrollbar: near-invisible steel → accent on hover (like a string lighting up)
+    --scrollbar-thumb:       #2a3d54;
+    --scrollbar-thumb-hover: #0ccfdf;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Theme: Parchment (warm light)
+// Aged sheet-music cream. Fretboard stays dark (rosewood) — the dark inner
+// board against warm parchment card feels intentionally vintage-modern.
+// Deep teal + crimson replace cyan + pink for contrast on a light ground.
+// ─────────────────────────────────────────────────────────────────────────────
+[data-theme="parchment"] {
+    --bg-base:       #f5eed8;
+    --bg-surface:    #ede4c4;
+    --bg-fretboard:  #12100c;
+
+    --accent-note:   #0a8ea8;
+    --accent-tonic:  #c4244e;
+
+    --color-fret:    #a89870;
+    --color-string:  #7a6248;
+    --color-dot:     #dccf98;
+
+    --text-primary:  #1a1208;
+    --text-muted:    #6a5840;
+
+    // Scrollbar: warm tan → teal on hover
+    --scrollbar-thumb:       #a89870;
+    --scrollbar-thumb-hover: #0a8ea8;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Theme: Ember (warm dark)
+// Tube-amp warmth. Deep brown-blacks, amber note highlights, ember-red roots.
+// Like the glow of lacquered mahogany or a studio at 2am.
+// ─────────────────────────────────────────────────────────────────────────────
+[data-theme="ember"] {
+    --bg-base:       #0d0804;
+    --bg-surface:    #191008;
+    --bg-fretboard:  #0a0603;
+
+    --accent-note:   #e8a418;
+    --accent-tonic:  #e04220;
+
+    --color-fret:    #2c1c0c;
+    --color-string:  #4a3218;
+    --color-dot:     #c8a838;
+
+    --text-primary:  #f0e4c8;
+    --text-muted:    #8a7050;
+
+    // Scrollbar: dark warm wood → amber on hover
+    --scrollbar-thumb:       #3d2a12;
+    --scrollbar-thumb-hover: #e8a418;
+}
+
+// ── Base styles ───────────────────────────────────────────
 body {
     color: var(--text-primary);
     font-family: 'Montserrat', sans-serif;
@@ -63,13 +107,12 @@ body {
     background-attachment: fixed;
     background-color: var(--bg-base);
     background-size: 100vw 100vh;
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-// ── Custom scrollbar — fret dot aesthetic ─────────────────
-// Thumb colour matches the inlay dots on the fretboard (warm brass).
-// Track is transparent so the page background shows through.
-// Hover brightens the thumb and deepens the glow, mirroring how
-// fret dots get a stronger box-shadow when active in the fretboard.
+// ── Custom scrollbar — fret inlay aesthetic ───────────────
+// Thumb rests at a near-invisible shade; brightens to the theme's
+// accent colour on hover, the same way a note lights up when played.
 
 *::-webkit-scrollbar {
     width: 6px;
@@ -81,17 +124,16 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-    background: $color-dot;
+    background: var(--scrollbar-thumb);
     border-radius: 3px;
-    box-shadow: 0 0 6px 1px rgba(196, 185, 138, 0.2);
 
     &:hover {
-        background: mix(white, $color-dot, 15%);
-        box-shadow: 0 0 10px 2px rgba(196, 185, 138, 0.4);
+        background: var(--scrollbar-thumb-hover);
     }
 
     &:active {
-        background: mix(white, $color-dot, 28%);
+        background: var(--scrollbar-thumb-hover);
+        filter: brightness(1.1);
     }
 }
 
@@ -99,10 +141,10 @@ body {
     background: transparent;
 }
 
-// Firefox — single shorthand; no hover state supported
+// Firefox
 * {
     scrollbar-width: thin;
-    scrollbar-color: #{$color-dot} transparent;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
 // ── Mobile touch targets ───────────────────────────────────

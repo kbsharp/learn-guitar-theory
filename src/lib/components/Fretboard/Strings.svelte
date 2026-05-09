@@ -96,13 +96,13 @@
 					&.in-scale {
 						background-color: var(--accent-note);
 						color: var(--bg-base);
-						box-shadow: 0 0 10px 2px rgba(12, 207, 223, 0.4);
+						box-shadow: 0 0 10px 2px color-mix(in srgb, var(--accent-note) 40%, transparent);
 					}
 
 					&.tonic {
 						background-color: var(--accent-tonic);
 						color: var(--white);
-						box-shadow: 0 0 12px 3px rgba(240, 56, 96, 0.5);
+						box-shadow: 0 0 12px 3px color-mix(in srgb, var(--accent-tonic) 50%, transparent);
 					}
 				}
 			}

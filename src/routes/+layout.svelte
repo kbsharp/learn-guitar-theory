@@ -1,9 +1,15 @@
 <script lang="ts">
+	import '@fontsource/fira-mono';
 	import type { Snippet } from 'svelte';
 	import Header from './Header.svelte';
 	import './styles/main.scss';
+	import { theme } from '../stores';
 
 	let { children }: { children: Snippet } = $props();
+
+	$effect(() => {
+		document.documentElement.setAttribute('data-theme', $theme);
+	});
 </script>
 
 <div class="app">
