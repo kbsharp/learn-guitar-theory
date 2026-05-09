@@ -28,6 +28,7 @@ Every feature must pass this test: *does this help a guitarist understand someth
 2. **Mobile** — Responsive fretboard. Guitarists look this up while holding a guitar. Fixed 1200px kills most real-world use.
 3. **Audio** — Hear the scale/chord. The bridge between abstract shapes and actual sound.
 4. **Practice mode** — Active exercises (interval recall, chord identification). Passive reference → active skill-building.
+5. **Circle of Fifths** — Dedicated page with an interactive, visually rich Circle of Fifths. Should explain: why keys are arranged by 5th intervals, which keys are "close" (share the most notes), relative major/minor pairs, how moving clockwise adds sharps and counterclockwise adds flats, and how to use it for modulation and key changes. The `CircleOfFifths.svelte` component (currently unused after the progressions page refactor) is a starting point but needs a full redesign with explanations.
 
 ## Architecture
 
