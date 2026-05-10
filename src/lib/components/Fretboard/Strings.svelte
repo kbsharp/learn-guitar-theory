@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { strings } from '$lib/strings';
+	import { strings, stringPitches } from '$lib/strings';
+	import { playNote } from '$lib/audio';
 
 	interface Props {
 		getNoteClass?: (note: string) => string;
@@ -18,16 +19,34 @@
 		if (fretIndex >= positionRange.start && fretIndex <= positionRange.end) return noteClass;
 		return noteClass + ' dim-note';
 	}
+
+	function handleNoteClick(stringIdx: number, fretIdx: number, noteClass: string) {
+		// Hidden notes shouldn't fire audio — they're not visible to the user.
+		if (noteClass === 'hide-note') return;
+		const pitch = stringPitches[stringIdx][fretIdx];
+		if (pitch) void playNote(pitch);
+	}
 </script>
 
 <div class="string-container">
 	{#each strings as string, i}
 		<div class={`string string${i}`}>
 			{#each string as note, j}
-				<div class={`note note${j}`}>
-					<p class={displayClass(getNoteClass(note), j)}>
-						{getNoteLabel(note)}
-					</p>
+				{@const noteClass = getNoteClass(note)}
+				{@const finalClass = displayClass(noteClass, j)}
+				<div class="note note{j}">
+					{#if noteClass === 'hide-note'}
+						<p class={finalClass}>{getNoteLabel(note)}</p>
+					{:else}
+						<button
+							type="button"
+							class={`note-btn ${finalClass}`}
+							onclick={() => handleNoteClick(i, j, noteClass)}
+							aria-label={`Play ${note}`}
+						>
+							{getNoteLabel(note)}
+						</button>
+					{/if}
 					<div class="string-graphic"></div>
 				</div>
 			{/each}
@@ -63,9 +82,12 @@
 					z-index: 5;
 				}
 
-				> p {
+				/* Shared base styles for both the hidden <p> and the clickable <button>. */
+				> p,
+				> .note-btn {
 					font-size: 13px;
 					font-weight: 600;
+					font-family: inherit;
 					margin: 0;
 					padding: 0;
 					position: absolute;
@@ -88,7 +110,8 @@
 						opacity 0.5s,
 						visibility 0.5s,
 						background-color 0.5s,
-						box-shadow 0.5s;
+						box-shadow 0.5s,
+						transform 0.12s ease;
 
 					&.hide-note {
 						opacity: 0;
@@ -112,6 +135,31 @@
 						color: var(--white);
 						box-shadow: 0 0 12px 3px
 							color-mix(in srgb, var(--accent-tonic) 50%, transparent);
+					}
+				}
+
+				/* Interactive button-specific overrides */
+				> .note-btn {
+					border: none;
+					cursor: pointer;
+					-webkit-tap-highlight-color: transparent;
+
+					&:hover {
+						transform: scale(1.18);
+					}
+
+					&:active {
+						transform: scale(0.94);
+					}
+
+					&:focus-visible {
+						outline: 2px solid var(--text-primary);
+						outline-offset: 2px;
+					}
+
+					&.dim-note:hover {
+						transform: scale(1.05);
+						opacity: 0.4;
 					}
 				}
 			}

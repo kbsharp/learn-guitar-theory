@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Scale } from 'tonal';
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
 	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
 	import HelpTip from '$lib/components/HelpTip.svelte';
@@ -14,9 +15,11 @@
 		type Quality as QualityType
 	} from './helpers';
 	import { scaleExplanations } from './explanations';
+	import { playSequence } from '$lib/audio';
 
 	let showDegrees = $state(false);
 	let selectedPosition = $state<number | null>(null);
+	let isPlaying = $state(false);
 
 	$effect(() => {
 		void $key;
@@ -39,6 +42,22 @@
 		showDegrees ? getScaleDegree(note, tonic) : convertFlatToSharp(note)
 	);
 	let explanation = $derived(scaleExplanations[$quality as QualityType]);
+
+	async function handlePlayScale() {
+		// Start the scale at octave 3 so most scales sit comfortably in the
+		// guitar's range, then append the upper tonic so the scale resolves.
+		const scale = Scale.get(`${tonic}3 ${$quality}`);
+		if (!scale.notes.length) return;
+		const ascending = [...scale.notes, `${tonic}4`];
+		isPlaying = true;
+		try {
+			await playSequence(ascending, 0.28);
+			// Re-enable button after the sequence finishes.
+			setTimeout(() => (isPlaying = false), ascending.length * 280 + 400);
+		} catch {
+			isPlaying = false;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -49,6 +68,18 @@
 	<div class="page-header">
 		<p class="page-title">Fretboard Explorer</p>
 		<div class="header-right">
+			<button
+				class="play-btn"
+				class:playing={isPlaying}
+				disabled={isPlaying}
+				onclick={handlePlayScale}
+				aria-label="Play scale"
+			>
+				<svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+					<path d="M2 1.5v7l6-3.5z" />
+				</svg>
+				<span>{isPlaying ? 'Playing…' : 'Play scale'}</span>
+			</button>
 			<button
 				class="toggle-btn"
 				class:active={showDegrees}
@@ -159,6 +190,43 @@
 	.header-right {
 		display: flex;
 		align-items: center;
+		gap: 8px;
+	}
+
+	.play-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+		font-family: inherit;
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		background: var(--accent-tonic);
+		border: 1px solid var(--accent-tonic);
+		color: var(--bg-base);
+		border-radius: var(--radius-sm);
+		padding: 6px 14px;
+		cursor: pointer;
+		transition:
+			background-color 0.2s ease,
+			border-color 0.2s ease,
+			box-shadow 0.2s ease,
+			opacity 0.2s ease;
+
+		svg {
+			flex-shrink: 0;
+		}
+
+		&:hover:not(:disabled) {
+			box-shadow: 0 0 12px color-mix(in srgb, var(--accent-tonic) 50%, transparent);
+		}
+
+		&:disabled,
+		&.playing {
+			cursor: default;
+			opacity: 0.75;
+		}
 	}
 
 	.page-intro {
