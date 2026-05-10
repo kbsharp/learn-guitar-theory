@@ -252,10 +252,10 @@
 		}
 
 		&.active {
-			background: color-mix(in srgb, var(--accent-note) 12%, transparent);
+			background: var(--accent-note);
 			border-color: var(--accent-note);
-			color: var(--accent-note);
-			box-shadow: 0 0 8px 1px color-mix(in srgb, var(--accent-note) 20%, transparent);
+			color: var(--bg-base);
+			box-shadow: 0 0 8px 1px color-mix(in srgb, var(--accent-note) 40%, transparent);
 		}
 	}
 </style>

@@ -487,7 +487,7 @@
 		&.active {
 			background: color-mix(in srgb, var(--accent-note) 12%, transparent);
 			border-color: var(--accent-note);
-			color: var(--accent-note);
+			color: var(--text-primary);
 		}
 	}
 
