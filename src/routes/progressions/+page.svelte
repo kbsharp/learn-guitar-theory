@@ -278,14 +278,11 @@
 	</div>
 
 	<!-- Explanation + Practice tip -->
-	<ExplanationPanel context={explanation().context} body={explanation().body} />
-
-	{#if explanation().practice}
-		<div class="practice-tip">
-			<span class="practice-label">What to practice</span>
-			<p class="practice-body">{explanation().practice}</p>
-		</div>
-	{/if}
+	<ExplanationPanel
+		context={explanation().context}
+		body={explanation().body}
+		practice={explanation().practice}
+	/>
 
 	<div class="legend">
 		<div class="legend-item">
@@ -768,35 +765,6 @@
 		font-weight: 600;
 		color: var(--text-primary);
 		letter-spacing: 0.02em;
-	}
-
-	// ─── Practice tip ─────────────────────────────────────────────────────────────
-
-	.practice-tip {
-		max-width: 640px;
-		margin: 16px auto 0;
-		padding: 14px 18px;
-		background: color-mix(in srgb, var(--accent-tonic) 4%, transparent);
-		border: 1px solid color-mix(in srgb, var(--accent-tonic) 12%, transparent);
-		border-radius: var(--radius-sm);
-	}
-
-	.practice-label {
-		display: block;
-		font-size: 9px;
-		font-weight: 700;
-		letter-spacing: 0.15em;
-		text-transform: uppercase;
-		color: var(--accent-tonic);
-		margin-bottom: 8px;
-	}
-
-	.practice-body {
-		margin: 0;
-		font-size: 12px;
-		line-height: 1.7;
-		color: var(--text-primary);
-		opacity: 0.85;
 	}
 
 	// ─── Legend ───────────────────────────────────────────────────────────────────

@@ -117,7 +117,12 @@
 		</div>
 	</div>
 
-	<ExplanationPanel context={explanation.context} body={explanation.body} next={explanation.next} />
+	<ExplanationPanel
+		context={explanation.context}
+		body={explanation.body}
+		next={explanation.next}
+		practice={explanation.practice}
+	/>
 
 	<div class="legend">
 		<div class="legend-item">

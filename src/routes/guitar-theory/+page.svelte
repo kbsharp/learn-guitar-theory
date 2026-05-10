@@ -115,6 +115,7 @@
 			context={explanation.context}
 			body={explanation.body}
 			next={explanation.next}
+			practice={explanation.practice}
 		/>
 	{/if}
 </div>

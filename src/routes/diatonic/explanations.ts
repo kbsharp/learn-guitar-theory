@@ -7,6 +7,7 @@ export interface DiatonicExplanation {
 	context: string;
 	body: string;
 	next?: NextLink;
+	practice?: string;
 }
 
 // -1 = no chord selected (concept intro)
@@ -20,7 +21,9 @@ export const diatonicExplanations: Record<number, DiatonicExplanation> = {
 	[0]: {
 		context: 'I / i — Tonic, home base',
 		body: "The tonic chord is where the key lives. Progressions feel resolved when they land here — it's the musical equivalent of a full stop. Starting and ending on the I chord creates stability; leaving it creates momentum. In major keys it's a major chord; in minor keys it's minor (i), but the function is identical.",
-		next: { href: '/progressions', label: 'Hear it as the anchor in a preset' }
+		next: { href: '/progressions', label: 'Hear it as the anchor in a preset' },
+		practice:
+			'Strum I → V → I in C major (C → G → C). Notice how G wants to come home and how landing on C feels like arrival. That single motion — leaving and returning — is the heartbeat of Western music.'
 	},
 	[1]: {
 		context: 'ii / ii° — Supertonic, moves toward V',
@@ -34,17 +37,23 @@ export const diatonicExplanations: Record<number, DiatonicExplanation> = {
 	[3]: {
 		context: 'IV / iv — Subdominant, momentum away from home',
 		body: "The IV chord creates a sense of openness and forward motion. The I–IV–V–I cycle is the foundation of blues, folk, and rock — the IV provides contrast and energy after the stability of I. In minor keys, iv creates a particularly emotional gravity. The move from IV back to I (the 'plagal cadence') is sometimes called the 'Amen' ending.",
-		next: { href: '/progressions', label: 'Hear it in classic progressions' }
+		next: { href: '/progressions', label: 'Hear it in classic progressions' },
+		practice:
+			'Strum I → IV → I in C major (C → F → C). That is the basic strumming song. The F opens things up, the C closes them down — that lift-and-land is one of the most-used moves in popular music.'
 	},
 	[4]: {
 		context: 'V / v — Dominant, maximum tension toward I',
 		body: 'The V chord has the strongest pull back to I in Western music. In major keys, the V7 (dominant 7th) makes this pull even stronger — the tritone interval within it creates harmonic tension that wants to resolve. The V–I movement is at the heart of almost every resolved cadence in Western music. In natural minor, the v is minor and has less pull; many minor key songs raise the 7th to create a V7.',
-		next: { href: '/chord-scale', label: 'See which scale fits the V7' }
+		next: { href: '/chord-scale', label: 'See which scale fits the V7' },
+		practice:
+			'Play G7 → C. Hear how G7 craves to resolve. Now play G7 → Am instead — that is the deceptive cadence. G7 expected C and got Am — the surprise is the whole point.'
 	},
 	[5]: {
 		context: 'vi / VI — Submediant, the relative connection',
 		body: 'In major keys, vi is the relative minor — it shares almost all its notes with I, making it sound closely related but with more depth. This is why the I–V–vi–IV progression (familiar from countless pop songs) feels so satisfying: vi gives you a minor turn without leaving the key. In minor keys, VI is a major chord that provides a sudden sense of openness or resolution.',
-		next: { href: '/progressions', label: 'Hear vi in the Pop Standard preset' }
+		next: { href: '/progressions', label: 'Hear vi in the Pop Standard preset' },
+		practice:
+			'Strum C → Am. Same notes, completely different mood. That is the relative minor turn — the move every pop song uses for a wistful moment without leaving the key. Loop it and feel the colour shift.'
 	},
 	[6]: {
 		context: 'vii° / VII — Leading tone, pulls strongly to I',
