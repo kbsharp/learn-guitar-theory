@@ -106,9 +106,9 @@
 	</div>
 
 	<p class="page-intro">
-		Every mood has a progression behind it — dark, cinematic, uplifting, or tense. Choose a preset
-		to learn why it sounds the way it does and what scale to reach for when you improvise. Then
-		build your own using the diatonic and borrowed chord palettes below.
+		Every mood has a progression behind it — dark, cinematic, uplifting, or tense. Choose a
+		preset to learn why it sounds the way it does and what scale to reach for when you
+		improvise. Then build your own using the diatonic and borrowed chord palettes below.
 	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} />
@@ -119,7 +119,11 @@
 			<span class="group-label">Key</span>
 			<div class="btn-row">
 				{#each diatonicKeys as k}
-					<button class="btn-key" class:active={progKey === k} onclick={() => selectKey(k)}>
+					<button
+						class="btn-key"
+						class:active={progKey === k}
+						onclick={() => selectKey(k)}
+					>
 						{k}
 					</button>
 				{/each}
@@ -334,7 +338,6 @@
 		line-height: 1.7;
 		color: var(--text-muted);
 		margin: 0 0 28px;
-		opacity: 0.75;
 		max-width: 680px;
 	}
 
@@ -666,7 +669,6 @@
 		font-size: 10px;
 		color: var(--text-muted);
 		letter-spacing: 0.06em;
-		opacity: 0.7;
 	}
 
 	// ─── Progression slots ────────────────────────────────────────────────────────

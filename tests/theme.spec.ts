@@ -10,15 +10,21 @@ test('default theme is void', async ({ page }) => {
 for (const theme of themes) {
 	test(`switching to ${theme} theme updates data-theme attribute`, async ({ page }) => {
 		await page.goto('/');
-		await page.getByRole('button', { name: `Switch to ${theme.charAt(0).toUpperCase() + theme.slice(1)} theme` }).click();
+		await page
+			.getByRole('button', {
+				name: `Switch to ${theme.charAt(0).toUpperCase() + theme.slice(1)} theme`
+			})
+			.click();
 		await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
 	});
 
 	test(`${theme} theme persists on page reload`, async ({ page }) => {
 		await page.goto('/');
-		await page.getByRole('button', {
-			name: `Switch to ${theme.charAt(0).toUpperCase() + theme.slice(1)} theme`
-		}).click();
+		await page
+			.getByRole('button', {
+				name: `Switch to ${theme.charAt(0).toUpperCase() + theme.slice(1)} theme`
+			})
+			.click();
 		await page.reload();
 		await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
 	});
@@ -38,8 +44,14 @@ test('active theme button has aria-pressed=true', async ({ page }) => {
 	const activeBtn = page.getByRole('button', { name: 'Switch to Midnight theme' });
 	await expect(activeBtn).toHaveAttribute('aria-pressed', 'true');
 	// Others are false
-	await expect(page.getByRole('button', { name: 'Switch to Void theme' })).toHaveAttribute('aria-pressed', 'false');
-	await expect(page.getByRole('button', { name: 'Switch to Chalk theme' })).toHaveAttribute('aria-pressed', 'false');
+	await expect(page.getByRole('button', { name: 'Switch to Void theme' })).toHaveAttribute(
+		'aria-pressed',
+		'false'
+	);
+	await expect(page.getByRole('button', { name: 'Switch to Chalk theme' })).toHaveAttribute(
+		'aria-pressed',
+		'false'
+	);
 });
 
 test('chalk theme applies light background', async ({ page }) => {

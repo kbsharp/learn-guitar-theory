@@ -8,12 +8,16 @@
 		positionRange?: { start: number; end: number } | null;
 	}
 
-	let { getNoteClass = () => 'hide-note', getNoteLabel = (note: string) => note, positionRange = null }: Props =
-		$props();
+	let {
+		getNoteClass = () => 'hide-note',
+		getNoteLabel = (note: string) => note,
+		positionRange = null
+	}: Props = $props();
 </script>
 
 <div class="fretboard-card">
-	<div class="fretboard-scroll">
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+	<div class="fretboard-scroll" tabindex="0" role="region" aria-label="Fretboard">
 		<div class="fretboard">
 			<Frets {positionRange} />
 
@@ -41,11 +45,14 @@
 		// Scroll shadow: visible only when content overflows (local = scrolls with content)
 		background:
 			linear-gradient(to right, var(--bg-surface) 8px, transparent) left no-repeat local,
-			linear-gradient(to left,  var(--bg-surface) 8px, transparent) right no-repeat local,
+			linear-gradient(to left, var(--bg-surface) 8px, transparent) right no-repeat local,
 			linear-gradient(to right, rgba(0, 0, 0, 0.35), transparent) left no-repeat scroll,
-			linear-gradient(to left,  rgba(0, 0, 0, 0.35), transparent) right no-repeat scroll;
-		background-size: 48px 100%, 48px 100%, 96px 100%, 96px 100%;
-
+			linear-gradient(to left, rgba(0, 0, 0, 0.35), transparent) right no-repeat scroll;
+		background-size:
+			48px 100%,
+			48px 100%,
+			96px 100%,
+			96px 100%;
 	}
 
 	.fretboard {

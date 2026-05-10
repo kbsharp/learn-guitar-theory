@@ -4,16 +4,26 @@
  */
 export function convertFlatToSharp(note: string): string {
 	switch (note) {
-		case 'Ab':  return 'G#';
-		case 'Bb':  return 'A#';
-		case 'Bbb': return 'A#';
-		case 'Cb':  return 'B';
-		case 'Db':  return 'C#';
-		case 'Eb':  return 'D#';
-		case 'Ebb': return 'D#';
-		case 'Fb':  return 'E';
-		case 'Gb':  return 'F#';
-		default:    return note;
+		case 'Ab':
+			return 'G#';
+		case 'Bb':
+			return 'A#';
+		case 'Bbb':
+			return 'A#';
+		case 'Cb':
+			return 'B';
+		case 'Db':
+			return 'C#';
+		case 'Eb':
+			return 'D#';
+		case 'Ebb':
+			return 'D#';
+		case 'Fb':
+			return 'E';
+		case 'Gb':
+			return 'F#';
+		default:
+			return note;
 	}
 }
 

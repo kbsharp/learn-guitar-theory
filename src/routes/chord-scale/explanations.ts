@@ -12,7 +12,7 @@ export const explanations: Record<ChordType, ChordScaleExplanation> = {
 	},
 	'7': {
 		context: 'The V chord — pulls toward resolution',
-		body: 'A dominant 7th chord is defined by its b7, which creates tension that naturally wants to resolve down to the I chord — that pull is the engine of most harmonic movement in western music. Mixolydian is simply the major scale with that b7 built in, so it matches the chord\'s character exactly. You hear it in every blues, funk, and rock riff that has that slightly unresolved, driving quality.'
+		body: "A dominant 7th chord is defined by its b7, which creates tension that naturally wants to resolve down to the I chord — that pull is the engine of most harmonic movement in western music. Mixolydian is simply the major scale with that b7 built in, so it matches the chord's character exactly. You hear it in every blues, funk, and rock riff that has that slightly unresolved, driving quality."
 	},
 	m7: {
 		context: 'The ii chord in major keys; minor grooves in jazz and funk',
@@ -20,7 +20,7 @@ export const explanations: Record<ChordType, ChordScaleExplanation> = {
 	},
 	m7b5: {
 		context: 'ii in minor keys (ii°–V–i); vii in major keys',
-		body: "The half-diminished chord is built around its flat 5th — Locrian is the only standard mode containing a b5, making it the logical match. This chord almost always appears as a passing chord on its way somewhere else (typically to a dominant), so think of it less as a destination and more as a point of maximum tension before resolution. In a minor ii–V–i progression (Bm7♭5 → E7 → Am), the Locrian scale reinforces that sense of inward pull."
+		body: 'The half-diminished chord is built around its flat 5th — Locrian is the only standard mode containing a b5, making it the logical match. This chord almost always appears as a passing chord on its way somewhere else (typically to a dominant), so think of it less as a destination and more as a point of maximum tension before resolution. In a minor ii–V–i progression (Bm7♭5 → E7 → Am), the Locrian scale reinforces that sense of inward pull.'
 	},
 	maj: {
 		context: 'Plain major triads — pop, rock, country',
@@ -28,10 +28,10 @@ export const explanations: Record<ChordType, ChordScaleExplanation> = {
 	},
 	m: {
 		context: 'Plain minor triads — rock, blues, and pop',
-		body: "Minor pentatonic strips natural minor down to its five most powerful notes by removing the 2nd and 6th — the two degrees most likely to feel tense over a basic minor chord. What remains is the backbone of blues and rock: root, flat third, fourth, fifth, flat seventh. Most guitarists encounter this scale first, and for good reason: it is nearly impossible to land on a note that sounds wrong."
+		body: 'Minor pentatonic strips natural minor down to its five most powerful notes by removing the 2nd and 6th — the two degrees most likely to feel tense over a basic minor chord. What remains is the backbone of blues and rock: root, flat third, fourth, fifth, flat seventh. Most guitarists encounter this scale first, and for good reason: it is nearly impossible to land on a note that sounds wrong.'
 	},
 	dim: {
 		context: 'Passing chords — often between adjacent diatonic chords',
-		body: "Diminished 7th chords repeat symmetrically every 3 frets — there are only 3 unique dim7 chords on the entire fretboard, each shared by four different roots. The diminished scale shares this symmetry: one shape works equally over Cdim7, E♭dim7, F♯dim7, and Adim7. It takes time to internalise, but learning it once gives you four harmonic situations covered by the same fingering."
+		body: 'Diminished 7th chords repeat symmetrically every 3 frets — there are only 3 unique dim7 chords on the entire fretboard, each shared by four different roots. The diminished scale shares this symmetry: one shape works equally over Cdim7, E♭dim7, F♯dim7, and Adim7. It takes time to internalise, but learning it once gives you four harmonic situations covered by the same fingering.'
 	}
 };

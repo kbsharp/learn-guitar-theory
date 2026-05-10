@@ -1,9 +1,9 @@
-@use "sass:color";
+@use 'sass:color';
 
 @function adjust-color-lightness($color, $percent) {
-    @return color.adjust($color, $lightness: $percent);
+	@return color.adjust($color, $lightness: $percent);
 }
 
 @function adjust-color-darkness($color, $percent) {
-    @return color.adjust($color, $lightness: -$percent);
+	@return color.adjust($color, $lightness: -$percent);
 }

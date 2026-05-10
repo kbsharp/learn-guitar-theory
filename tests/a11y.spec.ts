@@ -15,7 +15,11 @@ for (const theme of themes) {
 			await page.goto(route);
 			// Wait for data-theme — set by $effect after Svelte hydrates.
 			// Timeout is generous because parallel tests can slow the preview server.
-			await expect(page.locator('html')).toHaveAttribute('data-theme', theme, { timeout: 15000 });
+			await expect(page.locator('html')).toHaveAttribute('data-theme', theme, {
+				timeout: 15000
+			});
+			// Let CSS transitions (background-color: 0.4s ease) finish before axe reads colours.
+			await page.waitForTimeout(500);
 
 			const results = await new AxeBuilder({ page })
 				.withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
@@ -24,7 +28,9 @@ for (const theme of themes) {
 			if (results.violations.length > 0) {
 				report.push(`\n══ [${theme}] ${route} ══`);
 				for (const v of results.violations) {
-					report.push(`  [${(v.impact ?? 'unknown').toUpperCase()}] ${v.id}: ${v.description}`);
+					report.push(
+						`  [${(v.impact ?? 'unknown').toUpperCase()}] ${v.id}: ${v.description}`
+					);
 					v.nodes.slice(0, 3).forEach((n) => {
 						const d = (n.any[0]?.data ?? {}) as Record<string, unknown>;
 						const ratio = d.contrastRatio ? ` ratio:${d.contrastRatio}` : '';
@@ -36,6 +42,9 @@ for (const theme of themes) {
 		}
 
 		if (report.length > 0) console.log(report.join('\n'));
-		expect(report.length, `Accessibility violations found in ${theme} theme — see console output above`).toBe(0);
+		expect(
+			report.length,
+			`Accessibility violations found in ${theme} theme — see console output above`
+		).toBe(0);
 	});
 }

@@ -17,7 +17,7 @@
 
 <div class="fret-container">
 	<div class="frets">
-		{#each frets as _, i}
+		{#each frets as _fret, i}
 			<div class="fret" class:in-position={inPosition(i)}>
 				{#if hasDot(i)}
 					<div class="dot"></div>

@@ -15,7 +15,8 @@
 	import { chordRoot, chordQuality } from '../../stores';
 
 	let getNoteClass = $derived((note: string) =>
-		getChordScaleClass(note, $chordRoot, $chordQuality as ChordType));
+		getChordScaleClass(note, $chordRoot, $chordQuality as ChordType)
+	);
 	const getNoteLabel = (note: string) => note;
 	let chordName = $derived(getChordName($chordRoot, $chordQuality as ChordType));
 	let scaleName = $derived(getRecommendedScaleName($chordQuality as ChordType));
@@ -36,9 +37,9 @@
 	</div>
 
 	<p class="page-intro">
-		Pick a chord type to see which notes work over it when improvising. <strong>Pink</strong> notes
-		are chord tones — anchor your phrases here. <strong>Cyan</strong> notes extend the scale and
-		work best as passing notes between them.
+		Pick a chord type to see which notes work over it when improvising. <strong>Pink</strong>
+		notes are chord tones — anchor your phrases here. <strong>Cyan</strong> notes extend the scale
+		and work best as passing notes between them.
 	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} />
@@ -129,7 +130,6 @@
 		line-height: 1.7;
 		color: var(--text-muted);
 		margin: 0 0 28px;
-		opacity: 0.75;
 
 		strong {
 			color: var(--text-primary);
@@ -205,7 +205,10 @@
 		font-weight: 600;
 		letter-spacing: 0.05em;
 		cursor: pointer;
-		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease,
+			box-shadow 0.2s ease;
 
 		&:hover:not(.active) {
 			background: color-mix(in srgb, var(--accent-note) 10%, transparent);
@@ -229,7 +232,10 @@
 		font-weight: 600;
 		letter-spacing: 0.05em;
 		cursor: pointer;
-		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease,
+			box-shadow 0.2s ease;
 
 		&:hover:not(.active) {
 			background: color-mix(in srgb, var(--accent-tonic) 10%, transparent);

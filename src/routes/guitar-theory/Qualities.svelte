@@ -47,7 +47,10 @@
 		font-weight: 600;
 		letter-spacing: 0.05em;
 		cursor: pointer;
-		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease,
+			box-shadow 0.2s ease;
 
 		&:hover:not(.active) {
 			background: color-mix(in srgb, var(--accent-tonic) 10%, transparent);

@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { FIFTHS_KEYS, FIFTHS_DISPLAY, RELATIVE_MINOR_KEYS, RELATIVE_MINOR_DISPLAY } from './helpers';
+	import {
+		FIFTHS_KEYS,
+		FIFTHS_DISPLAY,
+		RELATIVE_MINOR_KEYS,
+		RELATIVE_MINOR_DISPLAY
+	} from './helpers';
 
 	interface Props {
 		selectedKey: string;
@@ -79,7 +84,7 @@
 	{/each}
 
 	<!-- Inner ring: relative minor keys -->
-	{#each RELATIVE_MINOR_KEYS as mkey, i}
+	{#each RELATIVE_MINOR_KEYS as _mkey, i}
 		{@const pos = labelPos(i, 57)}
 		{@const active = isMinorActive(i)}
 		<path
@@ -88,7 +93,7 @@
 			class:active
 			role="button"
 			tabindex="0"
-			aria-label="{RELATIVE_MINOR_DISPLAY[i]}"
+			aria-label={RELATIVE_MINOR_DISPLAY[i]}
 			aria-pressed={active}
 			onclick={() => onSelectMinor(RELATIVE_MINOR_KEYS[i])}
 			onkeydown={(e) => e.key === 'Enter' && onSelectMinor(RELATIVE_MINOR_KEYS[i])}
@@ -125,7 +130,9 @@
 
 	.segment {
 		cursor: pointer;
-		transition: fill 0.15s ease, filter 0.15s ease;
+		transition:
+			fill 0.15s ease,
+			filter 0.15s ease;
 
 		&.major {
 			fill: rgba(255, 255, 255, 0.04);

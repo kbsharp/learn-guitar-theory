@@ -13,13 +13,15 @@ export interface DiatonicChord {
 	name: string;
 }
 
-
 export function getDiatonicChords(root: string, mode: DiatonicMode): DiatonicChord[] {
 	try {
 		const chords =
 			mode === 'major' ? Key.majorKey(root).chords : Key.minorKey(root).natural.chords;
 		const romans = mode === 'major' ? romanNumeralsMajor : romanNumeralsMinor;
-		return chords.map((name: string, i: number) => ({ roman: romans[i] ?? String(i + 1), name }));
+		return chords.map((name: string, i: number) => ({
+			roman: romans[i] ?? String(i + 1),
+			name
+		}));
 	} catch {
 		return [];
 	}

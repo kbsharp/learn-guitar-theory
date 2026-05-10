@@ -7,8 +7,11 @@
 		positionRange?: { start: number; end: number } | null;
 	}
 
-	let { getNoteClass = () => 'hide-note', getNoteLabel = (note: string) => note, positionRange = null }: Props =
-		$props();
+	let {
+		getNoteClass = () => 'hide-note',
+		getNoteLabel = (note: string) => note,
+		positionRange = null
+	}: Props = $props();
 
 	function displayClass(noteClass: string, fretIndex: number): string {
 		if (!positionRange || noteClass === 'hide-note') return noteClass;
@@ -81,7 +84,11 @@
 
 					opacity: 1;
 					visibility: visible;
-					transition: opacity 0.5s, visibility 0.5s, background-color 0.5s, box-shadow 0.5s;
+					transition:
+						opacity 0.5s,
+						visibility 0.5s,
+						background-color 0.5s,
+						box-shadow 0.5s;
 
 					&.hide-note {
 						opacity: 0;
@@ -96,13 +103,15 @@
 					&.in-scale {
 						background-color: var(--accent-note);
 						color: var(--bg-base);
-						box-shadow: 0 0 10px 2px color-mix(in srgb, var(--accent-note) 40%, transparent);
+						box-shadow: 0 0 10px 2px
+							color-mix(in srgb, var(--accent-note) 40%, transparent);
 					}
 
 					&.tonic {
 						background-color: var(--accent-tonic);
 						color: var(--white);
-						box-shadow: 0 0 12px 3px color-mix(in srgb, var(--accent-tonic) 50%, transparent);
+						box-shadow: 0 0 12px 3px
+							color-mix(in srgb, var(--accent-tonic) 50%, transparent);
 					}
 				}
 			}

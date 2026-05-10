@@ -33,8 +33,8 @@
 			open = !open;
 		}}
 		aria-label="Help: {term}"
-		aria-expanded={open}
-	>?</button>
+		aria-expanded={open}>?</button
+	>
 
 	{#if open}
 		<div class="popover" role="tooltip">
@@ -68,7 +68,9 @@
 		cursor: pointer;
 		margin-left: 5px;
 		opacity: 0.6;
-		transition: opacity 0.15s ease, border-color 0.15s ease;
+		transition:
+			opacity 0.15s ease,
+			border-color 0.15s ease;
 		flex-shrink: 0;
 
 		&:hover,

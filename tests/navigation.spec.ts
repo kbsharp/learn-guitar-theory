@@ -2,10 +2,10 @@ import { test, expect } from '@playwright/test';
 
 const routes = [
 	{ path: '/guitar-theory', title: 'Fretboard Explorer' },
-	{ path: '/chord-scale',   title: 'Chord-Scale' },
-	{ path: '/diatonic',      title: 'Diatonic Chords' },
-	{ path: '/caged',         title: 'CAGED System' },
-	{ path: '/progressions',  title: 'Progression Builder' },
+	{ path: '/chord-scale', title: 'Chord-Scale' },
+	{ path: '/diatonic', title: 'Diatonic Chords' },
+	{ path: '/caged', title: 'CAGED System' },
+	{ path: '/progressions', title: 'Progression Builder' }
 ];
 
 test('home page loads', async ({ page }) => {

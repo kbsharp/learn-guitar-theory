@@ -179,6 +179,4 @@ export const glossary: GlossaryTerm[] = [
 	}
 ];
 
-export const glossaryByTerm: Map<string, GlossaryTerm> = new Map(
-	glossary.map((t) => [t.term, t])
-);
+export const glossaryByTerm: Map<string, GlossaryTerm> = new Map(glossary.map((t) => [t.term, t]));

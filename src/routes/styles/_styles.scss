@@ -1,4 +1,4 @@
-@use "functions" as func;
+@use 'functions' as func;
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;500;700&display=swap');
 
@@ -12,14 +12,14 @@ $radius-md: 12px;
 // ── Breakpoints ───────────────────────────────────────────
 $bp-tablet: 1024px;
 $bp-mobile: 768px;
-$bp-small:  480px;
+$bp-small: 480px;
 
 // ── Constant tokens ───────────────────────────────────────
 :root {
-    --font-body:  #{$font-body};
-    --radius-sm:  #{$radius-sm};
-    --radius-md:  #{$radius-md};
-    --white:      #fff;
+	--font-body: #{$font-body};
+	--radius-sm: #{$radius-sm};
+	--radius-md: #{$radius-md};
+	--white: #fff;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -27,24 +27,24 @@ $bp-small:  480px;
 // The original palette. Deep space blue-black, cyan notes, pink root.
 // ─────────────────────────────────────────────────────────────────────────────
 :root,
-[data-theme="void"] {
-    --bg-base:       #090c12;
-    --bg-surface:    #111520;
-    --bg-fretboard:  #0c0906;
+[data-theme='void'] {
+	--bg-base: #090c12;
+	--bg-surface: #111520;
+	--bg-fretboard: #0c0906;
 
-    --accent-note:   #0ccfdf;
-    --accent-tonic:  #f03860;
+	--accent-note: #0ccfdf;
+	--accent-tonic: #f03860;
 
-    --color-fret:    #1a2030;
-    --color-string:  #3d4a60;
-    --color-dot:     #c4b98a;
+	--color-fret: #1a2030;
+	--color-string: #3d4a60;
+	--color-dot: #c4b98a;
 
-    --text-primary:  #dde4f0;
-    --text-muted:    #748da4;
+	--text-primary: #dde4f0;
+	--text-muted: #748da4;
 
-    // Scrollbar: near-invisible steel → accent on hover (like a string lighting up)
-    --scrollbar-thumb:       #2a3d54;
-    --scrollbar-thumb-hover: #0ccfdf;
+	// Scrollbar: near-invisible steel → accent on hover (like a string lighting up)
+	--scrollbar-thumb: #2a3d54;
+	--scrollbar-thumb-hover: #0ccfdf;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -52,23 +52,23 @@ $bp-small:  480px;
 // Near-black with a faint blue cast. Electric green notes, coral roots.
 // Stage-monitor energy — reading a signal in a dark venue.
 // ─────────────────────────────────────────────────────────────────────────────
-[data-theme="midnight"] {
-    --bg-base:       #050508;
-    --bg-surface:    #0c0c14;
-    --bg-fretboard:  #030304;
+[data-theme='midnight'] {
+	--bg-base: #050508;
+	--bg-surface: #0c0c14;
+	--bg-fretboard: #030304;
 
-    --accent-note:   #39d353;
-    --accent-tonic:  #ff6b35;
+	--accent-note: #39d353;
+	--accent-tonic: #ff6b35;
 
-    --color-fret:    #181824;
-    --color-string:  #2e2e42;
-    --color-dot:     #686890;
+	--color-fret: #181824;
+	--color-string: #2e2e42;
+	--color-dot: #686890;
 
-    --text-primary:  #e8e8f0;
-    --text-muted:    #50506a;
+	--text-primary: #e8e8f0;
+	--text-muted: #8888aa;
 
-    --scrollbar-thumb:       #1e1e2e;
-    --scrollbar-thumb-hover: #39d353;
+	--scrollbar-thumb: #1e1e2e;
+	--scrollbar-thumb-hover: #39d353;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -76,35 +76,37 @@ $bp-small:  480px;
 // Neutral zinc surfaces, dark rosewood fretboard. Electric blue notes, crimson
 // roots. Premium daytime mode — legible, high-contrast, no warmth gimmicks.
 // ─────────────────────────────────────────────────────────────────────────────
-[data-theme="chalk"] {
-    --bg-base:       #f4f4f5;
-    --bg-surface:    #ffffff;
-    --bg-fretboard:  #1c1510;
+[data-theme='chalk'] {
+	--bg-base: #f4f4f5;
+	--bg-surface: #ffffff;
+	--bg-fretboard: #1c1510;
 
-    --accent-note:   #0057ff;
-    --accent-tonic:  #e5193c;
+	--accent-note: #0057ff;
+	--accent-tonic: #e5193c;
 
-    --color-fret:    #d8c8a0;
-    --color-string:  #907050;
-    --color-dot:     #c8a868;
+	--color-fret: #d8c8a0;
+	--color-string: #907050;
+	--color-dot: #c8a868;
 
-    --text-primary:  #141414;
-    --text-muted:    #787878;
+	--text-primary: #141414;
+	--text-muted: #646464;
 
-    --scrollbar-thumb:       #d0d0d4;
-    --scrollbar-thumb-hover: #0057ff;
+	--scrollbar-thumb: #d0d0d4;
+	--scrollbar-thumb-hover: #0057ff;
 }
 
 // ── Base styles ───────────────────────────────────────────
 body {
-    color: var(--text-primary);
-    font-family: 'Montserrat', sans-serif;
-    min-height: 100vh;
-    margin: 0;
-    background-attachment: fixed;
-    background-color: var(--bg-base);
-    background-size: 100vw 100vh;
-    transition: background-color 0.4s ease, color 0.4s ease;
+	color: var(--text-primary);
+	font-family: 'Montserrat', sans-serif;
+	min-height: 100vh;
+	margin: 0;
+	background-attachment: fixed;
+	background-color: var(--bg-base);
+	background-size: 100vw 100vh;
+	transition:
+		background-color 0.4s ease,
+		color 0.4s ease;
 }
 
 // ── Custom scrollbar — fret inlay aesthetic ───────────────
@@ -112,41 +114,41 @@ body {
 // accent colour on hover, the same way a note lights up when played.
 
 *::-webkit-scrollbar {
-    width: 6px;
-    height: 4px;
+	width: 6px;
+	height: 4px;
 }
 
 *::-webkit-scrollbar-track {
-    background: transparent;
+	background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 3px;
+	background: var(--scrollbar-thumb);
+	border-radius: 3px;
 
-    &:hover {
-        background: var(--scrollbar-thumb-hover);
-    }
+	&:hover {
+		background: var(--scrollbar-thumb-hover);
+	}
 
-    &:active {
-        background: var(--scrollbar-thumb-hover);
-        filter: brightness(1.1);
-    }
+	&:active {
+		background: var(--scrollbar-thumb-hover);
+		filter: brightness(1.1);
+	}
 }
 
 *::-webkit-scrollbar-corner {
-    background: transparent;
+	background: transparent;
 }
 
 // Firefox
 * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) transparent;
+	scrollbar-width: thin;
+	scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
 // ── Mobile touch targets ───────────────────────────────────
 @media (max-width: 768px) {
-    button {
-        min-height: 44px;
-    }
+	button {
+		min-height: 44px;
+	}
 }

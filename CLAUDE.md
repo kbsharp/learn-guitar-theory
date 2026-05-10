@@ -22,14 +22,15 @@ npm run test:unit    # Vitest unit tests
 
 ## Product Vision
 
-**Goal**: Turn the fretboard from a grid of shapes into a system a guitarist can *reason about*.
+**Goal**: Turn the fretboard from a grid of shapes into a system a guitarist can _reason about_.
 
-Every feature must pass this test: *does this help a guitarist understand something they were confused about, or hear something they couldn't hear before?* Pretty visuals are acceptable only when they serve comprehension.
+Every feature must pass this test: _does this help a guitarist understand something they were confused about, or hear something they couldn't hear before?_ Pretty visuals are acceptable only when they serve comprehension.
 
 **Target audience**: All skill levels, genre-agnostic. A beginner wanting to understand why their Em pentatonic works over everything, and a jazz player mapping chord-scale relationships, should both find value.
 
 **Full product roadmap (prioritised)**:
-1. **Explanations** — Context-aware "why" copy on every tool. Not tooltips. Sentences that explain *why Dorian over m7*, *why these 5 CAGED positions cover the neck*, *what the Circle of Fifths tells you*. This is the highest-leverage gap vs other guitar theory sites.
+
+1. **Explanations** — Context-aware "why" copy on every tool. Not tooltips. Sentences that explain _why Dorian over m7_, _why these 5 CAGED positions cover the neck_, _what the Circle of Fifths tells you_. This is the highest-leverage gap vs other guitar theory sites.
 2. **Mobile** — Responsive fretboard. Guitarists look this up while holding a guitar. Fixed 1200px kills most real-world use.
 3. **Audio** — Hear the scale/chord. The bridge between abstract shapes and actual sound.
 4. **Practice mode** — Active exercises (interval recall, chord identification). Passive reference → active skill-building.
@@ -42,6 +43,7 @@ Every feature must pass this test: *does this help a guitarist understand someth
 ### Routing
 
 `src/routes/` uses SvelteKit conventions. Current routes:
+
 - `/` — home (`+page.svelte`)
 - `/guitar-theory` — Fretboard Explorer: key + scale/mode selector, 5 box positions, note/degree toggle
 - `/chord-scale` — Chord-Scale Relationships: select chord type, see compatible scale highlighted
@@ -60,6 +62,7 @@ The design token source of truth is `src/routes/styles/_styles.scss` — SCSS va
 `src/stores.ts` holds Svelte writable stores for all tools. Components read stores with the `$store` reactive syntax and write via `.set()`. Page-level reactive derivations use the `$derived()` rune.
 
 Store groups by tool:
+
 - **Fretboard Explorer**: `key`, `quality`
 - **Chord-Scale**: `chordRoot`, `chordQuality`
 - **Diatonic**: `diatonicKey`, `diatonicMode`, `selectedDiatonicChord`
@@ -71,6 +74,7 @@ Store groups by tool:
 Shared utility: `src/lib/music.ts` — canonical `convertFlatToSharp()` and `convertFlatsToSharps()`. All helpers import from here; do not redefine these functions locally.
 
 Each route has a co-located `helpers.ts`:
+
 - `guitar-theory/helpers.ts` — `getClassName()`, `getScaleDegree()`, `computeScalePositions()`, `currentTonic()`
 - `chord-scale/helpers.ts` — `getChordScaleClass()`, `chordToScale` map
 - `diatonic/helpers.ts` — `getDiatonicChords()`, `getDiatonicNoteClass()`, `getScaleNotes()`
@@ -84,6 +88,7 @@ All note comparisons use sharps internally; `convertFlatToSharp()` normalises fl
 ### Fretboard rendering
 
 Three-layer composition inside `src/lib/components/Fretboard/Fretboard.svelte`:
+
 1. `Frets.svelte` — absolutely positioned grid of 25 fret dividers + inlay dots (frets 3,5,7,9,12,…)
 2. `Strings.svelte` — 6 strings × 25 notes; each note is a `<p>` element with class driven by a callback; string graphics are sibling `<div>` elements
 
@@ -119,8 +124,9 @@ Classes applied to fret notes: `hide-note` (invisible), `in-scale` (cyan glow), 
 The explanation system adds context-aware prose to each tool so the app teaches, not just displays.
 
 **Design rules:**
+
 - 2–3 sentences max per explanation. Guitarists want context, not lectures.
-- Explain the *why*, not the *what* — the UI already shows the what.
+- Explain the _why_, not the _what_ — the UI already shows the what.
 - Write for the intermediate guitarist who knows the shapes but not the theory behind them.
 - Explanation copy lives in a co-located `explanations.ts` file per route, not inline in components.
 
@@ -132,6 +138,7 @@ The explanation system adds context-aware prose to each tool so the app teaches,
 - `caged/explanations.ts` — keyed by lowercase shape name or `'all'`
 
 **Implementation approach:**
+
 - A typed `Record` in each `explanations.ts`
 - A shared `<ExplanationPanel>` component: `src/lib/components/ExplanationPanel.svelte`
 - Placed below controls, above the legend
@@ -172,6 +179,7 @@ This layering means advanced users see a clean interface, intermediates can hove
 ## Page-level patterns (established across all tool pages)
 
 Every tool page follows this structure (except Progressions, not yet updated):
+
 1. `.page-header` — tool name left, status/toggle right, `margin-bottom: 20px`
 2. `.page-intro` — 2–3 sentence `<p>`, `font-size: 12px`, `opacity: 0.75`, `margin-bottom: 28px`
 3. `<Fretboard />` — the visual
@@ -183,9 +191,10 @@ Labels with HelpTips use a `.label-with-help` wrapper (`display: flex; align-ite
 
 ## "What to DO" rule
 
-Every explanation on this site — whether in the page intro, HelpTip, or ExplanationPanel — must tell the guitarist what to *do* with the information, not just what something *is*. The test: could a guitarist use this sentence while holding a guitar? If it's purely theoretical, rewrite it.
+Every explanation on this site — whether in the page intro, HelpTip, or ExplanationPanel — must tell the guitarist what to _do_ with the information, not just what something _is_. The test: could a guitarist use this sentence while holding a guitar? If it's purely theoretical, rewrite it.
 
 Examples:
+
 - Bad: "Chord tones are the notes belonging to the chord."
 - Good: "Chord tones are your anchor notes — start and end phrases here and you'll always sound intentional."
 
@@ -196,11 +205,13 @@ Examples:
 Use **Tone.js** (`npm install tone`) for audio playback.
 
 **Planned interactions:**
+
 - Click any lit fret note to hear it
 - "Play scale" button plays notes ascending then descending
 - "Play chord" strums the chord tones bottom-to-top with a brief strum timing offset
 
 **Notes:**
+
 - AudioContext must be resumed on first user gesture (browser security requirement)
 - Use a guitar-like synth: `Tone.PluckSynth` for plucked strings, or a `Tone.PolySynth` with AM/FM oscillator for chords
 - Fret notes have MIDI pitch data available through tonal's `Note.midi()` — use that for Tone.js frequency input
@@ -210,6 +221,7 @@ Use **Tone.js** (`npm install tone`) for audio playback.
 ## Mobile Strategy (roadmap priority #2)
 
 The fretboard is the core problem. Options when implementing:
+
 - **Horizontal scroll**: wrap fretboard in a scrollable container, keep 1200px inner width, add scroll-shadow indicators
 - **Compact mode**: at <768px, render fewer frets (e.g. frets 0–12 only) with larger note circles
 - **Portrait fretboard**: rotate to show strings as columns (unusual but better on portrait phones)
@@ -234,13 +246,13 @@ Tests cover: `convertFlatToSharp`, `getClassName`, `getScaleDegree`, `computeSca
 
 Playwright builds the app and runs against the preview server on port 4173. Four test files:
 
-| File | Covers |
-|------|--------|
-| `tests/test.ts` | Smoke — home page renders |
-| `tests/navigation.spec.ts` | All routes load, correct titles, active nav links, fretboard presence |
-| `tests/theme.spec.ts` | Theme switcher updates `data-theme`, persists in `localStorage`, aria-pressed state |
-| `tests/a11y.spec.ts` | WCAG 2.1 AA audit across all 6 routes × 3 themes (axe-core) |
-| `tests/interactions.spec.ts` | Key tool interactions: key change, chord selection, preset activation |
+| File                         | Covers                                                                              |
+| ---------------------------- | ----------------------------------------------------------------------------------- |
+| `tests/test.ts`              | Smoke — home page renders                                                           |
+| `tests/navigation.spec.ts`   | All routes load, correct titles, active nav links, fretboard presence               |
+| `tests/theme.spec.ts`        | Theme switcher updates `data-theme`, persists in `localStorage`, aria-pressed state |
+| `tests/a11y.spec.ts`         | WCAG 2.1 AA audit across all 6 routes × 3 themes (axe-core)                         |
+| `tests/interactions.spec.ts` | Key tool interactions: key change, chord selection, preset activation               |
 
 **Themes are tested individually** in `a11y.spec.ts` — each theme is applied via `localStorage` before page load so the Svelte store picks it up correctly.
 

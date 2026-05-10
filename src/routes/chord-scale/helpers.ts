@@ -27,7 +27,6 @@ const chordToScale: Record<ChordType, string> = {
 	dim: 'diminished'
 };
 
-
 export function getChordScaleClass(note: string, root: string, chordType: ChordType): string {
 	const chordNotes = Chord.get(`${root}${chordType}`).notes.map(convertFlatToSharp);
 	const scaleType = chordToScale[chordType];

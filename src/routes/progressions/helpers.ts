@@ -4,12 +4,38 @@ export { getDiatonicChords };
 export type { DiatonicMode } from '../diatonic/helpers';
 
 // Circle of fifths — clockwise from C, using sharp notation internally
-export const FIFTHS_KEYS    = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'];
+export const FIFTHS_KEYS = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F'];
 export const FIFTHS_DISPLAY = ['C', 'G', 'D', 'A', 'E', 'B', 'F♯', 'D♭', 'A♭', 'E♭', 'B♭', 'F'];
 
 // Relative minor of each major key at the same circle position
-export const RELATIVE_MINOR_KEYS    = ['A', 'E', 'B', 'F#', 'C#', 'G#', 'D#', 'A#', 'F', 'C', 'G', 'D'];
-export const RELATIVE_MINOR_DISPLAY = ['Am', 'Em', 'Bm', 'F♯m', 'C♯m', 'G♯m', 'D♯m', 'A♯m', 'Fm', 'Cm', 'Gm', 'Dm'];
+export const RELATIVE_MINOR_KEYS = [
+	'A',
+	'E',
+	'B',
+	'F#',
+	'C#',
+	'G#',
+	'D#',
+	'A#',
+	'F',
+	'C',
+	'G',
+	'D'
+];
+export const RELATIVE_MINOR_DISPLAY = [
+	'Am',
+	'Em',
+	'Bm',
+	'F♯m',
+	'C♯m',
+	'G♯m',
+	'D♯m',
+	'A♯m',
+	'Fm',
+	'Cm',
+	'Gm',
+	'Dm'
+];
 
 // ─── Mood Tags ───────────────────────────────────────────────────────────────
 
@@ -82,7 +108,8 @@ export const PRESETS: Preset[] = [
 		mode: 'major',
 		romans: ['I', 'V', 'vi', 'iii'],
 		moods: ['Cinematic', 'Nostalgic'],
-		description: 'A descending bass line creates forward momentum even while staying firmly in key.'
+		description:
+			'A descending bass line creates forward momentum even while staying firmly in key.'
 	},
 	{
 		name: 'Jazz ii-V-I',
@@ -108,7 +135,8 @@ export const PRESETS: Preset[] = [
 		mode: 'major',
 		romans: ['I', 'IV', 'V', 'IV'],
 		moods: ['Uplifting', 'Bluesy'],
-		description: "The three-chord trick — every note is a chord tone of something, nowhere to hide."
+		description:
+			'The three-chord trick — every note is a chord tone of something, nowhere to hide.'
 	},
 	{
 		name: 'Mixolydian Drift',
@@ -153,7 +181,8 @@ export const PRESETS: Preset[] = [
 		mode: 'minor',
 		romans: ['i', 'iv', 'VII', 'III'],
 		moods: ['Dark', 'Melancholic'],
-		description: 'The minor iv adds weight that plain natural minor lacks — heavier and more resigned.'
+		description:
+			'The minor iv adds weight that plain natural minor lacks — heavier and more resigned.'
 	},
 	{
 		name: 'Night Drive',
@@ -222,13 +251,13 @@ export interface BorrowedChord {
 
 export const BORROWED_CHORDS: BorrowedChord[] = [
 	// Borrowed into major from parallel minor / Mixolydian / Lydian
-	{ roman: 'bVII', label: '♭VII', descriptor: 'driving',   forMode: 'major' },
-	{ roman: 'bVI',  label: '♭VI',  descriptor: 'cinematic', forMode: 'major' },
-	{ roman: 'iv',   label: 'iv',   descriptor: 'dark',      forMode: 'major' },
-	{ roman: 'II',   label: 'II',   descriptor: 'floating',  forMode: 'major' },
+	{ roman: 'bVII', label: '♭VII', descriptor: 'driving', forMode: 'major' },
+	{ roman: 'bVI', label: '♭VI', descriptor: 'cinematic', forMode: 'major' },
+	{ roman: 'iv', label: 'iv', descriptor: 'dark', forMode: 'major' },
+	{ roman: 'II', label: 'II', descriptor: 'floating', forMode: 'major' },
 	// Borrowed into minor from parallel major / harmonic minor
-	{ roman: 'IV',   label: 'IV',   descriptor: 'bright',    forMode: 'minor' },
-	{ roman: 'V',    label: 'V',    descriptor: 'resolved',  forMode: 'minor' }
+	{ roman: 'IV', label: 'IV', descriptor: 'bright', forMode: 'minor' },
+	{ roman: 'V', label: 'V', descriptor: 'resolved', forMode: 'minor' }
 ];
 
 export function getBorrowedChords(mode: 'major' | 'minor'): BorrowedChord[] {
@@ -285,11 +314,11 @@ function semitonesUp(root: string, semitones: number): string {
 
 const BORROWED_SEMITONES: Record<string, { semitones: number; quality: string }> = {
 	bVII: { semitones: 10, quality: '' },
-	bVI:  { semitones: 8,  quality: '' },
-	iv:   { semitones: 5,  quality: 'm' }, // minor 4th in major context
-	II:   { semitones: 2,  quality: '' },  // Lydian major II
-	IV:   { semitones: 5,  quality: '' },  // major 4th in minor context (Dorian)
-	V:    { semitones: 7,  quality: '' }   // major V in minor context (harmonic minor)
+	bVI: { semitones: 8, quality: '' },
+	iv: { semitones: 5, quality: 'm' }, // minor 4th in major context
+	II: { semitones: 2, quality: '' }, // Lydian major II
+	IV: { semitones: 5, quality: '' }, // major 4th in minor context (Dorian)
+	V: { semitones: 7, quality: '' } // major V in minor context (harmonic minor)
 };
 
 export function getSlotChord(roman: string, key: string, mode: 'major' | 'minor'): string {

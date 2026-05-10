@@ -16,7 +16,7 @@ export const scaleExplanations: Record<Quality, ScaleExplanation> = {
 	},
 	[Quality.Phrygian]: {
 		context: 'Flamenco, metal, exotic harmonic colour',
-		body: "The flat 2nd is the defining note — it gives Phrygian an immediately Spanish or dark-metal quality. This is the scale of flamenco guitar, thrash metal riffs, and dramatic film music. Less useful for improvising over changing chords; it shines when the music sits on a static minor chord and you want tense, brooding colour."
+		body: 'The flat 2nd is the defining note — it gives Phrygian an immediately Spanish or dark-metal quality. This is the scale of flamenco guitar, thrash metal riffs, and dramatic film music. Less useful for improvising over changing chords; it shines when the music sits on a static minor chord and you want tense, brooding colour.'
 	},
 	[Quality.Lydian]: {
 		context: 'Over Maj7 chords, cinematic or dreamy contexts',
@@ -28,7 +28,7 @@ export const scaleExplanations: Record<Quality, ScaleExplanation> = {
 	},
 	[Quality.Aeolian]: {
 		context: 'Natural minor — emotional rock, ballads, minor key songs',
-		body: "The natural minor scale. Darker and more melancholic than Dorian because the b6 adds weight and drama. Every major key has a relative minor that uses the same notes — A minor is the relative of C major. Classic for emotional rock, ballads, and minor-key pop. Less jazzy than Dorian, more plaintive."
+		body: 'The natural minor scale. Darker and more melancholic than Dorian because the b6 adds weight and drama. Every major key has a relative minor that uses the same notes — A minor is the relative of C major. Classic for emotional rock, ballads, and minor-key pop. Less jazzy than Dorian, more plaintive.'
 	},
 	[Quality.Locrian]: {
 		context: 'Rarely used; over m7♭5 chords as a passing scale',

@@ -15,8 +15,8 @@
 	let selectedShape = $state<string | null>(null);
 
 	$effect(() => {
-		$cagedKey;
-		$cagedQuality;
+		void $cagedKey;
+		void $cagedQuality;
 		selectedShape = null;
 	});
 
@@ -30,8 +30,7 @@
 				})()
 			: null
 	);
-	let getNoteClass = $derived((note: string) =>
-		getCAGEDNoteClass(note, $cagedKey, chordTones));
+	let getNoteClass = $derived((note: string) => getCAGEDNoteClass(note, $cagedKey, chordTones));
 	const getNoteLabel = (note: string) => note;
 
 	let chordName = $derived(`${$cagedKey}${$cagedQuality === 'minor' ? 'm' : ''}`);
@@ -183,7 +182,6 @@
 		line-height: 1.7;
 		color: var(--text-muted);
 		margin: 0 0 28px;
-		opacity: 0.75;
 	}
 
 	.label-with-help {
@@ -270,7 +268,10 @@
 		font-weight: 600;
 		letter-spacing: 0.05em;
 		cursor: pointer;
-		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease,
+			box-shadow 0.2s ease;
 
 		&:hover:not(.active) {
 			background: color-mix(in srgb, var(--accent-note) 10%, transparent);
@@ -319,7 +320,10 @@
 		padding: 10px 20px;
 		font-family: inherit;
 		cursor: pointer;
-		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease,
+			box-shadow 0.2s ease;
 		min-width: 80px;
 
 		&.all {

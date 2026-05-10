@@ -54,7 +54,6 @@
 		document.addEventListener('keydown', handleKeyDown);
 		return () => document.removeEventListener('keydown', handleKeyDown);
 	});
-
 </script>
 
 <button class="glossary-trigger" type="button" onclick={openGlossary} aria-label="Open glossary">
@@ -62,7 +61,6 @@
 </button>
 
 {#if open}
-	<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
 	<dialog
 		class="glossary-dialog"
 		bind:this={dialog}
@@ -73,8 +71,11 @@
 			<div class="dialog-chrome">
 				<div class="dialog-header">
 					<span class="dialog-title">Glossary</span>
-					<button class="close-btn" type="button" onclick={closeGlossary} aria-label="Close glossary"
-						>✕</button
+					<button
+						class="close-btn"
+						type="button"
+						onclick={closeGlossary}
+						aria-label="Close glossary">✕</button
 					>
 				</div>
 
@@ -128,7 +129,9 @@
 		cursor: pointer;
 		padding: 6px 14px;
 		border-radius: var(--radius-sm);
-		transition: color 0.2s ease, background 0.2s ease;
+		transition:
+			color 0.2s ease,
+			background 0.2s ease;
 
 		&:hover {
 			color: var(--text-primary);

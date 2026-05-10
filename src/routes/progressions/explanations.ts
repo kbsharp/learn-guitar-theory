@@ -15,7 +15,7 @@ const majorChordExplanations: Record<string, ChordExplanation> = {
 	},
 	ii: {
 		context: 'ii — Supertonic (Pre-dominant)',
-		body: "A softer approach to the dominant than going straight to V. The minor quality keeps things from feeling too settled, and the shared notes with IV make it a smooth pivot. Use it when you want forward momentum without the urgency of V."
+		body: 'A softer approach to the dominant than going straight to V. The minor quality keeps things from feeling too settled, and the shared notes with IV make it a smooth pivot. Use it when you want forward momentum without the urgency of V.'
 	},
 	iii: {
 		context: 'iii — Mediant (Tonic substitute)',
@@ -35,7 +35,7 @@ const majorChordExplanations: Record<string, ChordExplanation> = {
 	},
 	'vii°': {
 		context: 'vii° — Leading tone chord (Dominant substitute)',
-		body: "Unstable and restless — the diminished 5th makes it want to resolve to I immediately. Functions similarly to V but with more tension and less weight. Use it for decisive resolutions or to add drama before a final I."
+		body: 'Unstable and restless — the diminished 5th makes it want to resolve to I immediately. Functions similarly to V but with more tension and less weight. Use it for decisive resolutions or to add drama before a final I.'
 	}
 };
 
@@ -54,7 +54,7 @@ const minorChordExplanations: Record<string, ChordExplanation> = {
 	},
 	iv: {
 		context: 'iv — Minor subdominant (Pre-dominant)',
-		body: "Heavier and more resigned than a major IV — two of its notes are shared with i, making it feel like a deeper, more weighted version of the tonic itself. The minor subdominant is a key part of what makes minor progressions feel dark rather than just sad."
+		body: 'Heavier and more resigned than a major IV — two of its notes are shared with i, making it feel like a deeper, more weighted version of the tonic itself. The minor subdominant is a key part of what makes minor progressions feel dark rather than just sad.'
 	},
 	v: {
 		context: 'v — Minor dominant (Dominant)',
@@ -85,7 +85,7 @@ const borrowedChordExplanations: Record<string, ChordExplanation> = {
 	},
 	II: {
 		context: 'II — Lydian major II',
-		body: "A major chord built on the raised 2nd degree — diatonic to Lydian mode. It creates a floating, weightless quality unlike any diatonic chord: neither a strong dominant nor a clear pre-dominant, just an openness that hovers. Film composers reach for this for dreamlike, otherworldly moments."
+		body: 'A major chord built on the raised 2nd degree — diatonic to Lydian mode. It creates a floating, weightless quality unlike any diatonic chord: neither a strong dominant nor a clear pre-dominant, just an openness that hovers. Film composers reach for this for dreamlike, otherworldly moments.'
 	},
 	IV: {
 		context: 'IV — Borrowed major subdominant (Dorian)',
@@ -93,11 +93,14 @@ const borrowedChordExplanations: Record<string, ChordExplanation> = {
 	},
 	V: {
 		context: 'V — Harmonic minor dominant',
-		body: "The major V chord in a minor key, drawn from harmonic minor. Raising the 7th creates a leading tone just a half-step below the minor tonic — the strongest pull-to-resolution available in minor harmony. The contrast between the tension of this chord and the arrival at i is one of the most satisfying moments in Western music."
+		body: 'The major V chord in a minor key, drawn from harmonic minor. Raising the 7th creates a leading tone just a half-step below the minor tonic — the strongest pull-to-resolution available in minor harmony. The contrast between the tension of this chord and the arrival at i is one of the most satisfying moments in Western music.'
 	}
 };
 
-export function getChordExplanation(roman: string, mode: 'major' | 'minor'): ProgressionExplanation | null {
+export function getChordExplanation(
+	roman: string,
+	mode: 'major' | 'minor'
+): ProgressionExplanation | null {
 	const map = mode === 'major' ? majorChordExplanations : minorChordExplanations;
 	return map[roman] ?? borrowedChordExplanations[roman] ?? null;
 }
@@ -106,43 +109,43 @@ export const defaultExplanation: ProgressionExplanation = {
 	context: 'Build your own progression',
 	body: "Select a preset to learn the theory behind its mood, or assemble chords from the palette below. Each slot shows its harmonic function — T (Tonic), PD (Pre-dominant), and D (Dominant) — so you can see the tension arc you're building as you go.",
 	practice:
-		"Use the diatonic scale of your chosen key as your home base. When you borrow a chord from the palette, its chord tones will light up pink on the fretboard — those are the notes that give the borrowed chord its colour."
+		'Use the diatonic scale of your chosen key as your home base. When you borrow a chord from the palette, its chord tones will light up pink on the fretboard — those are the notes that give the borrowed chord its colour.'
 };
 
 export const progressionExplanations: Record<string, ProgressionExplanation> = {
 	'Pop Standard': {
 		context: 'I–V–vi–IV — tonic → dominant → relative minor → subdominant',
-		body: "This works because it cycles through all four harmonic functions in order: home (I), maximum tension (V), a brief minor shadow (vi), then a gentle forward push (IV) before landing home again. The vi chord — the relative minor — gives just enough darkness to make the resolution back to I feel satisfying rather than bland. Every repetition reinforces the loop, which is why it feels simultaneously fresh and inevitable.",
+		body: 'This works because it cycles through all four harmonic functions in order: home (I), maximum tension (V), a brief minor shadow (vi), then a gentle forward push (IV) before landing home again. The vi chord — the relative minor — gives just enough darkness to make the resolution back to I feel satisfying rather than bland. Every repetition reinforces the loop, which is why it feels simultaneously fresh and inevitable.',
 		practice:
 			"Play the major scale or major pentatonic throughout. When you land on the vi chord, try landing on the b3 of that chord (the minor 3rd) — it's already in the major pentatonic, so no scale change is needed, just shift your target notes briefly toward the minor."
 	},
 
 	'50s Classic': {
 		context: 'I–vi–IV–V — tonic → relative minor → subdominant → dominant',
-		body: "The difference from the Pop Standard is where vi appears: landing on the relative minor immediately after I creates wistfulness before the progression even starts building tension. The IV–V at the end is a clean cadential approach — pre-dominant into dominant — that makes the loop feel resolved yet forward-moving. This is why it reads as nostalgic: the minor turn comes early, before the energy builds.",
+		body: 'The difference from the Pop Standard is where vi appears: landing on the relative minor immediately after I creates wistfulness before the progression even starts building tension. The IV–V at the end is a clean cadential approach — pre-dominant into dominant — that makes the loop feel resolved yet forward-moving. This is why it reads as nostalgic: the minor turn comes early, before the energy builds.',
 		practice:
 			"Major pentatonic works over the whole loop. Over the vi chord, target the root and b3 of that chord — both are already in the major pentatonic, so you're just choosing where to land. The root of vi is the 6th degree of the major scale, making it a natural resting point for a phrase."
 	},
 
 	'Singer-Songwriter': {
 		context: 'I–iii–IV–V — tonic → mediant → subdominant → dominant',
-		body: "The iii chord (the mediant) is the quiet workhorse of acoustic music. It shares two notes with I and two with V, so it functions as a gentle pivot — neither fully at rest nor under tension. This makes the progression flow smoothly while avoiding the bluntness of a straight I–IV–V. The emotional quality is reflective: neither sad nor purely upbeat, just looking inward.",
+		body: 'The iii chord (the mediant) is the quiet workhorse of acoustic music. It shares two notes with I and two with V, so it functions as a gentle pivot — neither fully at rest nor under tension. This makes the progression flow smoothly while avoiding the bluntness of a straight I–IV–V. The emotional quality is reflective: neither sad nor purely upbeat, just looking inward.',
 		practice:
-			"The major scale works throughout. Over the iii chord, try resolving phrases to its 5th rather than its root — the 5th of iii is the 7th degree of the major scale, which gives phrases a slightly suspended, unresolved feel that fits the introspective mood."
+			'The major scale works throughout. Over the iii chord, try resolving phrases to its 5th rather than its root — the 5th of iii is the 7th degree of the major scale, which gives phrases a slightly suspended, unresolved feel that fits the introspective mood.'
 	},
 
 	'Pachelbel Canon': {
 		context: 'I–V–vi–iii — descending 3rds bass line',
-		body: "What makes this progression so enduring is its bass line: the roots descend in 3rds (I→V→vi→iii creates a bass of C–G–A–E in C major), implying forward motion even when the chords are cycling. The iii chord at the end is the twist — instead of resolving to IV or ii as you might expect, it pulls back toward I and restarts the cycle. The harmonic logic feels inevitable, which is why it sounds classical even in modern pop.",
+		body: 'What makes this progression so enduring is its bass line: the roots descend in 3rds (I→V→vi→iii creates a bass of C–G–A–E in C major), implying forward motion even when the chords are cycling. The iii chord at the end is the twist — instead of resolving to IV or ii as you might expect, it pulls back toward I and restarts the cycle. The harmonic logic feels inevitable, which is why it sounds classical even in modern pop.',
 		practice:
-			"Use the major scale throughout. The descending bass line is the key melodic idea here — try playing melodies that mirror or counterpoint the bass descent rather than just sitting on chord tones. A rising melody over a falling bass is the classical counterpoint move that makes this progression sing."
+			'Use the major scale throughout. The descending bass line is the key melodic idea here — try playing melodies that mirror or counterpoint the bass descent rather than just sitting on chord tones. A rising melody over a falling bass is the classical counterpoint move that makes this progression sing.'
 	},
 
 	'Jazz ii-V-I': {
 		context: 'ii–V–I — the fundamental unit of jazz harmony',
-		body: "The ii–V–I is the engine of jazz. The ii chord (minor 7th) introduces the 4th degree of the scale as a tension note. The V chord (dominant 7th) is maximum tension: its tritone interval — the 3rd and b7 of the chord — is inherently unstable and pulls toward resolution. The I chord releases everything. This sequence appears in jazz standards constantly, often in multiple keys within a single song.",
+		body: 'The ii–V–I is the engine of jazz. The ii chord (minor 7th) introduces the 4th degree of the scale as a tension note. The V chord (dominant 7th) is maximum tension: its tritone interval — the 3rd and b7 of the chord — is inherently unstable and pulls toward resolution. The I chord releases everything. This sequence appears in jazz standards constantly, often in multiple keys within a single song.',
 		practice:
-			"Over ii: play Dorian mode (major scale from the 2nd degree). Over V: play Mixolydian mode (major scale from the 5th degree), or for more jazz colour, the Lydian Dominant scale. Over I: Ionian (major scale) or Lydian for a lifted sound. Connecting these three scale choices smoothly is the core of jazz improvisation."
+			'Over ii: play Dorian mode (major scale from the 2nd degree). Over V: play Mixolydian mode (major scale from the 5th degree), or for more jazz colour, the Lydian Dominant scale. Over I: Ionian (major scale) or Lydian for a lifted sound. Connecting these three scale choices smoothly is the core of jazz improvisation.'
 	},
 
 	'Rhythm Changes': {
@@ -170,28 +173,28 @@ export const progressionExplanations: Record<string, ProgressionExplanation> = {
 		context: 'I–II–I–II — Lydian mode floating between two major chords',
 		body: "The II chord (a major chord built on the 2nd degree) belongs to Lydian mode, which has a raised 4th. The motion between I and II creates a hovering, weightless quality because neither chord is a traditional dominant — there's no strong pull in either direction, just floating. Film composers reach for this when scoring space travel, dreams, or moments of wonder. John Williams uses it constantly.",
 		practice:
-			"The Lydian scale (major scale with a #4) is your tool here — the raised 4th is what defines both the mode and the II chord. Over the II chord, the root of that chord is the 2nd degree of your key. Try playing melodies that emphasise the #4 over the I chord, then resolve to the natural 4th (now the root of the II chord). That half-step tension and release is the sound."
+			'The Lydian scale (major scale with a #4) is your tool here — the raised 4th is what defines both the mode and the II chord. Over the II chord, the root of that chord is the 2nd degree of your key. Try playing melodies that emphasise the #4 over the I chord, then resolve to the natural 4th (now the root of the II chord). That half-step tension and release is the sound.'
 	},
 
 	'Minor Ballad': {
 		context: 'i–VI–III–VII — descending natural minor loop',
-		body: "This progression follows the gravity of the natural minor scale: the chord roots move i→VI→III→VII (A→F→C→G in Am), stepping down in thirds through the scale. The VI and III are both major chords, which gives the progression periodic moments of brightness that make the return to i feel earned rather than inevitable. The emotional quality is resigned acceptance — sad, but not desperate.",
+		body: 'This progression follows the gravity of the natural minor scale: the chord roots move i→VI→III→VII (A→F→C→G in Am), stepping down in thirds through the scale. The VI and III are both major chords, which gives the progression periodic moments of brightness that make the return to i feel earned rather than inevitable. The emotional quality is resigned acceptance — sad, but not desperate.',
 		practice:
-			"Natural minor (Aeolian) works throughout. Over the VI and III chords — both of which are major — you can briefly shift your thinking to the relative major key and use major pentatonic. Your ear will adjust back naturally when i arrives. This parallel-scale thinking is how many guitarists instinctively navigate minor progressions without knowing why."
+			'Natural minor (Aeolian) works throughout. Over the VI and III chords — both of which are major — you can briefly shift your thinking to the relative major key and use major pentatonic. Your ear will adjust back naturally when i arrives. This parallel-scale thinking is how many guitarists instinctively navigate minor progressions without knowing why.'
 	},
 
-	'Andalusian': {
+	Andalusian: {
 		context: 'i–VII–VI–v — the Phrygian descent',
-		body: "The Andalusian cadence is one of the oldest progressions in Western music — flamenco, Baroque, metal, and film scores all reach for it. Its power comes from the descending bass: in Am, the roots move A–G–F–E, a chromatic descent of a perfect 4th. The v chord (minor dominant) instead of the expected V keeps the tension unresolved, giving the loop a cyclical, restless quality that never fully settles. The Phrygian colour comes from the VI chord approaching the cadence.",
+		body: 'The Andalusian cadence is one of the oldest progressions in Western music — flamenco, Baroque, metal, and film scores all reach for it. Its power comes from the descending bass: in Am, the roots move A–G–F–E, a chromatic descent of a perfect 4th. The v chord (minor dominant) instead of the expected V keeps the tension unresolved, giving the loop a cyclical, restless quality that never fully settles. The Phrygian colour comes from the VI chord approaching the cadence.',
 		practice:
-			"Phrygian dominant (5th mode of harmonic minor) captures both the exotic flat-2nd flavour and the harmonic minor pull of the approach to v. In Am: start with A Phrygian dominant (A–Bb–C#–D–E–F–G). For a darker alternative, pure Phrygian mode (no raised 3rd) gives the progression an even more ancient, unresolved quality — perfect for slow, heavy passages."
+			'Phrygian dominant (5th mode of harmonic minor) captures both the exotic flat-2nd flavour and the harmonic minor pull of the approach to v. In Am: start with A Phrygian dominant (A–Bb–C#–D–E–F–G). For a darker alternative, pure Phrygian mode (no raised 3rd) gives the progression an even more ancient, unresolved quality — perfect for slow, heavy passages.'
 	},
 
 	'Dark Pop': {
 		context: 'i–iv–VII–III — minor with a borrowed iv chord',
 		body: "The difference between 'Minor Ballad' and this progression is the iv chord. In natural minor, the 4th degree is already minor (iv), and using it instead of the major VI chord pulls the progression downward earlier and harder. The VII and III chords (both major) then lift things temporarily, before the cycle restarts at i. The emotional character is heavier and more resigned than the Minor Ballad — think modern pop songwriters aiming for weight, not just sadness.",
 		practice:
-			"Natural minor throughout. The iv chord is the key colour — it shares two notes with i (the root and the 5th of the minor scale), so you can phrase across the i→iv transition without needing to change your scale. Emphasising the minor 6th (the note that distinguishes natural minor from Dorian) over the iv chord deepens the dark quality."
+			'Natural minor throughout. The iv chord is the key colour — it shares two notes with i (the root and the 5th of the minor scale), so you can phrase across the i→iv transition without needing to change your scale. Emphasising the minor 6th (the note that distinguishes natural minor from Dorian) over the iv chord deepens the dark quality.'
 	},
 
 	'Night Drive': {
@@ -201,11 +204,11 @@ export const progressionExplanations: Record<string, ProgressionExplanation> = {
 			"Natural minor works throughout. Because III, VII, and VI are all major chords, your phrases over them can lean into major pentatonic briefly — especially on III (the relative major's tonic) where major pentatonic will feel most natural. The tension comes from returning to i and having to drop back into minor, so let phrases on III resolve downward toward the minor root."
 	},
 
-	'Cinematic': {
+	Cinematic: {
 		context: 'i–VI–VII–i — the minor epic loop',
 		body: "The VI and VII here are both major chords, which creates dramatic contrast with the minor tonic. The step VI→VII (a rising whole step) gathers momentum like a film score building toward something — it's the two-chord 'lift' that composers use before a climax. The return to i is satisfying because the two major chords have temporarily displaced the minor gravity, making the landing feel resolved and inevitable. This is everywhere in modern film scoring.",
 		practice:
-			"Natural minor throughout. The VI→VII motion is the harmonic hook — try playing melodies that rise over VI and VII, then fall back on i. The note that VI and VII share (the root of VII is the 7th degree of natural minor, and the root of VI is the 6th) creates a scalar step upward that you can use melodically to mirror the harmonic lift."
+			'Natural minor throughout. The VI→VII motion is the harmonic hook — try playing melodies that rise over VI and VII, then fall back on i. The note that VI and VII share (the root of VII is the 7th degree of natural minor, and the root of VI is the 6th) creates a scalar step upward that you can use melodically to mirror the harmonic lift.'
 	},
 
 	'Minor Blues': {
@@ -217,9 +220,9 @@ export const progressionExplanations: Record<string, ProgressionExplanation> = {
 
 	'Harmonic Minor Pull': {
 		context: 'i–iv–V–i — the strongest cadence in minor',
-		body: "The raised 7th of harmonic minor appears in the V chord. In natural minor, the 5th degree is v (minor), which has a weak pull toward i. Raising the 7th creates a major V chord with a leading tone just a half step below the minor tonic — this half-step tension is the strongest pull-to-resolution in all of Western harmony. Baroque and classical composers built entire styles around it. Metal and flamenco use it for maximum tension before release.",
+		body: 'The raised 7th of harmonic minor appears in the V chord. In natural minor, the 5th degree is v (minor), which has a weak pull toward i. Raising the 7th creates a major V chord with a leading tone just a half step below the minor tonic — this half-step tension is the strongest pull-to-resolution in all of Western harmony. Baroque and classical composers built entire styles around it. Metal and flamenco use it for maximum tension before release.',
 		practice:
-			"Use natural minor over i and iv, then switch to harmonic minor (natural minor with a raised 7th) over the V chord — that single raised note is what creates the pull. The Phrygian dominant scale (5th mode of harmonic minor) also works over the V and gives it an exotic quality. The moment of tension is the leading tone under the V — hold it, bend it, and let it resolve up to the minor tonic when i arrives."
+			'Use natural minor over i and iv, then switch to harmonic minor (natural minor with a raised 7th) over the V chord — that single raised note is what creates the pull. The Phrygian dominant scale (5th mode of harmonic minor) also works over the V and gives it an exotic quality. The moment of tension is the leading tone under the V — hold it, bend it, and let it resolve up to the minor tonic when i arrives.'
 	},
 
 	'Neo-Soul': {
@@ -231,7 +234,7 @@ export const progressionExplanations: Record<string, ProgressionExplanation> = {
 
 	'Dorian Groove': {
 		context: 'i–IV–i–IV — Dorian mode: minor with a major IV',
-		body: "Dorian mode is natural minor with a raised 6th. The consequence is that the 4th degree becomes a major chord (IV instead of iv), which gives the mode its distinctive brightness-within-minor quality. The IV chord here is borrowed from the parallel major — in Am Dorian, the IV chord is D major (not D minor). The back-and-forth between i and IV creates a groove that feels simultaneously dark (minor tonic) and open (major IV). This is the sound of funk, soul, and modal jazz. Carlos Santana lives here.",
+		body: 'Dorian mode is natural minor with a raised 6th. The consequence is that the 4th degree becomes a major chord (IV instead of iv), which gives the mode its distinctive brightness-within-minor quality. The IV chord here is borrowed from the parallel major — in Am Dorian, the IV chord is D major (not D minor). The back-and-forth between i and IV creates a groove that feels simultaneously dark (minor tonic) and open (major IV). This is the sound of funk, soul, and modal jazz. Carlos Santana lives here.',
 		practice:
 			"The Dorian scale (natural minor with a raised 6th) is your scale. The raised 6th is the characteristic note — it's the note that's in the IV chord but not in the natural minor scale. Emphasise it, especially over the IV chord: it's the note that screams 'Dorian' and defines the mood. Minor pentatonic also works but sounds less distinctly Dorian — adding that raised 6th is what separates this from a generic minor groove."
 	}

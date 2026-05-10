@@ -19,8 +19,8 @@
 	let selectedPosition = $state<number | null>(null);
 
 	$effect(() => {
-		$key;
-		$quality;
+		void $key;
+		void $quality;
 		selectedPosition = null;
 	});
 
@@ -28,12 +28,16 @@
 	let positions = $derived(computeScalePositions($key, $quality));
 	let positionRange = $derived(
 		selectedPosition !== null && positions[selectedPosition - 1]
-			? { start: positions[selectedPosition - 1].startFret, end: positions[selectedPosition - 1].endFret }
+			? {
+					start: positions[selectedPosition - 1].startFret,
+					end: positions[selectedPosition - 1].endFret
+				}
 			: null
 	);
 	let getNoteClass = $derived((note: string) => getClassName(note, $key, tonic, $quality));
 	let getNoteLabel = $derived((note: string) =>
-		showDegrees ? getScaleDegree(note, tonic) : convertFlatToSharp(note));
+		showDegrees ? getScaleDegree(note, tonic) : convertFlatToSharp(note)
+	);
 	let explanation = $derived(scaleExplanations[$quality as QualityType]);
 </script>
 
@@ -60,8 +64,9 @@
 	</div>
 
 	<p class="page-intro">
-		Select a key and scale to see every available note across the neck. Use the position buttons to
-		focus on a 4-fret box — the way you'd actually practise. <strong>Pink</strong> is the root,
+		Select a key and scale to see every available note across the neck. Use the position buttons
+		to focus on a 4-fret box — the way you'd actually practise. <strong>Pink</strong> is the
+		root,
 		<strong>cyan</strong> notes are in the scale.
 	</p>
 
@@ -156,7 +161,6 @@
 		line-height: 1.7;
 		color: var(--text-muted);
 		margin: 0 0 28px;
-		opacity: 0.75;
 
 		strong {
 			color: var(--text-primary);

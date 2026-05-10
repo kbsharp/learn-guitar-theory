@@ -10,9 +10,9 @@
 	}
 
 	const themes: { id: Theme; label: string; accent: string }[] = [
-		{ id: 'void',     label: 'Void',     accent: '#0ccfdf' },
+		{ id: 'void', label: 'Void', accent: '#0ccfdf' },
 		{ id: 'midnight', label: 'Midnight', accent: '#39d353' },
-		{ id: 'chalk',    label: 'Chalk',    accent: '#0057ff' },
+		{ id: 'chalk', label: 'Chalk', accent: '#0057ff' }
 	];
 
 	$effect(() => {
@@ -27,19 +27,35 @@
 	<a href="/" class="logo" onclick={closeMenu}>Fretboard Lab</a>
 
 	<nav class:open={menuOpen}>
-		<a href="/guitar-theory" class:active={page.url.pathname.startsWith('/guitar-theory')} onclick={closeMenu}>
+		<a
+			href="/guitar-theory"
+			class:active={page.url.pathname.startsWith('/guitar-theory')}
+			onclick={closeMenu}
+		>
 			Explorer
 		</a>
-		<a href="/chord-scale" class:active={page.url.pathname.startsWith('/chord-scale')} onclick={closeMenu}>
+		<a
+			href="/chord-scale"
+			class:active={page.url.pathname.startsWith('/chord-scale')}
+			onclick={closeMenu}
+		>
 			Chord-Scale
 		</a>
-		<a href="/diatonic" class:active={page.url.pathname.startsWith('/diatonic')} onclick={closeMenu}>
+		<a
+			href="/diatonic"
+			class:active={page.url.pathname.startsWith('/diatonic')}
+			onclick={closeMenu}
+		>
 			Diatonic
 		</a>
 		<a href="/caged" class:active={page.url.pathname.startsWith('/caged')} onclick={closeMenu}>
 			CAGED
 		</a>
-		<a href="/progressions" class:active={page.url.pathname.startsWith('/progressions')} onclick={closeMenu}>
+		<a
+			href="/progressions"
+			class:active={page.url.pathname.startsWith('/progressions')}
+			onclick={closeMenu}
+		>
 			Progressions
 		</a>
 		<Glossary />
@@ -49,7 +65,10 @@
 				<button
 					class="theme-option"
 					class:active={$theme === t.id}
-					onclick={() => { theme.set(t.id); closeMenu(); }}
+					onclick={() => {
+						theme.set(t.id);
+						closeMenu();
+					}}
 					aria-label="Switch to {t.label} theme"
 					aria-pressed={$theme === t.id}
 					style="--swatch-color: {t.accent}"
@@ -129,7 +148,9 @@
 		text-transform: uppercase;
 		color: var(--accent-note);
 		text-decoration: none;
-		transition: opacity 0.2s ease, color 0.4s ease;
+		transition:
+			opacity 0.2s ease,
+			color 0.4s ease;
 		flex-shrink: 0;
 
 		&:hover {
@@ -171,7 +192,9 @@
 		text-decoration: none;
 		padding: 6px 14px;
 		border-radius: var(--radius-sm);
-		transition: color 0.2s ease, background 0.2s ease;
+		transition:
+			color 0.2s ease,
+			background 0.2s ease;
 
 		&:hover {
 			color: var(--text-primary);
@@ -216,7 +239,9 @@
 		background: color-mix(in srgb, var(--text-primary) 5%, transparent);
 		border: 1px solid color-mix(in srgb, var(--text-primary) 9%, transparent);
 		border-radius: 20px;
-		transition: background 0.4s ease, border-color 0.4s ease;
+		transition:
+			background 0.4s ease,
+			border-color 0.4s ease;
 
 		@media (max-width: 768px) {
 			display: none;
@@ -239,7 +264,9 @@
 		background: transparent;
 		min-height: unset;
 		white-space: nowrap;
-		transition: background 0.18s ease, color 0.18s ease;
+		transition:
+			background 0.18s ease,
+			color 0.18s ease;
 
 		.dot {
 			width: 6px;
@@ -247,14 +274,18 @@
 			border-radius: 50%;
 			background: var(--swatch-color);
 			flex-shrink: 0;
-			transition: transform 0.18s ease, opacity 0.18s ease;
+			transition:
+				transform 0.18s ease,
+				opacity 0.18s ease;
 			opacity: 0.5;
 		}
 
 		&:hover:not(.active) {
 			color: var(--text-primary);
 
-			.dot { opacity: 0.8; }
+			.dot {
+				opacity: 0.8;
+			}
 		}
 
 		&.active {
@@ -291,18 +322,30 @@
 			background: var(--text-muted);
 			border-radius: 2px;
 			transform-origin: center;
-			transition: transform 0.25s ease, opacity 0.25s ease, background 0.2s ease;
+			transition:
+				transform 0.25s ease,
+				opacity 0.25s ease,
+				background 0.2s ease;
 		}
 
 		&:hover {
 			background: color-mix(in srgb, var(--text-primary) 5%, transparent);
-			span { background: var(--text-primary); }
+			span {
+				background: var(--text-primary);
+			}
 		}
 
 		&.open {
-			span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-			span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-			span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+			span:nth-child(1) {
+				transform: translateY(6.5px) rotate(45deg);
+			}
+			span:nth-child(2) {
+				opacity: 0;
+				transform: scaleX(0);
+			}
+			span:nth-child(3) {
+				transform: translateY(-6.5px) rotate(-45deg);
+			}
 		}
 
 		@media (max-width: 768px) {

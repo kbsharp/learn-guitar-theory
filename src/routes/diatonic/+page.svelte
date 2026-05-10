@@ -15,7 +15,8 @@
 	let chords = $derived(getDiatonicChords($diatonicKey, $diatonicMode as DiatonicMode));
 	let scaleNotes = $derived(getScaleNotes($diatonicKey, $diatonicMode as DiatonicMode));
 	let getNoteClass = $derived((note: string) =>
-		getDiatonicNoteClass(note, $selectedDiatonicChord, scaleNotes));
+		getDiatonicNoteClass(note, $selectedDiatonicChord, scaleNotes)
+	);
 	const getNoteLabel = (note: string) => note;
 
 	let selectedIndex = $derived(
@@ -47,8 +48,8 @@
 
 	<p class="page-intro">
 		Every key has 7 chords built from its scale — click any chord to light up its tones on the
-		fretboard. Each chord has a function: some create stability, others create tension that drives
-		the progression forward.
+		fretboard. Each chord has a function: some create stability, others create tension that
+		drives the progression forward.
 	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} />
@@ -61,7 +62,10 @@
 					<button
 						class="btn-key"
 						class:active={$diatonicKey === k}
-						onclick={() => { diatonicKey.set(k); selectedDiatonicChord.set(null); }}
+						onclick={() => {
+							diatonicKey.set(k);
+							selectedDiatonicChord.set(null);
+						}}
 					>
 						{k}
 					</button>
@@ -166,7 +170,6 @@
 		line-height: 1.7;
 		color: var(--text-muted);
 		margin: 0 0 28px;
-		opacity: 0.75;
 	}
 
 	.label-with-help {
@@ -235,7 +238,10 @@
 		font-weight: 600;
 		letter-spacing: 0.05em;
 		cursor: pointer;
-		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease,
+			box-shadow 0.2s ease;
 
 		&:hover:not(.active) {
 			background: color-mix(in srgb, var(--accent-note) 10%, transparent);
@@ -291,7 +297,10 @@
 		padding: 10px 16px;
 		font-family: inherit;
 		cursor: pointer;
-		transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease,
+			box-shadow 0.2s ease;
 		min-width: 80px;
 
 		.roman {
