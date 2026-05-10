@@ -47,9 +47,10 @@
 	</div>
 
 	<p class="page-intro">
-		Every key has 7 chords built from its scale — click any chord to light up its tones on the
-		fretboard. Each chord has a function: some create stability, others create tension that
-		drives the progression forward.
+		Every key has 7 chords that "belong" to it — the same pattern of majors, minors, and one
+		diminished in every key. Click each in turn to feel which ones resolve home (I) and which
+		demand movement (V). Then chain them into a four-chord song on the
+		<a class="intro-link" href="/progressions">Progressions page</a>.
 	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} />
@@ -116,7 +117,7 @@
 		</div>
 	</div>
 
-	<ExplanationPanel context={explanation.context} body={explanation.body} />
+	<ExplanationPanel context={explanation.context} body={explanation.body} next={explanation.next} />
 
 	<div class="legend">
 		<div class="legend-item">

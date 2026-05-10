@@ -64,10 +64,10 @@
 	</div>
 
 	<p class="page-intro">
-		Select a key and scale to see every available note across the neck. Use the position buttons
-		to focus on a 4-fret box — the way you'd actually practise. <strong>Pink</strong> is the
-		root,
-		<strong>cyan</strong> notes are in the scale.
+		Every scale is a pattern of intervals — see them all at once, or narrow to one 4-fret box you
+		can actually play. <strong>Pink</strong> is the root, <strong>cyan</strong> is in the scale.
+		Once a shape interests you, hit <a class="intro-link" href="/chord-scale">Chord-Scale</a> to
+		see which chords it fits over.
 	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} />
@@ -111,7 +111,11 @@
 	</div>
 
 	{#if explanation}
-		<ExplanationPanel context={explanation.context} body={explanation.body} />
+		<ExplanationPanel
+			context={explanation.context}
+			body={explanation.body}
+			next={explanation.next}
+		/>
 	{/if}
 </div>
 

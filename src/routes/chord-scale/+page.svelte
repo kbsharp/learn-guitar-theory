@@ -39,7 +39,8 @@
 	<p class="page-intro">
 		Pick a chord type to see which notes work over it when improvising. <strong>Pink</strong>
 		notes are chord tones — anchor your phrases here. <strong>Cyan</strong> notes extend the scale
-		and work best as passing notes between them.
+		and work best as passing notes between them. Want to see the recommended scale on the whole
+		neck? Head to <a class="intro-link" href="/guitar-theory">Fretboard Explorer</a>.
 	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} />
@@ -76,7 +77,7 @@
 		</div>
 	</div>
 
-	<ExplanationPanel context={explanation.context} body={explanation.body} />
+	<ExplanationPanel context={explanation.context} body={explanation.body} next={explanation.next} />
 
 	<div class="legend">
 		<div class="legend-item">

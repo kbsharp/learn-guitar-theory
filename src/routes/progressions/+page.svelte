@@ -109,6 +109,8 @@
 		Every mood has a progression behind it — dark, cinematic, uplifting, or tense. Choose a
 		preset to learn why it sounds the way it does and what scale to reach for when you
 		improvise. Then build your own using the diatonic and borrowed chord palettes below.
+		Confused about <em>why</em> each chord works? See its function on the
+		<a class="intro-link" href="/diatonic">Diatonic page</a>.
 	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} />

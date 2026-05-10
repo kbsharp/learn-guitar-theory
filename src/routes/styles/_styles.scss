@@ -152,3 +152,20 @@ body {
 		min-height: 44px;
 	}
 }
+
+// ── Inline cross-link in page intros and prose ─────────────
+// A subtle in-flow link that points to a related tool. Lives inside
+// .page-intro and similar muted-prose contexts. Uses the cyan accent
+// (same as scale-tone) so it reads as "this leads somewhere useful".
+.intro-link {
+	color: var(--accent-note);
+	text-decoration: none;
+	border-bottom: 1px solid color-mix(in srgb, var(--accent-note) 35%, transparent);
+	transition:
+		border-color 0.15s ease,
+		color 0.15s ease;
+
+	&:hover {
+		border-bottom-color: var(--accent-note);
+	}
+}

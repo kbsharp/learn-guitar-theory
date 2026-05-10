@@ -56,8 +56,9 @@
 
 	<p class="page-intro">
 		Every major or minor chord can be played in 5 positions across the neck, each based on a
-		familiar open chord shape. The shapes connect end-to-end with no gaps — learning them means
-		you always have chord tones nearby, no matter where you are on the fretboard.
+		familiar open chord shape. The shapes connect end-to-end with no gaps — learn them and
+		you'll always have a chord tone nearby. Use these shapes for the seven chords in any key:
+		see them in context on <a class="intro-link" href="/diatonic">Diatonic Chords</a>.
 	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} />
@@ -128,7 +129,7 @@
 		</div>
 	</div>
 
-	<ExplanationPanel context={explanation.context} body={explanation.body} />
+	<ExplanationPanel context={explanation.context} body={explanation.body} next={explanation.next} />
 
 	<div class="legend">
 		<div class="legend-item">

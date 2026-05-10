@@ -64,35 +64,35 @@
 			num: '01',
 			href: '/guitar-theory',
 			name: 'Fretboard Explorer',
-			desc: 'Every mode, pentatonic, and blues scale across the full neck — with scale degree overlay and 5-position box navigation.',
+			desc: "Stop seeing modes as shapes you've memorised. See exactly which note makes Dorian sound jazzy, Mixolydian sound bluesy, and Lydian sound floating — across the whole neck.",
 			accent: 'cyan'
 		},
 		{
 			num: '02',
 			href: '/caged',
 			name: 'CAGED System',
-			desc: 'See all five chord shapes for any root. Switch between major and minor, focus any shape, and connect chord voicings across the entire neck.',
+			desc: 'Five shapes that tile the entire fretboard with no gaps. Once you know them, there is always a chord tone nearby — no matter where your hand lands.',
 			accent: 'rose'
 		},
 		{
 			num: '03',
 			href: '/chord-scale',
 			name: 'Chord — Scale',
-			desc: 'Pick any chord and the fretboard tells you exactly which notes work. Chord tones, compatible scale, and avoid notes — colour-coded.',
+			desc: 'Pick any chord and see which notes work over it. Pink for chord tones (your anchors), cyan for scale tones (your connectors) — and a sentence on why that scale fits.',
 			accent: 'cyan'
 		},
 		{
 			num: '04',
 			href: '/diatonic',
 			name: 'Diatonic Chords',
-			desc: 'Explore every chord in a key with Roman numeral navigation. Click I through VII and watch the fretboard show chord and scale tones together.',
+			desc: "The seven chords that 'belong' in any key, and the job each one does. Learn why I–V–vi–IV feels resolved and why V always wants to pull home.",
 			accent: 'rose'
 		},
 		{
 			num: '05',
 			href: '/progressions',
 			name: 'Progression Builder',
-			desc: 'Build a four-chord progression and step through it. Each chord lights up its tones and recommended improvisation scale in real time.',
+			desc: 'Every mood — uplifting, dark, cinematic, nostalgic — has a progression behind it. Tweak presets to feel why each shape evokes what it does, then build your own.',
 			accent: 'mixed'
 		}
 	];
@@ -140,7 +140,8 @@
 		</h1>
 
 		<p class="hero-tagline">
-			Five tools. One neck.<br />No sheet music required.
+			Understand <em>why</em> your shapes work.<br />The fretboard as a system, not a grid of
+			patterns.
 		</p>
 
 		<a href="/guitar-theory" class="hero-cta">

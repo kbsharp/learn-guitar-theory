@@ -1,6 +1,12 @@
+export interface NextLink {
+	href: string;
+	label: string;
+}
+
 export interface CAGEDExplanation {
 	context: string;
 	body: string;
+	next?: NextLink;
 }
 
 // null key = "All" shapes selected (full system overview)
@@ -8,7 +14,8 @@ export interface CAGEDExplanation {
 export const cagedExplanations: Record<string, CAGEDExplanation> = {
 	all: {
 		context: 'Full neck — 5 shapes, no gaps',
-		body: 'These 5 shapes tile the entire fretboard end-to-end. Every chord tone you can play on the neck belongs to one of them. The shapes connect — the top of one shape overlaps the bottom of the next. Once you know all 5 for a given chord, there is always another voicing nearby, no matter where you are on the neck.'
+		body: 'These 5 shapes tile the entire fretboard end-to-end. Every chord tone you can play on the neck belongs to one of them. The shapes connect — the top of one shape overlaps the bottom of the next. Once you know all 5 for a given chord, there is always another voicing nearby, no matter where you are on the neck.',
+		next: { href: '/diatonic', label: 'Use these shapes for the chords in a key' }
 	},
 	E: {
 		context: 'E shape — open position moved up the neck',
