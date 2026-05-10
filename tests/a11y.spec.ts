@@ -13,11 +13,9 @@ for (const theme of themes) {
 
 		for (const route of routes) {
 			await page.goto(route);
-			// Wait for theme attribute and any reactive rendering to settle
-			await page.waitForFunction(
-				(t) => document.documentElement.getAttribute('data-theme') === t,
-				theme
-			);
+			// Wait for data-theme — set by $effect after Svelte hydrates.
+			// Timeout is generous because parallel tests can slow the preview server.
+			await expect(page.locator('html')).toHaveAttribute('data-theme', theme, { timeout: 15000 });
 
 			const results = await new AxeBuilder({ page })
 				.withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])

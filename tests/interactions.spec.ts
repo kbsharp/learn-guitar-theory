@@ -19,9 +19,11 @@ test('guitar-theory — changing key updates the fretboard', async ({ page }) =>
 
 test('guitar-theory — position selector highlights a fret range', async ({ page }) => {
 	await page.goto('/guitar-theory');
-	// Wait for positions to render, then click position 2
-	const pos2 = page.locator('button', { hasText: '2' }).first();
-	await pos2.click();
+	// data-theme is set by $effect in layout — its presence confirms Svelte has hydrated
+	// and event listeners are attached (unlike .in-scale which is present in SSR HTML)
+	await page.waitForSelector('html[data-theme]');
+	// Click position 2 using the specific btn-position class to avoid ambiguity
+	await page.locator('.btn-position', { hasText: '2' }).click();
 	// dim-note class indicates notes outside the selected position are dimmed
 	await expect(page.locator('.dim-note').first()).toBeVisible();
 });
@@ -36,7 +38,7 @@ test('chord-scale — shows chord tones for default selection', async ({ page })
 test('chord-scale — switching chord type updates fretboard', async ({ page }) => {
 	await page.goto('/chord-scale');
 	// Click m7 chord type button
-	await page.getByRole('button', { name: 'm7' }).click();
+	await page.getByRole('button', { name: 'm7', exact: true }).click();
 	await expect(page.locator('.in-scale').first()).toBeVisible();
 });
 
@@ -75,8 +77,8 @@ test('caged — shows chord tones by default', async ({ page }) => {
 
 test('caged — clicking a shape button highlights it', async ({ page }) => {
 	await page.goto('/caged');
-	// Click the second shape button
-	const shapeBtn = page.locator('.shape-btn').nth(1);
+	// Click the second shape button (nth(1) skips the "All" button, hits first named shape)
+	const shapeBtn = page.locator('.btn-shape').nth(1);
 	await shapeBtn.click();
 	await expect(shapeBtn).toHaveClass(/active/);
 });
