@@ -26,11 +26,11 @@ npm run test:unit    # Vitest unit tests
 
 Every feature must pass this test: _does this help a guitarist understand something they were confused about, or hear something they couldn't hear before?_ Pretty visuals are acceptable only when they serve comprehension.
 
-**Target audience**: All skill levels, genre-agnostic. A beginner wanting to understand why their Em pentatonic works over everything, and a jazz player mapping chord-scale relationships, should both find value.
+**Target audience**: Genre-agnostic and accessible to all skill levels — a beginner wanting to understand why their Em pentatonic works over everything, and a jazz player mapping chord-scale relationships, should both find value. **However**, the primary user we design *for* is the stuck intermediate (see Product Direction below). Design decisions resolve in their favour when there's a trade-off.
 
 **Full product roadmap (prioritised)**:
 
-1. **Explanations** — Context-aware "why" copy on every tool. Not tooltips. Sentences that explain _why Dorian over m7_, _why these 5 CAGED positions cover the neck_, _what the Circle of Fifths tells you_. This is the highest-leverage gap vs other guitar theory sites.
+1. **Pedagogical refinement** — Explanations exist on every tool but vary in quality. The priority now is auditing every existing piece against the WHY/DO/SOUND/CALIBRATION/CONNECT rubric (run `/guitar-pedagogy-review`) and rewriting failures so every explanation genuinely serves the stuck intermediate. This is the highest-leverage work because content quality is the moat.
 2. **Mobile** — Responsive fretboard. Guitarists look this up while holding a guitar. Fixed 1200px kills most real-world use.
 3. **Audio** — Hear the scale/chord. The bridge between abstract shapes and actual sound.
 4. **Practice mode** — Active exercises (interval recall, chord identification). Passive reference → active skill-building.

@@ -60,6 +60,33 @@ Does it miss an obvious cross-link to another tool page in the app where the use
 
 ---
 
+## Content types — apply the rubric appropriately
+
+Not all content is structurally an "explanation panel." Calibrate the rubric per type:
+
+| Content type | Where | What it must do | Rubric notes |
+|---|---|---|---|
+| **Home hero / feature cards** | `src/routes/+page.svelte` | Pitch the app and route users to the right tool | WHY applies to the tagline (does it make a guitarist understand what the app *does*?). DO is relaxed (no fretboard yet). SOUND is optional. CALIBRATION is critical. CONNECT is the whole point — every feature card is itself a link. |
+| **Page intros** | `+page.svelte` files | Orient a visitor to what this tool does and what they should do first | DO and CALIBRATION are critical. SOUND is optional for tool intros. CONNECT is highly relevant — page intros are a natural place to link to related tools. |
+| **ExplanationPanel body** | `explanations.ts` files | Explain *why* this specific scale/chord/shape sounds the way it does | All five criteria apply. This is the strict case. |
+
+If a piece of content is the right type for its location but doesn't fit the table above, evaluate against the spirit of the rubric: would the stuck intermediate be better off after reading this?
+
+---
+
+## Constraints on rewrites
+
+When suggesting rewritten content in Section 2:
+
+- **Length**: 2-3 sentences maximum, ~50 words. This matches the existing design rule in CLAUDE.md ("Guitarists want context, not lectures").
+- **Voice**: Direct, practical, no jargon without context. Match the voice of strong existing explanations (the Mixolydian and Minor Pentatonic entries are good reference points).
+- **Notation**: Use sharps (F#, C#) not flats internally — matches the codebase convention.
+- **No emojis.** No exclamation marks unless quoting a sound description.
+- **Don't pad.** If a rewrite passes all five criteria in two sentences, do not stretch it to three.
+- **Preserve typed structure.** Explanations have a `context` string and a `body` string in `explanations.ts`. Rewrites should fit into the existing structure, not require a schema change.
+
+---
+
 ## Output format
 
 Produce a structured report with exactly four sections. Be direct and specific — quote actual content, name actual files and line numbers where possible.
@@ -70,13 +97,23 @@ Produce a structured report with exactly four sections. Be direct and specific �
 
 A markdown table. Rows = every piece of content audited (page intros + each individual explanation entry). Columns = WHY | DO | SOUND | CALIBRATION | CONNECT | Overall.
 
-Use ✓ for pass, ✗ for fail.
+Use ✓ for pass, ✗ for fail. For content type-specific criteria that don't apply (e.g., SOUND on a tool intro), use `—` and exclude from the Overall score.
+
+After the table, briefly call out **strong content that passes all applicable criteria** — name the 3-5 best pieces. These become the voice/style reference for rewrites in Section 2.
+
+Also briefly call out the **overall failure pattern** — is the app weakest on DO (most common gap), CONNECT (siloed tools), or something else? One sentence.
 
 ---
 
 ### Section 2: Priority improvements
 
-The failing items ordered by impact — most-seen content first (page intros beat individual explanations; popular scales/chords beat obscure ones).
+Order failing items by **impact**, defined as:
+
+1. **Visibility** — page intros (seen on every visit) rank above individual explanations. Common scales/chords (major, minor pentatonic, m7, dominant 7, Mixolydian) rank above rare ones (Locrian, m7b5).
+2. **Severity** — items failing 3+ criteria rank above items failing 1-2.
+3. **Strategic centrality** — content tied to the app's core value prop (chord-scale relationships, the *why* behind shapes) ranks above peripheral content.
+
+Apply these in order: visibility first, then severity within the same visibility tier, then strategic centrality as the tiebreaker. Skip content that passes all five criteria — celebrate it in Section 1 instead.
 
 For each failing item:
 
@@ -86,7 +123,7 @@ For each failing item:
 Fails: [list which criteria and briefly why]
 
 Rewrite:
-> "[rewritten version that passes all criteria — stay within 2-3 sentences, do not pad]"
+> "[rewritten version that passes all criteria — respects the rewrite constraints above]"
 
 ---
 
@@ -104,3 +141,11 @@ Format:
 Things the target user would commonly want to know that the app doesn't currently address at all — in any explanation, page intro, or tool. These are honest content and feature gaps, not criticisms. Note them as future opportunities without implementing anything.
 
 Keep this list to the 5-8 most impactful gaps. For each: one sentence on what the gap is and one sentence on why it matters to the stuck intermediate.
+
+---
+
+## Improving this skill
+
+If during a run you discover the rubric itself is wrong — content that clearly fails the spirit of the standard but technically passes all five criteria, or vice versa — flag it at the end of the report under a brief **Rubric notes** heading. Don't silently work around it. The skill should evolve as we learn what genuinely serves the stuck intermediate; update this file rather than papering over its limitations.
+
+Do not make production code changes during a review. The audit reports; the developer decides which improvements to apply.
