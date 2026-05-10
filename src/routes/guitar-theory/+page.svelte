@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { Scale } from 'tonal';
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
 	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
@@ -15,11 +16,17 @@
 		type Quality as QualityType
 	} from './helpers';
 	import { scaleExplanations } from './explanations';
-	import { playSequence } from '$lib/audio';
+	import { playSequence, audioReady, preloadAudio } from '$lib/audio';
 
 	let showDegrees = $state(false);
 	let selectedPosition = $state<number | null>(null);
 	let isPlaying = $state(false);
+
+	// Begin downloading samples as soon as the page opens so they're ready
+	// by the time the user clicks the Play button.
+	onMount(() => {
+		void preloadAudio();
+	});
 
 	$effect(() => {
 		void $key;
@@ -71,14 +78,17 @@
 			<button
 				class="play-btn"
 				class:playing={isPlaying}
-				disabled={isPlaying}
+				class:loading={!$audioReady}
+				disabled={isPlaying || !$audioReady}
 				onclick={handlePlayScale}
 				aria-label="Play scale"
 			>
 				<svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
 					<path d="M2 1.5v7l6-3.5z" />
 				</svg>
-				<span>{isPlaying ? 'Playing…' : 'Play scale'}</span>
+				<span
+					>{!$audioReady ? 'Loading audio…' : isPlaying ? 'Playing…' : 'Play scale'}</span
+				>
 			</button>
 			<button
 				class="toggle-btn"

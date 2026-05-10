@@ -82,25 +82,42 @@
 					z-index: 5;
 				}
 
-				/* Shared base styles for both the hidden <p> and the clickable <button>. */
+				/*
+				 * Shared base styles for the hidden <p> (when class is hide-note)
+				 * and the clickable <button> (when visible). Buttons get user-agent
+				 * styling by default (background, border, padding, line-height,
+				 * appearance) — every one of those is explicitly reset here so the
+				 * button renders pixel-identically to the original <p>.
+				 */
 				> p,
 				> .note-btn {
+					font: inherit;
 					font-size: 13px;
 					font-weight: 600;
-					font-family: inherit;
+					line-height: 1;
+					letter-spacing: 0;
+					text-align: center;
+					color: inherit;
+
 					margin: 0;
-					padding: 0;
+					padding: 4px;
+					box-sizing: content-box;
+
 					position: absolute;
 					width: 20px;
 					height: 20px;
 					top: 6px;
 					left: 10px;
+
+					border: 0;
 					border-radius: 50%;
+					background-color: transparent;
+					appearance: none;
+					-webkit-appearance: none;
 
 					display: flex;
 					justify-content: center;
 					align-items: center;
-					padding: 4px;
 
 					z-index: 10;
 
@@ -110,8 +127,7 @@
 						opacity 0.5s,
 						visibility 0.5s,
 						background-color 0.5s,
-						box-shadow 0.5s,
-						transform 0.12s ease;
+						box-shadow 0.25s ease;
 
 					&.hide-note {
 						opacity: 0;
@@ -138,18 +154,28 @@
 					}
 				}
 
-				/* Interactive button-specific overrides */
+				/*
+				 * Interactive overrides: only add interaction hints, never change
+				 * the rendered size or position. Hover and active feel like the
+				 * note's glow is "lighting up" rather than the layout shifting.
+				 */
 				> .note-btn {
-					border: none;
 					cursor: pointer;
+					outline: 0;
 					-webkit-tap-highlight-color: transparent;
 
-					&:hover {
-						transform: scale(1.18);
+					&.in-scale:hover {
+						box-shadow: 0 0 14px 3px
+							color-mix(in srgb, var(--accent-note) 70%, transparent);
+					}
+
+					&.tonic:hover {
+						box-shadow: 0 0 16px 4px
+							color-mix(in srgb, var(--accent-tonic) 75%, transparent);
 					}
 
 					&:active {
-						transform: scale(0.94);
+						filter: brightness(1.15);
 					}
 
 					&:focus-visible {
@@ -158,8 +184,7 @@
 					}
 
 					&.dim-note:hover {
-						transform: scale(1.05);
-						opacity: 0.4;
+						opacity: 0.35;
 					}
 				}
 			}
