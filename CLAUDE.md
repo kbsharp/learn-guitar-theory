@@ -36,6 +36,41 @@ Every feature must pass this test: _does this help a guitarist understand someth
 4. **Practice mode** — Active exercises (interval recall, chord identification). Passive reference → active skill-building.
 5. **Circle of Fifths** — Dedicated page with an interactive, visually rich Circle of Fifths. Should explain: why keys are arranged by 5th intervals, which keys are "close" (share the most notes), relative major/minor pairs, how moving clockwise adds sharps and counterclockwise adds flats, and how to use it for modulation and key changes. The `CircleOfFifths.svelte` component (currently unused after the progressions page refactor) is a starting point but needs a full redesign with explanations.
 
+## Product Direction
+
+These decisions were made deliberately and should inform every content and feature choice.
+
+### Target user: the stuck intermediate
+
+The primary paying user is a guitarist who has played for **2-5 years**, is self-taught or lesson-taught, and knows their minor pentatonic, basic open chords, and maybe the CAGED shapes. They hit a wall: they know *what* to play but not *why* it works. They ask "why does my Em pentatonic work over everything?" and "how do I know which scale to use?"
+
+This is not a beginner who doesn't know what a chord is. It is not an advanced player who already knows all their modes. Write for the guitarist who has the shapes and wants the theory behind them.
+
+**Why this target**: Biggest addressable group, motivated, has disposable income (invested in gear), clear value proposition.
+
+### Monetisation: freemium with acquisition as upside
+
+- **Free tier**: all five current tools, full access — this is how the product spreads
+- **Paid tier (future)**: audio playback, practice mode (active exercises), personalised learning path
+- **Exit scenario**: build user base and pedagogical quality → acquisition target (Fender, Yousician, Guitar Center, edtech platforms)
+
+No aggressive sales required. Product-led growth: the free tier is genuinely excellent, users upgrade themselves or recommend to others.
+
+### Voice standard (extends the "What to DO" rule)
+
+Every explanation — ExplanationPanel body, page intro, HelpTip definition — must meet all four of these:
+
+1. **WHY**: Explains *why*, not just *what*. Not "Dorian is natural minor with a raised 6th" — explain what that raised 6th *does* to the sound.
+2. **DO**: Gives a concrete physical action the guitarist can try right now while holding their guitar. Specific enough to actually do.
+3. **SOUND**: Gives a sonic anchor — a genre, an artist, or a description of what it sounds like. Abstract theory without a sonic reference doesn't stick.
+4. **CALIBRATE**: Written for 2-5 years experience. Don't explain what a chord is. Don't assume they know what a tritone substitution is.
+
+When an explanation references a concept that has a dedicated tool page, add a cross-link to that page.
+
+### Audit tool
+
+Run `/guitar-pedagogy-review` to audit all explanatory content against these standards. The skill reads every explanation file and page intro, scores each piece against the five criteria (WHY, DO, SOUND, CALIBRATION, CONNECT), and returns a prioritised list of improvements with suggested rewrites.
+
 ## Architecture
 
 **SvelteKit** (v2) with file-based routing, **Svelte 5** (runes mode), **TypeScript**, **SCSS** via `vitePreprocess`, and **tonal** (v6) as the music theory engine.
