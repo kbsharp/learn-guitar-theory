@@ -97,8 +97,36 @@
 		}
 	];
 
+	const journeys = [
+		{
+			question: 'My solos sound boring — same five notes every time.',
+			tool: 'Chord-Scale',
+			href: '/chord-scale',
+			rationale: 'See which notes actually work over each chord — and why.'
+		},
+		{
+			question: 'My chord progressions sound plain. What comes after I–V?',
+			tool: 'Progressions',
+			href: '/progressions',
+			rationale: 'Twelve presets organised by mood — tweak them to learn how each one works.'
+		},
+		{
+			question: 'I know mode shapes, but I never know when to actually use them.',
+			tool: 'Fretboard Explorer',
+			href: '/guitar-theory',
+			rationale: 'See each mode on the whole neck, with a sentence on the sound it creates.'
+		},
+		{
+			question: "I'm stuck in one position. The rest of the neck feels random.",
+			tool: 'CAGED',
+			href: '/caged',
+			rationale: 'Five shapes that connect end-to-end — there is always a chord tone nearby.'
+		}
+	];
+
 	let heroEntered = $state(false);
 	let featureEls = $state<HTMLElement[]>([]);
+	let journeyEls = $state<HTMLElement[]>([]);
 
 	onMount(() => {
 		requestAnimationFrame(() => {
@@ -117,6 +145,7 @@
 			{ threshold: 0.15 }
 		);
 		featureEls.forEach((el) => el && io.observe(el));
+		journeyEls.forEach((el) => el && io.observe(el));
 		return () => io.disconnect();
 	});
 </script>
@@ -210,6 +239,40 @@
 		{/each}
 	</div>
 </div>
+
+<!-- ── JOURNEY ROUTER ─────────────────────────────────────────── -->
+<section class="router">
+	<p class="router-label">Where to start</p>
+	<p class="router-intro">
+		Pick the one that sounds like you.
+	</p>
+
+	<div class="router-grid">
+		{#each journeys as journey, i}
+			<a
+				href={journey.href}
+				class="journey-card"
+				bind:this={journeyEls[i]}
+			>
+				<p class="journey-question">&ldquo;{journey.question}&rdquo;</p>
+				<div class="journey-answer">
+					<span class="journey-prefix">Start with</span>
+					<span class="journey-tool">{journey.tool}</span>
+					<svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+						<path
+							d="M3 8h10M9 4l4 4-4 4"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+					</svg>
+				</div>
+				<p class="journey-rationale">{journey.rationale}</p>
+			</a>
+		{/each}
+	</div>
+</section>
 
 <!-- ── FEATURES ───────────────────────────────────────────────── -->
 <section class="features">
@@ -560,6 +623,146 @@
 			opacity: 0.5;
 			letter-spacing: 0;
 		}
+	}
+
+	/* ── JOURNEY ROUTER ────────────────────────────────────────── */
+	.router {
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 96px 32px 0;
+
+		@media (max-width: 768px) {
+			padding: 64px 16px 0;
+		}
+	}
+
+	.router-label {
+		font-size: 10px;
+		font-weight: 600;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--accent-note);
+		margin: 0 0 12px;
+	}
+
+	.router-intro {
+		font-size: 22px;
+		font-weight: 300;
+		line-height: 1.4;
+		color: var(--text-primary);
+		margin: 0 0 40px;
+		max-width: 560px;
+
+		@media (max-width: 768px) {
+			font-size: 18px;
+			margin-bottom: 28px;
+		}
+	}
+
+	.router-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 16px;
+
+		@media (max-width: 768px) {
+			grid-template-columns: 1fr;
+			gap: 12px;
+		}
+	}
+
+	.journey-card {
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+		padding: 28px 28px 24px;
+		background: var(--bg-surface);
+		border: 1px solid rgba(255, 255, 255, 0.05);
+		border-radius: var(--radius-md);
+		text-decoration: none;
+		color: inherit;
+		position: relative;
+
+		/* Scroll reveal */
+		opacity: 0;
+		transform: translateY(20px);
+		transition:
+			opacity 0.7s ease,
+			transform 0.7s ease,
+			border-color 0.25s ease,
+			background 0.25s ease;
+
+		&.visible {
+			opacity: 1;
+			transform: none;
+		}
+
+		&:hover {
+			border-color: color-mix(in srgb, var(--accent-note) 50%, transparent);
+			background: color-mix(in srgb, var(--accent-note) 3%, var(--bg-surface));
+
+			.journey-tool {
+				color: var(--accent-note);
+			}
+
+			svg {
+				transform: translateX(3px);
+				color: var(--accent-note);
+			}
+		}
+
+		@media (max-width: 768px) {
+			padding: 22px 22px 20px;
+			gap: 14px;
+		}
+	}
+
+	.journey-question {
+		font-size: 16px;
+		font-style: italic;
+		font-weight: 300;
+		line-height: 1.5;
+		color: var(--text-primary);
+		margin: 0;
+
+		@media (max-width: 768px) {
+			font-size: 14px;
+		}
+	}
+
+	.journey-answer {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.journey-prefix {
+		font-size: 9px;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--text-muted);
+	}
+
+	.journey-tool {
+		font-size: 13px;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		color: var(--text-primary);
+		transition: color 0.2s ease;
+	}
+
+	.journey-answer svg {
+		color: var(--text-muted);
+		transition:
+			transform 0.2s ease,
+			color 0.2s ease;
+	}
+
+	.journey-rationale {
+		font-size: 12px;
+		line-height: 1.7;
+		color: var(--text-muted);
+		margin: 0;
 	}
 
 	/* ── FEATURES ──────────────────────────────────────────────── */

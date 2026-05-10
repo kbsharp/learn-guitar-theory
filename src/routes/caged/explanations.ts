@@ -14,27 +14,28 @@ export interface CAGEDExplanation {
 export const cagedExplanations: Record<string, CAGEDExplanation> = {
 	all: {
 		context: 'Full neck — 5 shapes, no gaps',
-		body: 'These 5 shapes tile the entire fretboard end-to-end. Every chord tone you can play on the neck belongs to one of them. The shapes connect — the top of one shape overlaps the bottom of the next. Once you know all 5 for a given chord, there is always another voicing nearby, no matter where you are on the neck.',
+		body: "These 5 shapes tile the entire fretboard end-to-end with no gaps. Every chord tone you can play belongs to one of them, and each shape's top frets overlap the next shape's bottom frets. Try this: pick a chord (G works well) and play all 5 shapes from open up to fret 12 — you'll feel them connect.",
 		next: { href: '/diatonic', label: 'Use these shapes for the chords in a key' }
 	},
 	E: {
 		context: 'E shape — open position moved up the neck',
-		body: 'Based on the open E major chord — the most common starting point for most guitarists. As a barre chord it sits lowest on the fretboard for most roots and has strong, full bass notes on the low E string. Because the open E is usually the first barre chord shape people learn, this one tends to feel most natural. The root sits on the low E string.'
+		body: 'Based on the open E major chord, the most common barre shape. The root sits on the low E string — barre fret 3 in this shape and you have a G chord, fret 5 gives A, fret 7 gives B. Same shape, different keys.'
 	},
 	A: {
 		context: 'A shape — 5th-string root, versatile mid-neck voicing',
-		body: 'Based on the open A chord. The root sits on the 5th string (A string), making it easy to find using the A-string note names you may already know. Often played as a partial barre covering strings 2–4, or a full 5th-string barre. Very common for intermediate rhythm playing — it sits well in the middle of the neck and has a full, even tone.'
+		body: 'Based on the open A chord — root on the 5th string. Barre fret 5 with a partial A shape on strings 2–4 and you have a D chord; fret 7 gives E. Very common for intermediate rhythm playing — sits well in the middle of the neck with an even tone.'
 	},
 	G: {
 		context: 'G shape — high voicings, sits above the bass register',
-		body: 'Based on the open G chord — the trickiest shape because the open G fingering requires an unusual stretch. As a movable shape it gives you the highest-register chord tones, which sit cleanly above a bassist without conflicting. Advanced players use this for chord melody, fills, and high-register rhythm parts that cut through a dense mix.'
+		body: "Based on the open G chord — the trickiest fingering because of the stretch. As a movable shape it gives the highest-register chord tones, sitting cleanly above a bassist without conflicting. Try the top three strings at fret 7 for a B chord — that's the voicing chord melody players reach for constantly.",
+		next: { href: '/diatonic', label: 'See where these voicings fit a key' }
 	},
 	C: {
 		context: 'C shape — bright, high voicing for fills and stabs',
-		body: 'Based on the open C chord. Typically sits in the higher fret range for any given root and provides a bright, treble-focused voicing. Commonly used in pop and country for short chord stabs and fills — the high register makes it cut clearly. The root is on the 2nd string, which can take time to internalise compared to the E and A shapes.'
+		body: 'Based on the open C chord. Sits in the higher fret range and gives a bright, treble-focused voicing. Barre fret 5 with a C shape behind it for an F chord that cuts through a dense mix — common for pop and country chord stabs.'
 	},
 	D: {
 		context: 'D shape — compact, high-fret voicing',
-		body: 'Based on the open D chord. Often the highest-fret shape for a given root and gives the most compact, trebly voicing of the five. Good for rhythmic chord hits when you want to sit on top of the mix, or for adding chord tones in the upper register without duplicating what the bass is doing. Connects directly to the E shape above it on the neck.'
+		body: 'Based on the open D chord — the most compact, trebly voicing of the five. Barre fret 5 with an open-D shape behind it and you have a G chord at the top of the neck. Good for rhythmic hits sitting above the bass register, or for upper-string fills that connect to the E shape below it.'
 	}
 };
