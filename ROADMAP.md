@@ -148,7 +148,7 @@ teaching layer the ear-first design law needs.
 
 - [x] ~~**Play scale** button on Explorer — ascending/descending, notes light up on the fretboard in sync~~ — runs the _selected box_ (position 1 when showing the whole neck) root-to-root and back, walking real string/fret positions so what you hear is the shape you're looking at
 - [x] ~~**Play chord** button on Chord-Scale / Diatonic / CAGED — strum with slight offset, tones light up~~ — strums a real voicing on the neck (root in the bass, one note per string), strings lighting one by one as the strum passes and staying lit while the chord rings; on CAGED the strum stays inside the selected shape's box
-- [ ] **A/B comparison player** (new component) — two variants of the same phrase over the same root, user toggles; the characteristic note visually flagged. First uses: Dorian/Aeolian, Mixolydian/Ionian, Lydian/Ionian, maj3/min3
+- [x] ~~**A/B comparison player** (new component) — two variants of the same phrase over the same root, user toggles; the characteristic note visually flagged. First uses: Dorian/Aeolian, Mixolydian/Ionian, Lydian/Ionian, maj3/min3~~ — on Explorer, under the fretboard. All ten scales are paired with the nearest scale the user already plays; selecting a take redraws the board as that scale inside the _same_ fret window, so the characteristic note visibly slides one fret while everything else holds still
 - [ ] **Drone/loop player** (new component) — sustained root or looped chord vamp the user can leave running while they play. This is the backing for every rung-4 exercise
 - [ ] **Progression playback** on Progressions — hear the 4 slots in time; this makes function audible (V _leaning_ into I)
 
@@ -219,4 +219,22 @@ The differentiator. The journey router grows into a real "you are here."
   strum is constrained to the selected shape's box, so nothing lights up outside what's on screen —
   same principle as the scale run. Strings light cumulatively as the strum passes and stay lit while
   the chord rings: the shape assembles at the speed it sounds, which is the point.
+- **2026-08-09** — The A/B player **swaps the board, not just the audio**. Hearing two scales back to
+  back teaches that they differ; seeing one dot move a fret while the other twenty hold still teaches
+  _where_ they differ, which is the part that transfers to the neck. So both takes are built from the
+  same fret window (anchored to the user's own scale, never the reference's) and each take's
+  characteristic note is ringed in amber on the board — crux 4 made literal. The pairings go to the
+  nearest scale the user already plays, not the theoretically tidy parent: Locrian is heard against
+  Phrygian (one note) rather than Aeolian (two), and Ionian against Mixolydian. Pentatonics are the
+  honest exception — three notes move, but the copy says so and flags the 3rd, because that's the one
+  the ear actually hears. `comparisons.test.ts` checks every pair against tonal: the flagged note is
+  in the scale, absent from the reference, and one semitone away. Blues is the one pair with no
+  counterpart note — select the reference and the ring simply disappears, which is the lesson.
+- **2026-08-09** — `onCancel` added to the audio API. Only one thing plays at a time, so a second
+  Play button silently steals the audio from the first and the loser's button sticks on "Stop"
+  forever — its `onEnd` is stale by construction. Every player now gets told when it's superseded.
+  The subtlety that cost a debugging round: a component can supersede _itself_ (flipping A→B), so
+  the outgoing run's `onCancel` fires while the incoming run is still being scheduled and will tear
+  down state the new run just set. Any component that can restart its own playback needs a run token
+  — `ABComparison.svelte` is the reference.
 - **2026-08-09** — Scale playback plays the **box on screen**, not an abstract pitch list. A run of decontextualised pitches teaches the sound of a scale but nothing about the neck; walking the real string/fret positions of the selected position, with each note lighting as it sounds, ties sound to shape — which is crux 1 (intervals, not shapes) and crux 5 (ear leads) doing their job together. Runs are trimmed root-to-root so the ear gets resolution, and playback stops the moment the board changes underneath it.

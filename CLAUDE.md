@@ -112,7 +112,7 @@ Shared utility: `src/lib/music.ts` — canonical `convertFlatToSharp()` and `con
 
 Each route has a co-located `helpers.ts`:
 
-- `guitar-theory/helpers.ts` — `getClassName()`, `getScaleDegree()`, `computeScalePositions()`, `currentTonic()`
+- `guitar-theory/helpers.ts` — `getClassName()`, `getScaleDegree()`, `noteAtSemitones()`, `computeScalePositions()`, `computeScaleRun()`, `currentTonic()`
 - `chord-scale/helpers.ts` — `getChordScaleClass()`, `chordToScale` map
 - `diatonic/helpers.ts` — `getDiatonicChords()`, `getDiatonicNoteClass()`, `getScaleNotes()`
 - `caged/helpers.ts` — `computeCAGEDShapes()`, `getCAGEDNoteClass()`, `getChordTones()`
@@ -131,7 +131,7 @@ Three-layer composition inside `src/lib/components/Fretboard/Fretboard.svelte`:
 
 The fretboard is fixed at 1200px wide — **intentionally not responsive yet** (mobile is roadmap item #2).
 
-Classes applied to fret notes: `hide-note` (invisible), `in-scale` (cyan glow), `tonic` (pink glow), `dim-note` (15% opacity outside position range).
+Classes applied to fret notes: `hide-note` (invisible), `in-scale` (cyan glow), `tonic` (pink glow), `dim-note` (15% opacity outside position range), `characteristic` (amber ring — the note that gives the current scale its colour), `is-playing` (bright ring on the note sounding right now).
 
 ### Adding new scales or qualities
 
@@ -250,7 +250,7 @@ first user gesture via `ensureAudio()`.
 | Export                         | Use                                                                      |
 | ------------------------------ | ------------------------------------------------------------------------ |
 | `playNote(pitch, durationSec)` | One note. Used by every clickable fret note.                             |
-| `playSequence(pitches, opts)`  | Timed run. `opts`: `gapSec`, `onStep(index)`, `onEnd()`.                 |
+| `playSequence(pitches, opts)`  | Timed run. `opts`: `gapSec`, `onStep(index)`, `onEnd()`, `onCancel()`.   |
 | `playChord(pitches, opts)`     | Strum, bass string first. `opts`: `strumSec`, `durationSec`, same hooks. |
 | `stopPlayback()`               | Cancel whatever is playing and silence ringing notes. Safe pre-load.     |
 | `audioReady`                   | Readable store — gate Play buttons on this while samples download.       |
@@ -272,6 +272,16 @@ add new timed playback there rather than hand-rolling another Transport schedule
   highlight that silently disappears is worse than one a frame late.
 - `onEnd` is Transport-driven only. A stuck "playing" button is worse than
   resetting one lookahead-tick early.
+- **A superseded run gets `onCancel`, never `onEnd`.** Starting playback cancels
+  its predecessor, so any component with a Play button must pass `onCancel` to
+  reset itself — otherwise it sits on "Stop" forever once another player takes
+  the audio. Never call `stopPlayback()` from inside `onCancel`; that would kill
+  the run that just took over.
+- **A component that can supersede its own run needs a run token.** The outgoing
+  run's `onCancel` fires _while the incoming one is being scheduled_, so without
+  a token it tears down state the new run just set and both go silent. See
+  `runToken` in `ABComparison.svelte`. Components that early-return while playing
+  (`ChordPlayer`) can't hit this.
 
 **Syncing visuals to audio:** `<Fretboard>` takes a `playingNotes: { string,
 fret }[]` prop, passed straight through to `Strings.svelte`, which adds
@@ -304,6 +314,43 @@ if those break, the voicings have stopped being real guitar chords.
   and `bind:playingNotes`, then hand `playingNotes` to `<Fretboard>`. It
   preloads samples on mount and cancels playback whenever the voicing changes,
   so pages don't repeat that wiring.
+- `ABComparison.svelte` — the A/B player: two takes of the same phrase, one note
+  apart. Props: `a`, `b` (each `{ label, notes }`), `degree`, `listenFor`,
+  `bind:selected`, `bind:playingNotes`, `gapSec`.
+
+---
+
+## A/B comparison (crux 4 — "one note makes the colour")
+
+`ABComparison` exists to make a _single note_ audible by removing every other
+variable. Three rules make it work, and breaking any one of them turns it back
+into "here are two scales":
+
+1. **Both takes are the same phrase in the same fret window on the same root.**
+   The window is anchored to the scale the _user_ picked, never recomputed for
+   the reference — otherwise the whole box shifts under them and the one-fret
+   move is lost in the noise.
+2. **Selecting a take redraws the fretboard as that scale.** The component owns
+   the toggle and the audio; the page owns the swap (`bind:selected` → a
+   `shownQuality` derived value feeding `getNoteClass` and the run). Hearing the
+   difference without seeing where it lives teaches half the lesson.
+3. **The characteristic note is ringed**, via a `characteristic` class the page
+   appends in `getNoteClass`. It's a ring in `--accent-characteristic`, not a
+   fill, so the note still says whether it's a scale tone or the root — the ring
+   is a third piece of information, not a replacement for the first two.
+
+Pairings live in `guitar-theory/comparisons.ts`, keyed by `Quality`. Pair each
+scale with **the nearest scale the target user already plays**, not its
+theoretical parent — Locrian against Phrygian (one note) beats Locrian against
+Aeolian (two). `comparisons.test.ts` checks every pair against tonal: the flagged
+note is in the scale, absent from the reference, and one semitone away. Add a
+pair and those assertions catch a wrong semitone number before the page does.
+
+`--accent-characteristic` is a per-theme token in `_styles.scss`. It's readable
+as a ring because the fretboard is dark in every theme — as small text on the
+light theme's white surface it lands under WCAG AA, so in panels carry it on
+borders and fills and leave the glyph at `--text-primary`. `a11y.spec.ts` audits
+all three themes and will catch a regression here.
 
 ---
 
@@ -327,7 +374,7 @@ Controls (key selector, chord buttons, etc.) must stack vertically on mobile and
 
 Each `helpers.ts` has a co-located `helpers.test.ts`. The shared utilities have `src/lib/music.test.ts` and `src/lib/voicing.test.ts`. Tests run in ~1s and are the first thing to check after any logic change.
 
-Tests cover: `convertFlatToSharp`, `getClassName`, `getScaleDegree`, `computeScalePositions`, `getDiatonicChords`, `getScaleNotes`, `getDiatonicNoteClass`, `computeCAGEDShapes`, `getChordTones`, `getCAGEDNoteClass`, `getSlotChord`, `getFunctionLabel`, `formatRoman`, `getBorrowedChords`, `computeChordVoicing`.
+Tests cover: `convertFlatToSharp`, `getClassName`, `getScaleDegree`, `noteAtSemitones`, `computeScalePositions`, `computeScaleRun`, `getDiatonicChords`, `getScaleNotes`, `getDiatonicNoteClass`, `computeCAGEDShapes`, `getChordTones`, `getCAGEDNoteClass`, `getSlotChord`, `getFunctionLabel`, `formatRoman`, `getBorrowedChords`, `computeChordVoicing`, plus `comparisons.ts` (the A/B pairings, validated against tonal rather than hand-checked).
 
 **Adding new helper functions**: write a co-located test before the function reaches the page. Pure functions (no DOM, no Svelte stores) only — keep tests free of mocking.
 

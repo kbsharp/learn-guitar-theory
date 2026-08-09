@@ -28,6 +28,39 @@ test('guitar-theory — position selector highlights a fret range', async ({ pag
 	await expect(page.locator('.dim-note').first()).toBeVisible();
 });
 
+test('guitar-theory — A/B comparison moves the characteristic note one fret', async ({ page }) => {
+	await page.goto('/guitar-theory');
+	await page.waitForSelector('html[data-theme]');
+	// C Ionian by default: the ♮7 (B) is what separates it from Mixolydian.
+	await expect(page.locator('.ab-degree')).toHaveText('♮7');
+	const ringed = page.locator('.note-btn.characteristic');
+	await expect(ringed.first()).toHaveText('B');
+
+	// Selecting B redraws the board as the reference scale, so the ring lands
+	// on the ♭7 a fret below — the whole point of the exercise.
+	await page.locator('.ab-btn').nth(1).click();
+	await expect(page.locator('.ab-degree')).toHaveText('♭7');
+	await expect(ringed.first()).toHaveText('A#');
+	await expect(page.locator('.ab-showing')).toContainText('Mixolydian');
+
+	// Flipping back mid-listen has to work — it's the interaction, not an edge
+	// case. The outgoing run must not tear down the incoming one.
+	await page.locator('.ab-btn').first().click();
+	await expect(page.locator('.ab-btn').first()).toHaveClass(/sounding/);
+	await expect(ringed.first()).toHaveText('B');
+});
+
+test('guitar-theory — starting an A/B take resets the Play scale button', async ({ page }) => {
+	await page.goto('/guitar-theory');
+	await page.waitForSelector('html[data-theme]');
+	const play = page.locator('.play-btn');
+	await play.click();
+	await expect(play).toHaveText('Stop');
+	// The A/B player takes the audio; a button left saying "Stop" would lie.
+	await page.locator('.ab-btn').nth(1).click();
+	await expect(play).toHaveText('Play scale');
+});
+
 // ── Chord-Scale Relationships ─────────────────────────────────────────────────
 
 test('chord-scale — shows chord tones for default selection', async ({ page }) => {

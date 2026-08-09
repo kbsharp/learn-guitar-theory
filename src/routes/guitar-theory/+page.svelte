@@ -4,6 +4,7 @@
 	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
 	import HelpTip from '$lib/components/HelpTip.svelte';
 	import PlayButton from '$lib/components/PlayButton.svelte';
+	import ABComparison from '$lib/components/ABComparison.svelte';
 	import Keys from './Keys.svelte';
 	import Qualities from './Qualities.svelte';
 	import { key, quality } from '../../stores';
@@ -14,9 +15,13 @@
 		convertFlatToSharp,
 		computeScalePositions,
 		computeScaleRun,
-		type Quality as QualityType
+		noteAtSemitones,
+		qualityLabels,
+		type Quality as QualityType,
+		type ScaleRunNote
 	} from './helpers';
 	import { scaleExplanations } from './explanations';
+	import { scaleComparisons } from './comparisons';
 	import { playSequence, stopPlayback, audioReady, preloadAudio } from '$lib/audio';
 
 	// Seconds between notes in a scale run. Slow enough to hear each interval
@@ -27,6 +32,9 @@
 	let selectedPosition = $state<number | null>(null);
 	let isPlaying = $state(false);
 	let playingStep = $state<number | null>(null);
+	// 0 = the scale the user picked, 1 = the reference it's compared against.
+	let comparedVariant = $state(0);
+	let comparisonNotes = $state<ScaleRunNote[]>([]);
 
 	// Begin downloading samples as soon as the page opens so they're ready
 	// by the time the user clicks the Play button.
@@ -42,8 +50,19 @@
 		selectedPosition = null;
 	});
 
+	// A new scale means a new comparison pair — drop back to showing the
+	// scale the user actually picked.
+	$effect(() => {
+		void $key;
+		void $quality;
+		comparedVariant = 0;
+	});
+
 	// Any change to what's on the board invalidates a run in progress — the
 	// notes it was walking through are no longer the ones on screen.
+	// Deliberately not watching `comparedVariant`: flipping A/B starts its own
+	// playback, and that supersession already resets this button via onCancel.
+	// Stopping here too would race with — and kill — the run just started.
 	$effect(() => {
 		void $key;
 		void $quality;
@@ -52,6 +71,34 @@
 	});
 
 	let tonic = $derived(currentTonic($key));
+	let comparison = $derived(scaleComparisons[$quality as QualityType]);
+	// Selecting variant B shows the reference scale on the board. The fret
+	// window stays anchored to the user's own scale (below), so switching
+	// moves the characteristic note by a fret instead of moving the whole box
+	// out from under them — seeing that one dot shift is the lesson.
+	let shownQuality = $derived(
+		comparedVariant === 1 && comparison ? comparison.against : ($quality as QualityType)
+	);
+	// The colour note of whichever scale is showing — for B that's the note A's
+	// characteristic moved away from, so the ring visibly shifts a fret rather
+	// than disappearing. Blues is the exception: its ♭5 has no counterpart in
+	// minor pentatonic, so on B the ring simply isn't there, which is the point.
+	let shownDegree = $derived(
+		comparedVariant === 1 && comparison
+			? (comparison.referenceDegree ?? comparison.degree)
+			: comparison?.degree
+	);
+	let characteristicNote = $derived(
+		!comparison
+			? null
+			: noteAtSemitones(
+					tonic,
+					comparedVariant === 1
+						? (comparison.reference ?? comparison.characteristic)
+						: comparison.characteristic
+				)
+	);
+
 	let positions = $derived(computeScalePositions($key, $quality));
 	let positionRange = $derived(
 		selectedPosition !== null && positions[selectedPosition - 1]
@@ -61,7 +108,11 @@
 				}
 			: null
 	);
-	let getNoteClass = $derived((note: string) => getClassName(note, $key, tonic, $quality));
+	let getNoteClass = $derived((note: string) => {
+		const base = getClassName(note, $key, tonic, shownQuality);
+		if (base === 'hide-note' || note !== characteristicNote) return base;
+		return `${base} characteristic`;
+	});
 	let getNoteLabel = $derived((note: string) =>
 		showDegrees ? getScaleDegree(note, tonic) : convertFlatToSharp(note)
 	);
@@ -69,19 +120,35 @@
 
 	// The run walks the selected box (or position 1 when showing the whole
 	// neck) up and back down — the way you'd actually practise it.
-	let ascendingRun = $derived(computeScaleRun($key, $quality, positionRange));
+	let ascendingRun = $derived(computeScaleRun($key, shownQuality, positionRange));
 	let runSteps = $derived(
 		ascendingRun.length ? [...ascendingRun, ...ascendingRun.slice(0, -1).reverse()] : []
 	);
+	// Both variants walk the same window, so they come out the same phrase
+	// with one note a fret apart — the only variable left is the colour note.
+	let variantA = $derived({
+		label: qualityLabels[$quality as QualityType],
+		notes: computeScaleRun($key, $quality as QualityType, positionRange)
+	});
+	let variantB = $derived({
+		label: comparison ? qualityLabels[comparison.against] : '',
+		notes: comparison ? computeScaleRun($key, comparison.against, positionRange) : []
+	});
 	// One note at a time on a run — the fretboard takes a list either way.
-	let playingNotes = $derived(
+	// Only one player can be sounding, so whichever has notes is the live one.
+	let runNotes = $derived(
 		playingStep === null ? [] : runSteps.slice(playingStep, playingStep + 1)
 	);
+	let playingNotes = $derived(comparisonNotes.length ? comparisonNotes : runNotes);
+
+	function resetRun() {
+		isPlaying = false;
+		playingStep = null;
+	}
 
 	function stopRun() {
 		stopPlayback();
-		isPlaying = false;
-		playingStep = null;
+		resetRun();
 	}
 
 	async function handlePlayScale() {
@@ -98,10 +165,10 @@
 				{
 					gapSec: RUN_GAP_SEC,
 					onStep: (i) => (playingStep = i),
-					onEnd: () => {
-						isPlaying = false;
-						playingStep = null;
-					}
+					onEnd: resetRun,
+					// The A/B player took the audio — reset without calling
+					// stopPlayback(), which would cancel the run that took it.
+					onCancel: resetRun
 				}
 			);
 		} catch {
@@ -141,13 +208,26 @@
 	<p class="page-intro">
 		Every scale is a pattern of intervals — see them all at once, or narrow to one 4-fret box
 		you can actually play. <strong>Pink</strong> is the root, <strong>cyan</strong> is in the
-		scale. Hit <strong>Play scale</strong> to hear the box run root-to-root and back, each note
-		lighting up as it sounds — play along and your fingers learn the shape and the sound
-		together. Once a shape interests you, hit
+		scale, and the <strong>amber ring</strong> is the one note this scale's whole character
+		hangs on. Hit <strong>Play scale</strong> to hear the box run root-to-root and back, then
+		use <strong>A/B</strong> below to hear that one note move — same phrase, same box, one fret
+		of difference. Once a shape interests you, hit
 		<a class="intro-link" href="/chord-scale">Chord-Scale</a> to see which chords it fits over.
 	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} {playingNotes} />
+
+	{#if comparison}
+		<ABComparison
+			a={variantA}
+			b={variantB}
+			degree={shownDegree ?? comparison.degree}
+			listenFor={comparison.listenFor}
+			gapSec={RUN_GAP_SEC}
+			bind:selected={comparedVariant}
+			bind:playingNotes={comparisonNotes}
+		/>
+	{/if}
 
 	<div class="controls">
 		<div class="control-group">
