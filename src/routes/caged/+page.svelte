@@ -2,6 +2,8 @@
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
 	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
 	import HelpTip from '$lib/components/HelpTip.svelte';
+	import ChordPlayer from '$lib/components/ChordPlayer.svelte';
+	import { computeChordVoicing, type VoicingNote } from '$lib/voicing';
 	import {
 		cagedRoots,
 		computeCAGEDShapes,
@@ -33,6 +35,12 @@
 	let getNoteClass = $derived((note: string) => getCAGEDNoteClass(note, $cagedKey, chordTones));
 	const getNoteLabel = (note: string) => note;
 
+	// With a shape selected we strum inside that box, so every note that lights
+	// up is one of the shape's own — hearing the shape, not just a chord that
+	// happens to share its name. With no shape selected, the lowest position.
+	let voicing = $derived(computeChordVoicing($cagedKey, chordTones, positionRange));
+	let playingNotes = $state<VoicingNote[]>([]);
+
 	let chordName = $derived(`${$cagedKey}${$cagedQuality === 'minor' ? 'm' : ''}`);
 	let explanation = $derived(
 		cagedExplanations[selectedShape?.toLowerCase() ?? 'all'] ?? cagedExplanations['all']
@@ -51,17 +59,21 @@
 			{#if selectedShape}
 				<span class="shape-badge">{selectedShape} shape</span>
 			{/if}
+			<ChordPlayer {voicing} bind:playingNotes />
 		</div>
 	</div>
 
 	<p class="page-intro">
 		Every major or minor chord can be played in 5 positions across the neck, each based on a
 		familiar open chord shape. The shapes connect end-to-end with no gaps — learn them and
-		you'll always have a chord tone nearby. Use these shapes for the seven chords in any key:
-		see them in context on <a class="intro-link" href="/diatonic">Diatonic Chords</a>.
+		you'll always have a chord tone nearby. Pick a shape, then hit <strong>Play chord</strong>:
+		it strums that box low string to high, lighting each note as it sounds. Same chord, five
+		places — play each one and hear how the position changes the colour without changing the
+		harmony. Use these shapes for the seven chords in any key: see them in context on
+		<a class="intro-link" href="/diatonic">Diatonic Chords</a>.
 	</p>
 
-	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} />
+	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} {playingNotes} />
 
 	<div class="controls">
 		<div class="control-group">

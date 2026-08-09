@@ -2,11 +2,14 @@
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
 	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
 	import HelpTip from '$lib/components/HelpTip.svelte';
+	import ChordPlayer from '$lib/components/ChordPlayer.svelte';
+	import { computeChordVoicing, type VoicingNote } from '$lib/voicing';
 	import {
 		diatonicKeys,
 		getDiatonicChords,
 		getScaleNotes,
 		getDiatonicNoteClass,
+		getChordTones,
 		type DiatonicMode
 	} from './helpers';
 	import { diatonicExplanations } from './explanations';
@@ -23,6 +26,11 @@
 		$selectedDiatonicChord ? chords.findIndex((c) => c.name === $selectedDiatonicChord) : -1
 	);
 	let explanation = $derived(diatonicExplanations[selectedIndex] ?? diatonicExplanations[-1]);
+
+	// tonal lists a chord's notes root first, so tones[0] is the bass we want.
+	let chordTones = $derived(getChordTones($selectedDiatonicChord));
+	let voicing = $derived(chordTones.length ? computeChordVoicing(chordTones[0], chordTones) : []);
+	let playingNotes = $state<VoicingNote[]>([]);
 
 	function selectChord(chordName: string) {
 		selectedDiatonicChord.set($selectedDiatonicChord === chordName ? null : chordName);
@@ -41,19 +49,24 @@
 <div class="container">
 	<div class="page-header">
 		<p class="page-title">Diatonic Chords</p>
-		{#if $selectedDiatonicChord}
-			<span class="selected-label">{$selectedDiatonicChord}</span>
-		{/if}
+		<div class="header-right">
+			{#if $selectedDiatonicChord}
+				<span class="selected-label">{$selectedDiatonicChord}</span>
+			{/if}
+			<ChordPlayer {voicing} bind:playingNotes />
+		</div>
 	</div>
 
 	<p class="page-intro">
 		Every key has 7 chords that "belong" to it — the same pattern of majors, minors, and one
-		diminished in every key. Click each in turn to feel which ones resolve home (I) and which
-		demand movement (V). Then chain them into a four-chord song on the
+		diminished in every key. Select each in turn and hit <strong>Play chord</strong>: listen for
+		which ones sound like arriving home (I, vi) and which lean somewhere else and demand a
+		resolution (V, vii°). That pull is the engine every progression runs on. Then chain them
+		into a four-chord song on the
 		<a class="intro-link" href="/progressions">Progressions page</a>.
 	</p>
 
-	<Fretboard {getNoteClass} {getNoteLabel} />
+	<Fretboard {getNoteClass} {getNoteLabel} {playingNotes} />
 
 	<div class="controls">
 		<div class="control-group">
@@ -195,6 +208,12 @@
 		color: var(--text-muted);
 		margin: 0;
 		font-weight: 500;
+	}
+
+	.header-right {
+		display: flex;
+		align-items: center;
+		gap: 12px;
 	}
 
 	.selected-label {

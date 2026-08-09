@@ -60,6 +60,18 @@ test('diatonic — selecting a chord highlights chord tones', async ({ page }) =
 	await expect(firstChord).toHaveClass(/active/);
 });
 
+test('diatonic — play chord button unlocks once a chord is selected', async ({ page }) => {
+	await page.goto('/diatonic');
+	const play = page.locator('.play-btn');
+	// Nothing to strum yet, so the button says what to do first.
+	await expect(play).toBeDisabled();
+	await expect(play).toHaveText('Select a chord');
+	await page.locator('.btn-chord').first().click();
+	// Enables once the samples are in and there's a chord to play.
+	await expect(play).toHaveText('Play chord');
+	await expect(play).toBeEnabled();
+});
+
 test('diatonic — mode toggle switches between major and minor', async ({ page }) => {
 	await page.goto('/diatonic');
 	// Click minor mode
@@ -81,6 +93,21 @@ test('caged — clicking a shape button highlights it', async ({ page }) => {
 	const shapeBtn = page.locator('.btn-shape').nth(1);
 	await shapeBtn.click();
 	await expect(shapeBtn).toHaveClass(/active/);
+});
+
+test('caged — play chord strums the shape and lights its notes', async ({ page }) => {
+	await page.goto('/caged');
+	const play = page.locator('.play-btn');
+	await expect(play).toHaveText('Play chord');
+	// Select the first named shape so the strum is confined to that box.
+	await page.locator('.btn-shape').nth(1).click();
+	await play.click();
+	// Strings light one by one as the strum passes over them.
+	await expect(page.locator('.note-btn.is-playing').first()).toBeVisible();
+	// Nothing sounding outside the selected shape's window.
+	await expect(page.locator('.note-btn.is-playing.dim-note')).toHaveCount(0);
+	await play.click();
+	await expect(page.locator('.note-btn.is-playing')).toHaveCount(0);
 });
 
 // ── Progressions ──────────────────────────────────────────────────────────────

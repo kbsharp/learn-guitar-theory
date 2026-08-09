@@ -3,6 +3,7 @@
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
 	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
 	import HelpTip from '$lib/components/HelpTip.svelte';
+	import PlayButton from '$lib/components/PlayButton.svelte';
 	import Keys from './Keys.svelte';
 	import Qualities from './Qualities.svelte';
 	import { key, quality } from '../../stores';
@@ -72,7 +73,10 @@
 	let runSteps = $derived(
 		ascendingRun.length ? [...ascendingRun, ...ascendingRun.slice(0, -1).reverse()] : []
 	);
-	let playingNote = $derived(playingStep === null ? null : (runSteps[playingStep] ?? null));
+	// One note at a time on a run — the fretboard takes a list either way.
+	let playingNotes = $derived(
+		playingStep === null ? [] : runSteps.slice(playingStep, playingStep + 1)
+	);
 
 	function stopRun() {
 		stopPlayback();
@@ -114,29 +118,12 @@
 	<div class="page-header">
 		<p class="page-title">Fretboard Explorer</p>
 		<div class="header-right">
-			<button
-				class="play-btn"
-				class:playing={isPlaying}
-				class:loading={!$audioReady}
-				disabled={!$audioReady}
+			<PlayButton
+				label="Play scale"
+				playing={isPlaying}
+				loading={!$audioReady}
 				onclick={handlePlayScale}
-				aria-label={isPlaying ? 'Stop scale' : 'Play scale'}
-			>
-				<svg
-					width="10"
-					height="10"
-					viewBox="0 0 10 10"
-					fill="currentColor"
-					aria-hidden="true"
-				>
-					{#if isPlaying}
-						<rect x="2" y="2" width="6" height="6" />
-					{:else}
-						<path d="M2 1.5v7l6-3.5z" />
-					{/if}
-				</svg>
-				<span>{!$audioReady ? 'Loading audio…' : isPlaying ? 'Stop' : 'Play scale'}</span>
-			</button>
+			/>
 			<button
 				class="toggle-btn"
 				class:active={showDegrees}
@@ -160,7 +147,7 @@
 		<a class="intro-link" href="/chord-scale">Chord-Scale</a> to see which chords it fits over.
 	</p>
 
-	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} {playingNote} />
+	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} {playingNotes} />
 
 	<div class="controls">
 		<div class="control-group">
@@ -250,42 +237,6 @@
 		display: flex;
 		align-items: center;
 		gap: 8px;
-	}
-
-	.play-btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 7px;
-		font-family: inherit;
-		font-size: 11px;
-		font-weight: 600;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		background: var(--accent-tonic);
-		border: 1px solid var(--accent-tonic);
-		color: var(--bg-base);
-		border-radius: var(--radius-sm);
-		padding: 6px 14px;
-		cursor: pointer;
-		transition:
-			background-color 0.2s ease,
-			border-color 0.2s ease,
-			box-shadow 0.2s ease,
-			opacity 0.2s ease;
-
-		svg {
-			flex-shrink: 0;
-		}
-
-		&:hover:not(:disabled) {
-			box-shadow: 0 0 12px color-mix(in srgb, var(--accent-tonic) 50%, transparent);
-		}
-
-		&:disabled,
-		&.playing {
-			cursor: default;
-			opacity: 0.75;
-		}
 	}
 
 	.page-intro {

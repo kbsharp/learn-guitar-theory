@@ -32,13 +32,22 @@ export function getScaleNotes(root: string, mode: DiatonicMode): string[] {
 	return Scale.get(`${root} ${scaleName}`).notes.map(convertFlatToSharp);
 }
 
+/**
+ * Notes of a diatonic chord by name (e.g. "Am", "Bdim"), root first — what
+ * "Play chord" strums. Empty when nothing is selected.
+ */
+export function getChordTones(chordName: string | null): string[] {
+	if (!chordName) return [];
+	return Chord.get(chordName).notes.map(convertFlatToSharp);
+}
+
 export function getDiatonicNoteClass(
 	note: string,
 	selectedChord: string | null,
 	scaleNotes: string[]
 ): string {
 	if (selectedChord) {
-		const chordTones = Chord.get(selectedChord).notes.map(convertFlatToSharp);
+		const chordTones = getChordTones(selectedChord);
 		if (chordTones.includes(note)) return 'in-scale tonic';
 		if (scaleNotes.includes(note)) return 'in-scale';
 		return 'hide-note';

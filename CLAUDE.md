@@ -247,13 +247,17 @@ first user gesture via `ensureAudio()`.
 
 **Public API:**
 
-| Export                         | Use                                                                  |
-| ------------------------------ | -------------------------------------------------------------------- |
-| `playNote(pitch, durationSec)` | One note. Used by every clickable fret note.                         |
-| `playSequence(pitches, opts)`  | Timed run. `opts`: `gapSec`, `onStep(index)`, `onEnd()`.             |
-| `stopPlayback()`               | Cancel the run in progress and silence ringing notes. Safe pre-load. |
-| `audioReady`                   | Readable store — gate Play buttons on this while samples download.   |
-| `preloadAudio()`               | Call in `onMount` on any page with audio so samples are ready.       |
+| Export                         | Use                                                                      |
+| ------------------------------ | ------------------------------------------------------------------------ |
+| `playNote(pitch, durationSec)` | One note. Used by every clickable fret note.                             |
+| `playSequence(pitches, opts)`  | Timed run. `opts`: `gapSec`, `onStep(index)`, `onEnd()`.                 |
+| `playChord(pitches, opts)`     | Strum, bass string first. `opts`: `strumSec`, `durationSec`, same hooks. |
+| `stopPlayback()`               | Cancel whatever is playing and silence ringing notes. Safe pre-load.     |
+| `audioReady`                   | Readable store — gate Play buttons on this while samples download.       |
+| `preloadAudio()`               | Call in `onMount` on any page with audio so samples are ready.           |
+
+`playSequence` and `playChord` are thin wrappers over one private `schedulePitches` —
+add new timed playback there rather than hand-rolling another Transport schedule.
 
 **Sequencing rules (learned the hard way — don't regress these):**
 
@@ -269,17 +273,37 @@ first user gesture via `ensureAudio()`.
 - `onEnd` is Transport-driven only. A stuck "playing" button is worse than
   resetting one lookahead-tick early.
 
-**Syncing visuals to audio:** `<Fretboard>` takes a `playingNote: { string,
-fret } | null` prop, passed straight through to `Strings.svelte`, which adds
-`.is-playing` to that one note button. Pages drive it from an index into their
-own step list — the note is identified by **string+fret, not note name**, since
+**Syncing visuals to audio:** `<Fretboard>` takes a `playingNotes: { string,
+fret }[]` prop, passed straight through to `Strings.svelte`, which adds
+`.is-playing` to those note buttons — one entry for a scale run, the whole
+voicing for a strummed chord. Notes are identified by **string+fret, not note
+name**, since
 the same name appears all over the neck.
 
 **Building a playable run:** `computeScaleRun()` in `guitar-theory/helpers.ts`
 is the reference implementation — collect scale notes inside the fret window,
 sort by MIDI, collapse unisons to the lower string, trim root-to-root. Copy
-that shape for chord/arpeggio runs rather than playing abstract pitch lists:
+that shape for arpeggio runs rather than playing abstract pitch lists:
 what the user hears should be the shape they're looking at.
+
+**Building a chord:** `computeChordVoicing()` in `src/lib/voicing.ts` — root in
+the bass, then the lowest chord tone within reach on every string above. Pass a
+fret window to keep the whole voicing inside a highlighted box (a CAGED shape, a
+scale position); omit it to get the lowest comfortable position. Chord tones are
+matched by **pitch class**, so tonal's flat and odd spellings (Bb, E#) need no
+normalising at the call site. `voicing.test.ts` pins the canonical shapes the
+rule produces (open E, open Am, the E- and A-shape barres, the CAGED D shape) —
+if those break, the voicings have stopped being real guitar chords.
+
+**Shared audio UI components:**
+
+- `PlayButton.svelte` — the one Play/Stop control. Props: `label`, `playing`,
+  `loading`, `disabled`, `hint` (replaces the label while disabled, e.g. "Select
+  a chord"), `onclick`. Lives in `.page-header`, right-hand side, on every tool.
+- `ChordPlayer.svelte` — `PlayButton` plus the strum state. Give it a `voicing`
+  and `bind:playingNotes`, then hand `playingNotes` to `<Fretboard>`. It
+  preloads samples on mount and cancels playback whenever the voicing changes,
+  so pages don't repeat that wiring.
 
 ---
 
@@ -301,9 +325,9 @@ Controls (key selector, chord buttons, etc.) must stack vertically on mobile and
 
 ### Unit tests (Vitest) — `npm run test:unit`
 
-Each `helpers.ts` has a co-located `helpers.test.ts`. The shared music utility also has `src/lib/music.test.ts`. Tests run in ~1s and are the first thing to check after any logic change.
+Each `helpers.ts` has a co-located `helpers.test.ts`. The shared utilities have `src/lib/music.test.ts` and `src/lib/voicing.test.ts`. Tests run in ~1s and are the first thing to check after any logic change.
 
-Tests cover: `convertFlatToSharp`, `getClassName`, `getScaleDegree`, `computeScalePositions`, `getDiatonicChords`, `getScaleNotes`, `getDiatonicNoteClass`, `computeCAGEDShapes`, `getChordTones`, `getCAGEDNoteClass`, `getSlotChord`, `getFunctionLabel`, `formatRoman`, `getBorrowedChords`.
+Tests cover: `convertFlatToSharp`, `getClassName`, `getScaleDegree`, `computeScalePositions`, `getDiatonicChords`, `getScaleNotes`, `getDiatonicNoteClass`, `computeCAGEDShapes`, `getChordTones`, `getCAGEDNoteClass`, `getSlotChord`, `getFunctionLabel`, `formatRoman`, `getBorrowedChords`, `computeChordVoicing`.
 
 **Adding new helper functions**: write a co-located test before the function reaches the page. Pure functions (no DOM, no Svelte stores) only — keep tests free of mocking.
 
