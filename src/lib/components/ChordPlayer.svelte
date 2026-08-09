@@ -68,6 +68,12 @@
 					onEnd: () => {
 						isPlaying = false;
 						playingNotes = [];
+					},
+					// Another player took the audio — reset without calling
+					// stopPlayback(), which would cancel the run that stole it.
+					onCancel: () => {
+						isPlaying = false;
+						playingNotes = [];
 					}
 				}
 			);

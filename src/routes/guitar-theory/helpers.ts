@@ -3,6 +3,7 @@ import { convertFlatToSharp, convertFlatsToSharps } from '$lib/music';
 import { strings, stringPitches } from '$lib/strings';
 
 const LOW_E = ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#'];
+const CHROMATIC = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 export const frets = new Array(25).fill(null);
 
@@ -113,6 +114,18 @@ export function getScaleDegree(note: string, tonic: string): string {
 	if (tonicChroma === undefined || noteChroma === undefined) return note;
 	const semitones = (noteChroma - tonicChroma + 12) % 12;
 	return labels[semitones];
+}
+
+/**
+ * The note a given number of semitones above a root, named in sharps to match
+ * the fretboard. The inverse of `getScaleDegree` — used to locate a scale's
+ * characteristic note (Dorian's ♮6 is 9 semitones up) so it can be flagged on
+ * the board.
+ */
+export function noteAtSemitones(tonic: string, semitones: number): string {
+	const chroma = Note.chroma(tonic);
+	if (chroma === undefined) return tonic;
+	return CHROMATIC[(((chroma + semitones) % 12) + 12) % 12];
 }
 
 export { convertFlatToSharp } from '$lib/music';

@@ -43,6 +43,10 @@ let started = false;
 // Bumped whenever playback starts or stops, so callbacks already queued for
 // a cancelled run identify themselves as stale and do nothing.
 let playbackGeneration = 0;
+// The current run's `onCancel`. Only one thing plays at a time, so a second
+// caller silently steals the audio from the first — without this the loser's
+// Play button stays stuck on "Stop" forever, since its `onEnd` is now stale.
+let activeCancel: (() => void) | null = null;
 
 // Public reactive store: subscribe to know whether audio is ready to play.
 // Pages can use this to disable Play buttons or show a "loading…" state.
@@ -101,6 +105,12 @@ export interface SequenceOptions {
 	onStep?: (index: number) => void;
 	/** Fired once the last note has been triggered. */
 	onEnd?: () => void;
+	/**
+	 * Fired when this run is stopped or superseded by another. Reset your Play
+	 * button here — `onEnd` will never arrive for a cancelled run. Do not call
+	 * `stopPlayback()` from inside it.
+	 */
+	onCancel?: () => void;
 }
 
 /**
@@ -112,7 +122,7 @@ export interface SequenceOptions {
  */
 export async function playSequence(
 	pitches: string[],
-	{ gapSec = 0.32, onStep, onEnd }: SequenceOptions = {}
+	{ gapSec = 0.32, onStep, onEnd, onCancel }: SequenceOptions = {}
 ): Promise<void> {
 	// Each note is cut a little before the next arrives, so the run reads as
 	// separate notes rather than a wash.
@@ -121,7 +131,8 @@ export async function playSequence(
 		durationSec: gapSec * 1.8,
 		tailSec: gapSec,
 		onStep,
-		onEnd
+		onEnd,
+		onCancel
 	});
 }
 
@@ -139,6 +150,8 @@ export interface ChordOptions {
 	onStep?: (index: number) => void;
 	/** Fired once the chord has finished ringing. */
 	onEnd?: () => void;
+	/** Fired if the strum is stopped or superseded — see `SequenceOptions`. */
+	onCancel?: () => void;
 }
 
 /**
@@ -148,14 +161,15 @@ export interface ChordOptions {
  */
 export async function playChord(
 	pitches: string[],
-	{ strumSec = 0.045, durationSec = 2.6, onStep, onEnd }: ChordOptions = {}
+	{ strumSec = 0.045, durationSec = 2.6, onStep, onEnd, onCancel }: ChordOptions = {}
 ): Promise<void> {
 	return schedulePitches(pitches, {
 		gapSec: strumSec,
 		durationSec,
 		tailSec: durationSec,
 		onStep,
-		onEnd
+		onEnd,
+		onCancel
 	});
 }
 
@@ -168,6 +182,7 @@ interface ScheduleOptions {
 	tailSec: number;
 	onStep?: (index: number) => void;
 	onEnd?: () => void;
+	onCancel?: () => void;
 }
 
 /**
@@ -177,12 +192,14 @@ interface ScheduleOptions {
  */
 async function schedulePitches(
 	pitches: string[],
-	{ gapSec, durationSec, tailSec, onStep, onEnd }: ScheduleOptions
+	{ gapSec, durationSec, tailSec, onStep, onEnd, onCancel }: ScheduleOptions
 ): Promise<void> {
 	if (typeof window === 'undefined' || pitches.length === 0) return;
 	const Tone = await ensureAudio();
 
+	// Cancels the previous run, notifying its owner before we take over.
 	stopPlayback();
+	activeCancel = onCancel ?? null;
 
 	const transport = Tone.getTransport();
 	const draw = Tone.getDraw();
@@ -213,7 +230,10 @@ async function schedulePitches(
 	transport.scheduleOnce(
 		() => {
 			transport.stop();
-			if (generation === playbackGeneration) onEnd?.();
+			if (generation !== playbackGeneration) return;
+			// Finished on its own terms — there's nothing left to cancel.
+			activeCancel = null;
+			onEnd?.();
 		},
 		(pitches.length - 1) * gapSec + tailSec
 	);
@@ -227,6 +247,11 @@ async function schedulePitches(
  */
 export function stopPlayback(): void {
 	playbackGeneration++;
+	// Cleared before firing so a handler that calls back into `stopPlayback()`
+	// can't loop.
+	const cancel = activeCancel;
+	activeCancel = null;
+	cancel?.();
 	if (typeof window === 'undefined' || !toneModule) return;
 	const transport = toneModule.getTransport();
 	transport.stop();

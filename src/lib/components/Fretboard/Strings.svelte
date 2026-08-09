@@ -162,6 +162,21 @@
 					}
 
 					/*
+					 * The one note that gives the current scale its colour —
+					 * Dorian's ♮6, Lydian's ♯4. Ringed rather than refilled so
+					 * the note keeps saying whether it's a scale tone or the
+					 * root; the ring is the third piece of information, not a
+					 * replacement for the first two. Amber borrows the inlay
+					 * colour, which no note fill uses.
+					 */
+					&.characteristic {
+						box-shadow:
+							0 0 0 2px var(--accent-characteristic),
+							0 0 14px 3px
+								color-mix(in srgb, var(--accent-characteristic) 35%, transparent);
+					}
+
+					/*
 					 * The note sounding right now during a scale run. Keeps the
 					 * note's own colour (so root vs scale tone stays readable)
 					 * and adds a bright ring — the eye needs "this one, now",
@@ -198,6 +213,15 @@
 					&.tonic:hover {
 						box-shadow: 0 0 16px 4px
 							color-mix(in srgb, var(--accent-tonic) 75%, transparent);
+					}
+
+					// The hover glows above out-specify .characteristic, so the
+					// ring has to be restated or it vanishes under the cursor.
+					&.characteristic:hover {
+						box-shadow:
+							0 0 0 2px var(--accent-characteristic),
+							0 0 18px 5px
+								color-mix(in srgb, var(--accent-characteristic) 55%, transparent);
 					}
 
 					&:active {
