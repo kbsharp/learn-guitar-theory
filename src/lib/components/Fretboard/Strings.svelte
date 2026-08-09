@@ -6,12 +6,14 @@
 		getNoteClass?: (note: string) => string;
 		getNoteLabel?: (note: string) => string;
 		positionRange?: { start: number; end: number } | null;
+		playingNote?: { string: number; fret: number } | null;
 	}
 
 	let {
 		getNoteClass = () => 'hide-note',
 		getNoteLabel = (note: string) => note,
-		positionRange = null
+		positionRange = null,
+		playingNote = null
 	}: Props = $props();
 
 	function displayClass(noteClass: string, fretIndex: number): string {
@@ -41,6 +43,7 @@
 						<button
 							type="button"
 							class={`note-btn ${finalClass}`}
+							class:is-playing={playingNote?.string === i && playingNote?.fret === j}
 							onclick={() => handleNoteClick(i, j, noteClass)}
 							aria-label={`Play ${note}`}
 						>
@@ -127,7 +130,8 @@
 						opacity 0.5s,
 						visibility 0.5s,
 						background-color 0.5s,
-						box-shadow 0.25s ease;
+						box-shadow 0.25s ease,
+						transform 0.15s ease;
 
 					&.hide-note {
 						opacity: 0;
@@ -151,6 +155,24 @@
 						color: var(--white);
 						box-shadow: 0 0 12px 3px
 							color-mix(in srgb, var(--accent-tonic) 50%, transparent);
+					}
+
+					/*
+					 * The note sounding right now during a scale run. Keeps the
+					 * note's own colour (so root vs scale tone stays readable)
+					 * and adds a bright ring — the eye needs "this one, now",
+					 * not a different hue. Forced past .dim-note so a run is
+					 * never invisible if it strays outside the position window.
+					 */
+					&.is-playing {
+						opacity: 1;
+						transform: scale(1.35);
+						box-shadow:
+							0 0 0 2px var(--text-primary),
+							0 0 18px 6px color-mix(in srgb, var(--text-primary) 45%, transparent) !important;
+						transition:
+							box-shadow 0.06s ease,
+							transform 0.06s ease;
 					}
 				}
 

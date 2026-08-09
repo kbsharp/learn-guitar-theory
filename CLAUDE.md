@@ -237,21 +237,49 @@ Examples:
 
 ---
 
-## Audio Integration (roadmap priority #3)
+## Audio
 
-Use **Tone.js** (`npm install tone`) for audio playback.
+`src/lib/audio.ts` is the only place that touches Tone.js. It plays a **sampled
+acoustic guitar** (`static/samples/guitar-acoustic/`) through a `Tone.Sampler`,
+not a synth — software synthesis doesn't sell an acoustic guitar at our scale.
+Tone is dynamically imported (SSR-safe) and the AudioContext starts on the
+first user gesture via `ensureAudio()`.
 
-**Planned interactions:**
+**Public API:**
 
-- Click any lit fret note to hear it
-- "Play scale" button plays notes ascending then descending
-- "Play chord" strums the chord tones bottom-to-top with a brief strum timing offset
+| Export                         | Use                                                                  |
+| ------------------------------ | -------------------------------------------------------------------- |
+| `playNote(pitch, durationSec)` | One note. Used by every clickable fret note.                         |
+| `playSequence(pitches, opts)`  | Timed run. `opts`: `gapSec`, `onStep(index)`, `onEnd()`.             |
+| `stopPlayback()`               | Cancel the run in progress and silence ringing notes. Safe pre-load. |
+| `audioReady`                   | Readable store — gate Play buttons on this while samples download.   |
+| `preloadAudio()`               | Call in `onMount` on any page with audio so samples are ready.       |
 
-**Notes:**
+**Sequencing rules (learned the hard way — don't regress these):**
 
-- AudioContext must be resumed on first user gesture (browser security requirement)
-- Use a guitar-like synth: `Tone.PluckSynth` for plucked strings, or a `Tone.PolySynth` with AM/FM oscillator for chords
-- Fret notes have MIDI pitch data available through tonal's `Note.midi()` — use that for Tone.js frequency input
+- Sequences are scheduled on **Tone's Transport**, not raw `Tone.now()` offsets.
+  Raw offsets can't be cancelled, and every teaching interaction needs a Stop.
+- Only one sequence plays at a time; `playSequence` cancels any predecessor.
+  A module-level `playbackGeneration` counter makes callbacks already queued
+  for a cancelled run identify themselves as stale.
+- `onStep` fires through **`Tone.getDraw()` backed by a `setTimeout`**, first
+  one wins. Draw alone lands the highlight on the right animation frame but
+  drops events it misses and never runs at all while the tab is hidden — a
+  highlight that silently disappears is worse than one a frame late.
+- `onEnd` is Transport-driven only. A stuck "playing" button is worse than
+  resetting one lookahead-tick early.
+
+**Syncing visuals to audio:** `<Fretboard>` takes a `playingNote: { string,
+fret } | null` prop, passed straight through to `Strings.svelte`, which adds
+`.is-playing` to that one note button. Pages drive it from an index into their
+own step list — the note is identified by **string+fret, not note name**, since
+the same name appears all over the neck.
+
+**Building a playable run:** `computeScaleRun()` in `guitar-theory/helpers.ts`
+is the reference implementation — collect scale notes inside the fret window,
+sort by MIDI, collapse unisons to the lower string, trim root-to-root. Copy
+that shape for chord/arpeggio runs rather than playing abstract pitch lists:
+what the user hears should be the shape they're looking at.
 
 ---
 
