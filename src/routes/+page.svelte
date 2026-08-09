@@ -243,17 +243,11 @@
 <!-- ── JOURNEY ROUTER ─────────────────────────────────────────── -->
 <section class="router">
 	<p class="router-label">Where to start</p>
-	<p class="router-intro">
-		Pick the one that sounds like you.
-	</p>
+	<p class="router-intro">Pick the one that sounds like you.</p>
 
 	<div class="router-grid">
 		{#each journeys as journey, i}
-			<a
-				href={journey.href}
-				class="journey-card"
-				bind:this={journeyEls[i]}
-			>
+			<a href={journey.href} class="journey-card" bind:this={journeyEls[i]}>
 				<p class="journey-question">&ldquo;{journey.question}&rdquo;</p>
 				<div class="journey-answer">
 					<span class="journey-prefix">Start with</span>
