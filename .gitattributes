@@ -1,0 +1,22 @@
+# Line endings: LF in the repository and LF in the working tree, on every OS.
+#
+# Every file here is already committed as LF. What was missing is a statement
+# of intent, which left the working-tree half of the question up to whatever
+# `core.autocrlf` each clone happened to have. On a Windows clone with
+# `core.autocrlf=true` Git wants a CRLF working tree, so it reported all ~60
+# text files as modified — each with an empty diff, because it was flagging a
+# conversion it intended to perform rather than a change anyone had made. Any
+# command that rewrites mtimes (a Prettier pass will do it) surfaces the whole
+# set at once, which is alarming and buries real changes.
+#
+# `eol=lf` rather than `text=auto` alone: Prettier writes LF by default and
+# `prettier --check` is the lint gate in CI, so a CRLF working tree would fight
+# the formatter. This pins both halves and overrides local `core.autocrlf`.
+* text=auto eol=lf
+
+# Binary assets — never transform. Git's auto-detection would very likely get
+# these right on its own, but a mangled guitar sample is a silent corruption
+# and the explicit line costs nothing.
+*.mp3 binary
+*.png binary
+*.webp binary
