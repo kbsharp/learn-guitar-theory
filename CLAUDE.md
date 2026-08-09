@@ -5,20 +5,91 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Non-negotiable code quality rules
 
 - **Never leave a file with an error in it.** After every edit run `npm run check` and fix any type errors before moving on. Do not leave broken files and continue to other tasks.
-- **Never write code that could break tests without first confirming tests still pass.** After any change to a `helpers.ts`, shared utility, config file, or component that existing tests cover, run `npm run test:unit -- --run` (unit) and/or `npm run check` before reporting the work as done. If a test breaks, fix it in the same step — do not leave a red suite.
+- **Never write code that could break tests without first confirming tests still pass.** After any change to a `helpers.ts`, shared utility, config file, or component that existing tests cover, run `npm run test:unit` (unit) and/or `npm run check` before reporting the work as done. If a test breaks, fix it in the same step — do not leave a red suite.
 
 ## Commands
 
 ```bash
-npm run dev          # start dev server (localhost:5173)
-npm run build        # production build
-npm run preview      # preview production build
-npm run check        # Svelte type-check
-npm run lint         # Prettier + ESLint check
-npm run format       # auto-format with Prettier
-npm run test         # Playwright e2e tests
-npm run test:unit    # Vitest unit tests
+npm run build          # production build
+npm run check          # Svelte type-check
+npm run lint           # Prettier + ESLint check
+npm run format         # auto-format with Prettier
+npm run test           # Playwright e2e tests
+npm run test:unit      # Vitest unit tests (single run — terminates)
+npm run test:unit:watch # watch mode (humans only — this never exits)
 ```
+
+**Never run `npm run dev`, `npm run preview`, or `test:unit:watch` from a shell.**
+They don't terminate, so they hang the tool call. Use `preview_start` for a dev
+server (see Feedback loop below); the two watch scripts exist for a human at a
+terminal, not for you.
+
+## Feedback loop — how to check your work, cheapest first
+
+Work down this list. Each rung costs roughly 10× the one above it, so reaching
+for the wrong one is the single biggest waste of a session.
+
+| Cost | Tool                  | Use it for                                    |
+| ---- | --------------------- | --------------------------------------------- |
+| ~1s  | `npm run test:unit`   | Any pure-logic change. Always first.          |
+| ~5s  | `npm run check`       | Types, after every edit (non-negotiable rule) |
+| ~5s  | Browser pane          | Anything visual or interactive                |
+| ~10s | `npm run lint`        | Before committing                             |
+| ~30s | `npx playwright test` | The regression gate, before reporting done    |
+
+### Browser pane — the fast path for anything visual
+
+`preview_start {name: "dev"}` starts the dev server from `.claude/launch.json`
+and opens a tab. **Never launch a server with Bash.** HMR means most edits need
+no reload at all.
+
+The technique matters more than the tool. Ranked by what actually works:
+
+1. **`javascript_tool` is the primary instrument, not `screenshot`.** A query
+   like `[...document.querySelectorAll('.note-btn.characteristic')].map(e => e.textContent)`
+   returns the exact assertion you need in one round trip. A screenshot returns
+   pixels you then have to interpret, and interpretation is where you get it
+   wrong.
+2. **Don't screenshot to find an element, and don't compute click coordinates
+   from one.** The screenshot is scaled relative to the viewport, the page can
+   reflow between calls, and a mis-scaled click silently does nothing — which
+   reads as "my feature is broken" when the feature is fine. Use `read_page` /
+   `find` for refs, or `.click()` via `javascript_tool`.
+3. **Poll async behaviour inside a single call.** An async IIFE with a
+   `setTimeout` loop, returning an array of samples, turns ten round trips into
+   one — and it's the only reliable way to observe something time-based like
+   audio playback stepping through notes:
+    ```js
+    (async () => {
+    	const out = [];
+    	btn.click();
+    	for (let i = 0; i < 10; i++) {
+    		await new Promise((r) => setTimeout(r, 300));
+    		out.push(document.querySelectorAll('.is-playing').length);
+    	}
+    	return JSON.stringify(out);
+    })();
+    ```
+4. **Screenshot last**, as visual proof for the user, or when the question is
+   genuinely "does this look right" — spacing, colour, overlap.
+5. `resize_window` to a width matching the screenshot scale (~800px) when you do
+   need pixels, so what you see is 1:1 rather than a shrunk 1280px page.
+
+### Where Playwright earns its place
+
+The browser pane is for **iterating**; Playwright is for **not regressing**. Its
+30s build cycle is the wrong tool for the former and the only tool for the
+latter. Specifically:
+
+- `a11y.spec.ts` catches contrast failures across all three themes that no
+  amount of looking will — it has already caught a 4.08-vs-4.5 ratio that
+  looked completely fine on screen.
+- Interaction tests pin bugs you fixed so they can't come back. Two playback
+  bugs are held down this way; both would silently return without them.
+
+So: verify in the browser while building, run the suite before declaring done.
+Don't reach for Playwright to answer "did my change work" — that's a browser
+pane question, and a 30s answer to a 5s question.
 
 ## Product Vision
 
@@ -402,12 +473,24 @@ Hosted on **Vercel free tier** — Vercel's GitHub integration handles deploymen
 
 **GitHub Actions** (`.github/workflows/ci.yml`) runs two jobs on every push and PR to `master`:
 
-1. **check** (fast, ~1 min): `svelte-check` → `lint` → `test:unit`. Runs on every push/PR. Fails fast before wasting build minutes.
-2. **e2e** (slower, ~4 min): builds the app then runs Playwright (chromium only). Uploads traces as artifacts on failure.
+1. **check** (~30s): `svelte-check` → `lint` → `test:unit`. The gate.
+2. **e2e** (~1 min): builds once, then runs Playwright (chromium only). The safety net.
 
-Playwright traces are retained for 7 days — download from the Actions run to debug failing screenshots.
+They run in parallel, so wall-clock is whatever e2e takes.
 
-**Never merge a PR with a failing `check` job.** The `e2e` job is the safety net; the `check` job is the gate.
+**Never merge a PR with a failing `check` job.** Traces are kept 7 days — download
+from the Actions run to debug a failure you can't reproduce locally.
+
+Three things keep it quick; don't undo them by accident:
+
+- **The app is built exactly once per run.** `playwright.config.ts` skips its own
+  `webServer` build when `CI` is set, because the workflow has a dedicated Build
+  step. Adding a build back to either side compiles the app twice.
+- **The chromium binary is cached** on the lockfile hash. On a hit the workflow
+  runs `install-deps` only, skipping a ~130MB download.
+- **PR runs cancel their own superseded runs** (`concurrency`), so pushing twice
+  in a minute doesn't leave the first run burning minutes on a dead commit.
+  Keyed so `master` pushes queue instead of cancelling.
 
 ---
 
@@ -415,4 +498,6 @@ Playwright traces are retained for 7 days — download from the Actions run to d
 
 - The `$black` and `$key-color` SCSS variables were removed in the latest refactor; don't re-add them
 - `src/routes/styles/main.scss` uses Sass `@import` (deprecated in Dart Sass 3); the warning is cosmetic
-- `@neoconfetti/svelte` is installed but unused — remove when cleaning up deps
+- Line endings are LF everywhere, pinned by `.gitattributes` (`* text=auto eol=lf`) and
+  `.prettierrc` (`endOfLine: "lf"`). Don't add a `core.autocrlf` workaround on top — the
+  two settings above are the whole policy, and a third opinion is what caused the trouble
