@@ -28,13 +28,15 @@ Every feature must pass this test: _does this help a guitarist understand someth
 
 **Target audience**: Genre-agnostic and accessible to all skill levels — a beginner wanting to understand why their Em pentatonic works over everything, and a jazz player mapping chord-scale relationships, should both find value. **However**, the primary user we design *for* is the stuck intermediate (see Product Direction below). Design decisions resolve in their favour when there's a trade-off.
 
-**Full product roadmap (prioritised)**:
+**Full product roadmap**: see [ROADMAP.md](ROADMAP.md) — the working roadmap we iterate through, created 2026-08-09. It supersedes the old five-item priority list. Summary of its phases:
 
-1. **Pedagogical refinement** — Explanations exist on every tool but vary in quality. The priority now is auditing every existing piece against the WHY/DO/SOUND/CALIBRATION/CONNECT rubric (run `/guitar-pedagogy-review`) and rewriting failures so every explanation genuinely serves the stuck intermediate. This is the highest-leverage work because content quality is the moat.
-2. **Mobile** — Responsive fretboard. Guitarists look this up while holding a guitar. Fixed 1200px kills most real-world use.
-3. **Audio** — Hear the scale/chord. The bridge between abstract shapes and actual sound.
-4. **Practice mode** — Active exercises (interval recall, chord identification). Passive reference → active skill-building.
-5. **Circle of Fifths** — Dedicated page with an interactive, visually rich Circle of Fifths. Should explain: why keys are arranged by 5th intervals, which keys are "close" (share the most notes), relative major/minor pairs, how moving clockwise adds sharps and counterclockwise adds flats, and how to use it for modulation and key changes. The `CircleOfFifths.svelte` component (currently unused after the progressions page refactor) is a starting point but needs a full redesign with explanations.
+1. **Audio as a teaching instrument** — play scale/chord, A/B characteristic-note comparisons, drone/loop player, progression playback
+2. **Exercise engine** — generic framework + exercise types (find-the-note, name-the-interval, ear A/B, chord-tone tap, constraint tasks), localStorage progress
+3. **The Path** — `/path` curriculum spine of 9 modules built on the five cruxes; existing tools become the labs; deep-linkable tool state
+4. **Application arenas** — jam mode (loop + live chord-tone highlighting), Circle of Fifths page, ear-training expansion
+5. **Production & business** — accounts/sync, paywall seam (tools + modules 0–2 free), growth loops, instrumentation
+
+Pedagogy audits (`/guitar-pedagogy-review`) are ongoing hygiene across all phases. ROADMAP.md also holds the pedagogical core — the five cruxes and the four-rung exercise ladder (see → hear → retrieve → apply) that all practice content must follow — plus a decision log. Update the decision log when product decisions are made.
 
 ## Product Direction
 
