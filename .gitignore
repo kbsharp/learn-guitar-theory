@@ -10,3 +10,9 @@ node_modules
 .output
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Playwright run artifacts (traces, screenshots, last-run state)
+/test-results
+/playwright-report
+/blob-report
+/playwright/.cache
