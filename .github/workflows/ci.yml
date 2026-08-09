@@ -1,21 +1,38 @@
 name: CI
 
+# PRs only — deliberately not `push: [master]`.
+#
+# A `pull_request` event does not test the branch head. GitHub builds
+# `refs/pull/N/merge`, the result of merging the PR into master, and runs
+# against that. So the tree CI proves green is the tree that lands. Re-running
+# the identical commits after the merge tested nothing new, and cost a full
+# duplicate run on every single merge.
+#
+# Nothing depended on that second run: there's no CI badge, and the Vercel
+# deploy comes from Vercel's own GitHub integration, which fires on push
+# independently of Actions and never waited on this workflow.
+#
+# The one gap this leaves is merge skew — if master moves after a PR is tested
+# and the PR isn't retested, its green tick describes a merge result that no
+# longer applies. Close it with branch protection on master: "Require status
+# checks to pass" plus "Require branches to be up to date before merging",
+# which forces a retest whenever the base moves. See CI / CD in CLAUDE.md.
 on:
-    push:
-        branches: [master]
     pull_request:
         branches: [master]
+    # Escape hatch: run against master by hand from the Actions tab if a merge
+    # ever lands without a PR, or to re-verify after changing repo settings.
+    workflow_dispatch:
 
 env:
     FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 # Pushing twice to a PR used to leave the first run grinding away on a commit
-# nobody will merge. Supersede it instead — the only run worth minutes is the
-# one for the current head. master is keyed separately so pushes there queue
-# rather than cancel each other.
+# nobody will merge. Supersede it instead — the only run worth having is the
+# one for the current head.
 concurrency:
     group: ci-${{ github.ref }}
-    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    cancel-in-progress: true
 
 jobs:
     # ── Fast checks — the gate. Never merge with this red ─────────────────────
