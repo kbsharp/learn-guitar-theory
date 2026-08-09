@@ -83,7 +83,13 @@
 				onclick={handlePlayScale}
 				aria-label="Play scale"
 			>
-				<svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+				<svg
+					width="10"
+					height="10"
+					viewBox="0 0 10 10"
+					fill="currentColor"
+					aria-hidden="true"
+				>
 					<path d="M2 1.5v7l6-3.5z" />
 				</svg>
 				<span
@@ -105,10 +111,10 @@
 	</div>
 
 	<p class="page-intro">
-		Every scale is a pattern of intervals — see them all at once, or narrow to one 4-fret box you
-		can actually play. <strong>Pink</strong> is the root, <strong>cyan</strong> is in the scale.
-		Once a shape interests you, hit <a class="intro-link" href="/chord-scale">Chord-Scale</a> to
-		see which chords it fits over.
+		Every scale is a pattern of intervals — see them all at once, or narrow to one 4-fret box
+		you can actually play. <strong>Pink</strong> is the root, <strong>cyan</strong> is in the
+		scale. Once a shape interests you, hit
+		<a class="intro-link" href="/chord-scale">Chord-Scale</a> to see which chords it fits over.
 	</p>
 
 	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} />

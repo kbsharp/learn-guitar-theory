@@ -26,7 +26,7 @@ npm run test:unit    # Vitest unit tests
 
 Every feature must pass this test: _does this help a guitarist understand something they were confused about, or hear something they couldn't hear before?_ Pretty visuals are acceptable only when they serve comprehension.
 
-**Target audience**: Genre-agnostic and accessible to all skill levels — a beginner wanting to understand why their Em pentatonic works over everything, and a jazz player mapping chord-scale relationships, should both find value. **However**, the primary user we design *for* is the stuck intermediate (see Product Direction below). Design decisions resolve in their favour when there's a trade-off.
+**Target audience**: Genre-agnostic and accessible to all skill levels — a beginner wanting to understand why their Em pentatonic works over everything, and a jazz player mapping chord-scale relationships, should both find value. **However**, the primary user we design _for_ is the stuck intermediate (see Product Direction below). Design decisions resolve in their favour when there's a trade-off.
 
 **Full product roadmap**: see [ROADMAP.md](ROADMAP.md) — the working roadmap we iterate through, created 2026-08-09. It supersedes the old five-item priority list. Summary of its phases:
 
@@ -44,7 +44,7 @@ These decisions were made deliberately and should inform every content and featu
 
 ### Target user: the stuck intermediate
 
-The primary paying user is a guitarist who has played for **2-5 years**, is self-taught or lesson-taught, and knows their minor pentatonic, basic open chords, and maybe the CAGED shapes. They hit a wall: they know *what* to play but not *why* it works. They ask "why does my Em pentatonic work over everything?" and "how do I know which scale to use?"
+The primary paying user is a guitarist who has played for **2-5 years**, is self-taught or lesson-taught, and knows their minor pentatonic, basic open chords, and maybe the CAGED shapes. They hit a wall: they know _what_ to play but not _why_ it works. They ask "why does my Em pentatonic work over everything?" and "how do I know which scale to use?"
 
 This is not a beginner who doesn't know what a chord is. It is not an advanced player who already knows all their modes. Write for the guitarist who has the shapes and wants the theory behind them.
 
@@ -62,7 +62,7 @@ No aggressive sales required. Product-led growth: the free tier is genuinely exc
 
 Every explanation — ExplanationPanel body, page intro, HelpTip definition — must meet all four of these:
 
-1. **WHY**: Explains *why*, not just *what*. Not "Dorian is natural minor with a raised 6th" — explain what that raised 6th *does* to the sound.
+1. **WHY**: Explains _why_, not just _what_. Not "Dorian is natural minor with a raised 6th" — explain what that raised 6th _does_ to the sound.
 2. **DO**: Gives a concrete physical action the guitarist can try right now while holding their guitar. Specific enough to actually do.
 3. **SOUND**: Gives a sonic anchor — a genre, an artist, or a description of what it sounds like. Abstract theory without a sonic reference doesn't stick.
 4. **CALIBRATE**: Written for 2-5 years experience. Don't explain what a chord is. Don't assume they know what a tritone substitution is.

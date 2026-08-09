@@ -4,7 +4,7 @@ You are auditing the explanatory content of Fretboard Lab against a strict pedag
 
 ## Who this app is for
 
-**The stuck intermediate guitarist.** They have played for 2-5 years, are self-taught or lesson-taught, and know their minor pentatonic, basic open chords, and maybe the CAGED shapes. They hit a wall: they know *what* to play but not *why* it works. They ask "why does my Em pentatonic work over everything?" and "how do I know which scale to use?" They have money invested in gear and are motivated to improve.
+**The stuck intermediate guitarist.** They have played for 2-5 years, are self-taught or lesson-taught, and know their minor pentatonic, basic open chords, and maybe the CAGED shapes. They hit a wall: they know _what_ to play but not _why_ it works. They ask "why does my Em pentatonic work over everything?" and "how do I know which scale to use?" They have money invested in gear and are motivated to improve.
 
 Write for this person. Not for beginners who don't know what a chord is. Not for advanced players who already know modes. For the guitarist who has the shapes and wants the theory behind them.
 
@@ -28,24 +28,28 @@ Read ALL of the following and hold their contents in context:
 Score every ExplanationPanel body text and every page intro against these 5 criteria. Each is a binary pass/fail.
 
 ### 1. WHY
-Does it explain *why* something works, not just *what* it is?
+
+Does it explain _why_ something works, not just _what_ it is?
 
 - **Fail**: "Dorian is natural minor with a raised 6th." (definition, not explanation)
 - **Pass**: "That raised 6th is the one note that separates Dorian from sounding heavy to sounding jazzy — landing on it deliberately is how you get that Santana sound."
 
 ### 2. DO
-Does it give the guitarist a concrete physical action they can try *right now while holding a guitar*? This must be specific enough to actually do — not just "try it over a minor chord" but a specific fret, string, or physical instruction.
+
+Does it give the guitarist a concrete physical action they can try _right now while holding a guitar_? This must be specific enough to actually do — not just "try it over a minor chord" but a specific fret, string, or physical instruction.
 
 - **Fail**: "Use Dorian over minor chords."
 - **Pass**: "Over an Am chord, deliberately target the F# — that's the raised 6th, and that one note is what makes it sound Dorian instead of just minor."
 
 ### 3. SOUND
-Does it give a concrete sonic orientation? A genre, an artist, or a description of what it *sounds like* — something the guitarist can mentally anchor the concept to before they even play it.
+
+Does it give a concrete sonic orientation? A genre, an artist, or a description of what it _sounds like_ — something the guitarist can mentally anchor the concept to before they even play it.
 
 - **Fail**: "This scale has a dark quality."
 - **Pass**: "This is the sound behind virtually every Hendrix, Clapton, and Slash solo — the foundational blues-rock voice."
 
 ### 4. CALIBRATION
+
 Is it written for someone with 2-5 years of playing? Not so basic it explains what a chord is. Not so advanced it assumes they know what the lydian dominant mode is. The sweet spot: they know scales exist, they know minor from major, they've heard of modes but couldn't explain them.
 
 - **Fail (too basic)**: "A chord is a group of notes played together."
@@ -53,7 +57,8 @@ Is it written for someone with 2-5 years of playing? Not so basic it explains wh
 - **Pass**: "Think of modes as flavours — same notes, different starting point, completely different feeling."
 
 ### 5. CONNECT
-Does it miss an obvious cross-link to another tool page in the app where the user could *immediately apply* what they just learned? If an explanation mentions a concept that has a dedicated page, it should point there.
+
+Does it miss an obvious cross-link to another tool page in the app where the user could _immediately apply_ what they just learned? If an explanation mentions a concept that has a dedicated page, it should point there.
 
 - **Fail**: Dorian explanation doesn't mention that Chord-Scale shows exactly which chord Dorian maps to.
 - **Pass**: Dorian explanation ends with "See exactly which chords call for Dorian on the Chord-Scale page."
@@ -64,11 +69,11 @@ Does it miss an obvious cross-link to another tool page in the app where the use
 
 Not all content is structurally an "explanation panel." Calibrate the rubric per type:
 
-| Content type | Where | What it must do | Rubric notes |
-|---|---|---|---|
-| **Home hero / feature cards** | `src/routes/+page.svelte` | Pitch the app and route users to the right tool | WHY applies to the tagline (does it make a guitarist understand what the app *does*?). DO is relaxed (no fretboard yet). SOUND is optional. CALIBRATION is critical. CONNECT is the whole point — every feature card is itself a link. |
-| **Page intros** | `+page.svelte` files | Orient a visitor to what this tool does and what they should do first | DO and CALIBRATION are critical. SOUND is optional for tool intros. CONNECT is highly relevant — page intros are a natural place to link to related tools. |
-| **ExplanationPanel body** | `explanations.ts` files | Explain *why* this specific scale/chord/shape sounds the way it does | All five criteria apply. This is the strict case. |
+| Content type                  | Where                     | What it must do                                                       | Rubric notes                                                                                                                                                                                                                           |
+| ----------------------------- | ------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Home hero / feature cards** | `src/routes/+page.svelte` | Pitch the app and route users to the right tool                       | WHY applies to the tagline (does it make a guitarist understand what the app _does_?). DO is relaxed (no fretboard yet). SOUND is optional. CALIBRATION is critical. CONNECT is the whole point — every feature card is itself a link. |
+| **Page intros**               | `+page.svelte` files      | Orient a visitor to what this tool does and what they should do first | DO and CALIBRATION are critical. SOUND is optional for tool intros. CONNECT is highly relevant — page intros are a natural place to link to related tools.                                                                             |
+| **ExplanationPanel body**     | `explanations.ts` files   | Explain _why_ this specific scale/chord/shape sounds the way it does  | All five criteria apply. This is the strict case.                                                                                                                                                                                      |
 
 If a piece of content is the right type for its location but doesn't fit the table above, evaluate against the spirit of the rubric: would the stuck intermediate be better off after reading this?
 
@@ -111,18 +116,20 @@ Order failing items by **impact**, defined as:
 
 1. **Visibility** — page intros (seen on every visit) rank above individual explanations. Common scales/chords (major, minor pentatonic, m7, dominant 7, Mixolydian) rank above rare ones (Locrian, m7b5).
 2. **Severity** — items failing 3+ criteria rank above items failing 1-2.
-3. **Strategic centrality** — content tied to the app's core value prop (chord-scale relationships, the *why* behind shapes) ranks above peripheral content.
+3. **Strategic centrality** — content tied to the app's core value prop (chord-scale relationships, the _why_ behind shapes) ranks above peripheral content.
 
 Apply these in order: visibility first, then severity within the same visibility tier, then strategic centrality as the tiebreaker. Skip content that passes all five criteria — celebrate it in Section 1 instead.
 
 For each failing item:
 
 **[Tool name] — [Content identifier]**
+
 > Current: "[exact quote]"
 
 Fails: [list which criteria and briefly why]
 
 Rewrite:
+
 > "[rewritten version that passes all criteria — respects the rewrite constraints above]"
 
 ---
@@ -132,6 +139,7 @@ Rewrite:
 Every place where content references a concept that has its own dedicated tool page but doesn't link to it. Be specific: name the source page, quote the text that should carry the link, and give the exact link text and destination path.
 
 Format:
+
 - **[Source page]**: "[quoted text]" → add link: "[link text]" → `/[path]`
 
 ---
