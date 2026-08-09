@@ -9,8 +9,16 @@ on:
 env:
     FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
+# Pushing twice to a PR used to leave the first run grinding away on a commit
+# nobody will merge. Supersede it instead — the only run worth minutes is the
+# one for the current head. master is keyed separately so pushes there queue
+# rather than cancel each other.
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-    # ── Fast checks — run on every push/PR ────────────────────────────────────
+    # ── Fast checks — the gate. Never merge with this red ─────────────────────
     check:
         name: Type-check, lint & unit tests
         runs-on: ubuntu-latest
@@ -22,7 +30,7 @@ jobs:
                   node-version: 24
                   cache: npm
 
-            - run: npm ci
+            - run: npm ci --no-audit --fund=false
 
             - name: Svelte type-check
               run: npm run check
@@ -31,9 +39,9 @@ jobs:
               run: npm run lint
 
             - name: Unit tests
-              run: npm run test:unit -- --run
+              run: npm run test:unit
 
-    # ── E2E — runs on every push/PR to master (catches regressions pre-merge) ─
+    # ── E2E — the safety net. Catches regressions pre-merge ───────────────────
     e2e:
         name: Playwright e2e (chromium)
         runs-on: ubuntu-latest
@@ -45,11 +53,29 @@ jobs:
                   node-version: 24
                   cache: npm
 
-            - run: npm ci
+            - run: npm ci --no-audit --fund=false
 
-            - name: Install Playwright browsers
+            # The browser binary is ~130MB and identical between runs until the
+            # Playwright version moves, so key the cache on the lockfile.
+            - name: Cache Playwright browser
+              id: playwright-cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/ms-playwright
+                  key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+            - name: Install Playwright browser
+              if: steps.playwright-cache.outputs.cache-hit != 'true'
               run: npx playwright install chromium --with-deps
 
+            # Cached binary still needs the system libs it links against; this
+            # is a no-op apt run when the runner image already has them.
+            - name: Install Playwright system dependencies
+              if: steps.playwright-cache.outputs.cache-hit == 'true'
+              run: npx playwright install-deps chromium
+
+            # Built once, here. playwright.config.ts deliberately skips its own
+            # build under CI so the app isn't compiled twice per run.
             - name: Build
               run: npm run build
 

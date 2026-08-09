@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '@fontsource/fira-mono';
 	import type { Snippet } from 'svelte';
 	import Header from './Header.svelte';
 	import './styles/main.scss';
