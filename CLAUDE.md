@@ -471,7 +471,7 @@ Playwright builds the app and runs against the preview server on port 4173. Four
 
 Hosted on **Vercel free tier** — Vercel's GitHub integration handles deployment automatically on push to `master`.
 
-**GitHub Actions** (`.github/workflows/ci.yml`) runs two jobs on every push and PR to `master`:
+**GitHub Actions** (`.github/workflows/ci.yml`) runs two jobs **on pull requests only**:
 
 1. **check** (~30s): `svelte-check` → `lint` → `test:unit`. The gate.
 2. **e2e** (~1 min): builds once, then runs Playwright (chromium only). The safety net.
@@ -480,6 +480,31 @@ They run in parallel, so wall-clock is whatever e2e takes.
 
 **Never merge a PR with a failing `check` job.** Traces are kept 7 days — download
 from the Actions run to debug a failure you can't reproduce locally.
+
+### Why there's no `push: [master]` trigger
+
+Because it would test the same commits twice. A `pull_request` event doesn't run
+against the branch head — GitHub builds `refs/pull/N/merge`, the PR already
+merged into master, and tests that. **The tree CI proves green is the tree that
+lands**, so a post-merge run re-tested identical content, and nothing depended
+on it: there is no CI badge, and Vercel deploys from its own GitHub integration
+on push, independently of Actions.
+
+The gap this leaves is **merge skew**: if master moves after a PR was tested and
+the PR isn't retested, its green tick describes a merge result that no longer
+applies. Two ways to stay safe, in order of preference:
+
+1. Enable branch protection on `master` — "Require status checks to pass" plus
+   **"Require branches to be up to date before merging"**. That forces a retest
+   whenever the base moves, which makes the PR run authoritative and closes the
+   gap completely.
+2. Failing that, if a PR has been open while another merged, push an update (or
+   rebase) before merging so CI re-runs against the new base.
+
+`workflow_dispatch` is there to run the suite against master by hand if a commit
+ever lands without a PR.
+
+### Keeping it quick
 
 Three things keep it quick; don't undo them by accident:
 
