@@ -1,5 +1,6 @@
 import { Scale, Note } from 'tonal';
 import { convertFlatToSharp, convertFlatsToSharps } from '$lib/music';
+import { strings, stringPitches } from '$lib/strings';
 
 const LOW_E = ['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#'];
 
@@ -144,4 +145,69 @@ export function computeScalePositions(key: Key, quality: Quality): ScalePosition
 		startFret,
 		endFret: startFret + 4
 	}));
+}
+
+export interface ScaleRunNote {
+	/** String index — 0 is high e, 5 is low E (matches Strings.svelte). */
+	string: number;
+	fret: number;
+	/** Pitch with octave, e.g. "E2" — what gets sent to the sampler. */
+	pitch: string;
+}
+
+/**
+ * Build a playable ascending run of the scale inside one 4-fret box.
+ *
+ * Hearing a scale as an abstract list of pitches teaches nothing about the
+ * neck — the point is to hear the shape you're looking at. So the run walks
+ * the real string/fret positions inside the window, lowest pitch to highest,
+ * and is trimmed root-to-root so the scale resolves instead of stopping
+ * somewhere arbitrary.
+ *
+ * With no position selected we run position 1 (the box anchored on the lowest
+ * tonic on the low E string) rather than the whole 24 frets.
+ */
+export function computeScaleRun(
+	key: Key,
+	quality: Quality,
+	positionRange: { start: number; end: number } | null
+): ScaleRunNote[] {
+	const scaleNotes = Scale.get(`${key} ${quality}`).notes.map(convertFlatToSharp);
+	if (!scaleNotes.length) return [];
+
+	const fallback = computeScalePositions(key, quality)[0];
+	const start = positionRange ? positionRange.start : (fallback?.startFret ?? 0);
+	const end = positionRange ? positionRange.end : (fallback?.endFret ?? 4);
+
+	const candidates: (ScaleRunNote & { midi: number })[] = [];
+	for (let s = 0; s < strings.length; s++) {
+		const lastFret = Math.min(end, strings[s].length - 1);
+		for (let f = Math.max(0, start); f <= lastFret; f++) {
+			if (!scaleNotes.includes(strings[s][f])) continue;
+			const pitch = stringPitches[s][f];
+			const midi = Note.midi(pitch);
+			if (midi === null) continue;
+			candidates.push({ string: s, fret: f, pitch, midi });
+		}
+	}
+
+	// Ascending by pitch. Unisons (the same pitch available on two strings)
+	// collapse to the lower string — the one your hand reaches first on the
+	// way up the box.
+	candidates.sort((a, b) => a.midi - b.midi || b.string - a.string);
+	const ascending: typeof candidates = [];
+	for (const note of candidates) {
+		if (ascending.length && ascending[ascending.length - 1].midi === note.midi) continue;
+		ascending.push(note);
+	}
+
+	const tonicChroma = Note.chroma(currentTonic(key));
+	const roots = ascending.reduce<number[]>((acc, note, i) => {
+		if (Note.chroma(note.pitch) === tonicChroma) acc.push(i);
+		return acc;
+	}, []);
+	const run =
+		roots.length >= 2 ? ascending.slice(roots[0], roots[roots.length - 1] + 1) : ascending;
+
+	return run.map(({ string, fret, pitch }) => ({ string, fret, pitch }));
 }

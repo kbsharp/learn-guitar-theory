@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { Scale } from 'tonal';
+	import { onDestroy, onMount } from 'svelte';
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
 	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
 	import HelpTip from '$lib/components/HelpTip.svelte';
@@ -13,14 +12,20 @@
 		getScaleDegree,
 		convertFlatToSharp,
 		computeScalePositions,
+		computeScaleRun,
 		type Quality as QualityType
 	} from './helpers';
 	import { scaleExplanations } from './explanations';
-	import { playSequence, audioReady, preloadAudio } from '$lib/audio';
+	import { playSequence, stopPlayback, audioReady, preloadAudio } from '$lib/audio';
+
+	// Seconds between notes in a scale run. Slow enough to hear each interval
+	// against the last, fast enough that two octaves up and down isn't a chore.
+	const RUN_GAP_SEC = 0.26;
 
 	let showDegrees = $state(false);
 	let selectedPosition = $state<number | null>(null);
 	let isPlaying = $state(false);
+	let playingStep = $state<number | null>(null);
 
 	// Begin downloading samples as soon as the page opens so they're ready
 	// by the time the user clicks the Play button.
@@ -28,10 +33,21 @@
 		void preloadAudio();
 	});
 
+	onDestroy(stopPlayback);
+
 	$effect(() => {
 		void $key;
 		void $quality;
 		selectedPosition = null;
+	});
+
+	// Any change to what's on the board invalidates a run in progress — the
+	// notes it was walking through are no longer the ones on screen.
+	$effect(() => {
+		void $key;
+		void $quality;
+		void selectedPosition;
+		stopRun();
 	});
 
 	let tonic = $derived(currentTonic($key));
@@ -50,19 +66,42 @@
 	);
 	let explanation = $derived(scaleExplanations[$quality as QualityType]);
 
+	// The run walks the selected box (or position 1 when showing the whole
+	// neck) up and back down — the way you'd actually practise it.
+	let ascendingRun = $derived(computeScaleRun($key, $quality, positionRange));
+	let runSteps = $derived(
+		ascendingRun.length ? [...ascendingRun, ...ascendingRun.slice(0, -1).reverse()] : []
+	);
+	let playingNote = $derived(playingStep === null ? null : (runSteps[playingStep] ?? null));
+
+	function stopRun() {
+		stopPlayback();
+		isPlaying = false;
+		playingStep = null;
+	}
+
 	async function handlePlayScale() {
-		// Start the scale at octave 3 so most scales sit comfortably in the
-		// guitar's range, then append the upper tonic so the scale resolves.
-		const scale = Scale.get(`${tonic}3 ${$quality}`);
-		if (!scale.notes.length) return;
-		const ascending = [...scale.notes, `${tonic}4`];
+		if (isPlaying) {
+			stopRun();
+			return;
+		}
+		if (!runSteps.length) return;
 		isPlaying = true;
+		playingStep = null;
 		try {
-			await playSequence(ascending, 0.28);
-			// Re-enable button after the sequence finishes.
-			setTimeout(() => (isPlaying = false), ascending.length * 280 + 400);
+			await playSequence(
+				runSteps.map((step) => step.pitch),
+				{
+					gapSec: RUN_GAP_SEC,
+					onStep: (i) => (playingStep = i),
+					onEnd: () => {
+						isPlaying = false;
+						playingStep = null;
+					}
+				}
+			);
 		} catch {
-			isPlaying = false;
+			stopRun();
 		}
 	}
 </script>
@@ -79,9 +118,9 @@
 				class="play-btn"
 				class:playing={isPlaying}
 				class:loading={!$audioReady}
-				disabled={isPlaying || !$audioReady}
+				disabled={!$audioReady}
 				onclick={handlePlayScale}
-				aria-label="Play scale"
+				aria-label={isPlaying ? 'Stop scale' : 'Play scale'}
 			>
 				<svg
 					width="10"
@@ -90,11 +129,13 @@
 					fill="currentColor"
 					aria-hidden="true"
 				>
-					<path d="M2 1.5v7l6-3.5z" />
+					{#if isPlaying}
+						<rect x="2" y="2" width="6" height="6" />
+					{:else}
+						<path d="M2 1.5v7l6-3.5z" />
+					{/if}
 				</svg>
-				<span
-					>{!$audioReady ? 'Loading audio…' : isPlaying ? 'Playing…' : 'Play scale'}</span
-				>
+				<span>{!$audioReady ? 'Loading audio…' : isPlaying ? 'Stop' : 'Play scale'}</span>
 			</button>
 			<button
 				class="toggle-btn"
@@ -113,11 +154,13 @@
 	<p class="page-intro">
 		Every scale is a pattern of intervals — see them all at once, or narrow to one 4-fret box
 		you can actually play. <strong>Pink</strong> is the root, <strong>cyan</strong> is in the
-		scale. Once a shape interests you, hit
+		scale. Hit <strong>Play scale</strong> to hear the box run root-to-root and back, each note
+		lighting up as it sounds — play along and your fingers learn the shape and the sound
+		together. Once a shape interests you, hit
 		<a class="intro-link" href="/chord-scale">Chord-Scale</a> to see which chords it fits over.
 	</p>
 
-	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} />
+	<Fretboard {getNoteClass} {getNoteLabel} {positionRange} {playingNote} />
 
 	<div class="controls">
 		<div class="control-group">
