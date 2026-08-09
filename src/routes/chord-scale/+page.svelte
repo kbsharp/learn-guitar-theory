@@ -2,11 +2,14 @@
 	import Fretboard from '$lib/components/Fretboard/Fretboard.svelte';
 	import ExplanationPanel from '$lib/components/ExplanationPanel.svelte';
 	import HelpTip from '$lib/components/HelpTip.svelte';
+	import ChordPlayer from '$lib/components/ChordPlayer.svelte';
+	import { computeChordVoicing, type VoicingNote } from '$lib/voicing';
 	import {
 		chordRoots,
 		chordTypes,
 		chordTypeLabels,
 		getChordScaleClass,
+		getChordNotes,
 		getChordName,
 		getRecommendedScaleName,
 		type ChordType
@@ -21,6 +24,13 @@
 	let chordName = $derived(getChordName($chordRoot, $chordQuality as ChordType));
 	let scaleName = $derived(getRecommendedScaleName($chordQuality as ChordType));
 	let explanation = $derived(explanations[$chordQuality as ChordType]);
+
+	// No box is selected on this page, so the voicing picks its own position:
+	// the lowest comfortable one for the chord.
+	let voicing = $derived(
+		computeChordVoicing($chordRoot, getChordNotes($chordRoot, $chordQuality as ChordType))
+	);
+	let playingNotes = $state<VoicingNote[]>([]);
 </script>
 
 <svelte:head>
@@ -33,17 +43,20 @@
 		<div class="chord-summary">
 			<span class="chord-name">{chordName}</span>
 			<span class="scale-label">→ {scaleName}</span>
+			<ChordPlayer {voicing} bind:playingNotes />
 		</div>
 	</div>
 
 	<p class="page-intro">
 		Pick a chord type to see which notes work over it when improvising. <strong>Pink</strong>
 		notes are chord tones — anchor your phrases here. <strong>Cyan</strong> notes extend the
-		scale and work best as passing notes between them. Want to see the recommended scale on the
-		whole neck? Head to <a class="intro-link" href="/guitar-theory">Fretboard Explorer</a>.
+		scale and work best as passing notes between them. Hit <strong>Play chord</strong> and let
+		it ring: that sound is what your line has to agree with, and the pink notes are the ones
+		already inside it. Want to see the recommended scale on the whole neck? Head to
+		<a class="intro-link" href="/guitar-theory">Fretboard Explorer</a>.
 	</p>
 
-	<Fretboard {getNoteClass} {getNoteLabel} />
+	<Fretboard {getNoteClass} {getNoteLabel} {playingNotes} />
 
 	<div class="controls">
 		<div class="control-group">

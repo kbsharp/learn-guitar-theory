@@ -6,15 +6,19 @@
 		getNoteClass?: (note: string) => string;
 		getNoteLabel?: (note: string) => string;
 		positionRange?: { start: number; end: number } | null;
-		playingNote?: { string: number; fret: number } | null;
+		playingNotes?: { string: number; fret: number }[];
 	}
 
 	let {
 		getNoteClass = () => 'hide-note',
 		getNoteLabel = (note: string) => note,
 		positionRange = null,
-		playingNote = null
+		playingNotes = []
 	}: Props = $props();
+
+	// Keyed by string+fret, never by note name — the same note name appears all
+	// over the neck and only one of them is the one sounding.
+	let playingKeys = $derived(new Set(playingNotes.map((n) => `${n.string}:${n.fret}`)));
 
 	function displayClass(noteClass: string, fretIndex: number): string {
 		if (!positionRange || noteClass === 'hide-note') return noteClass;
@@ -43,7 +47,7 @@
 						<button
 							type="button"
 							class={`note-btn ${finalClass}`}
-							class:is-playing={playingNote?.string === i && playingNote?.fret === j}
+							class:is-playing={playingKeys.has(`${i}:${j}`)}
 							onclick={() => handleNoteClick(i, j, noteClass)}
 							aria-label={`Play ${note}`}
 						>

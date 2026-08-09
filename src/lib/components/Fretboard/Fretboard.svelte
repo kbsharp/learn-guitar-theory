@@ -6,15 +6,18 @@
 		getNoteClass?: (note: string) => string;
 		getNoteLabel?: (note: string) => string;
 		positionRange?: { start: number; end: number } | null;
-		/** The string/fret currently sounding during playback, lit up on the board. */
-		playingNote?: { string: number; fret: number } | null;
+		/**
+		 * The string/fret positions sounding right now, lit up on the board.
+		 * One entry for a scale run; the whole voicing for a strummed chord.
+		 */
+		playingNotes?: { string: number; fret: number }[];
 	}
 
 	let {
 		getNoteClass = () => 'hide-note',
 		getNoteLabel = (note: string) => note,
 		positionRange = null,
-		playingNote = null
+		playingNotes = []
 	}: Props = $props();
 </script>
 
@@ -25,7 +28,7 @@
 			<Frets {positionRange} />
 
 			<div class="string-container">
-				<Strings {getNoteClass} {getNoteLabel} {positionRange} {playingNote} />
+				<Strings {getNoteClass} {getNoteLabel} {positionRange} {playingNotes} />
 			</div>
 		</div>
 	</div>

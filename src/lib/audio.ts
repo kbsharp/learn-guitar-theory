@@ -114,6 +114,71 @@ export async function playSequence(
 	pitches: string[],
 	{ gapSec = 0.32, onStep, onEnd }: SequenceOptions = {}
 ): Promise<void> {
+	// Each note is cut a little before the next arrives, so the run reads as
+	// separate notes rather than a wash.
+	return schedulePitches(pitches, {
+		gapSec,
+		durationSec: gapSec * 1.8,
+		tailSec: gapSec,
+		onStep,
+		onEnd
+	});
+}
+
+export interface ChordOptions {
+	/**
+	 * Seconds between adjacent strings — the strum spread. A guitar is not a
+	 * piano: the strings are struck one after another, and that tiny stagger is
+	 * most of what makes a strum sound like a guitar rather than a stack of
+	 * pitches.
+	 */
+	strumSec?: number;
+	/** How long each string rings. Long enough that the chord sounds as one. */
+	durationSec?: number;
+	/** Fired as each string sounds, in strum order. */
+	onStep?: (index: number) => void;
+	/** Fired once the chord has finished ringing. */
+	onEnd?: () => void;
+}
+
+/**
+ * Strum a chord: pitches sound in the order given (pass them bass string
+ * first) and ring together. Cancellable exactly like `playSequence`, and
+ * likewise only one thing plays at a time.
+ */
+export async function playChord(
+	pitches: string[],
+	{ strumSec = 0.045, durationSec = 2.6, onStep, onEnd }: ChordOptions = {}
+): Promise<void> {
+	return schedulePitches(pitches, {
+		gapSec: strumSec,
+		durationSec,
+		tailSec: durationSec,
+		onStep,
+		onEnd
+	});
+}
+
+interface ScheduleOptions {
+	/** Seconds between note onsets. */
+	gapSec: number;
+	/** How long each note rings. */
+	durationSec: number;
+	/** Seconds after the last onset before playback is considered over. */
+	tailSec: number;
+	onStep?: (index: number) => void;
+	onEnd?: () => void;
+}
+
+/**
+ * The one scheduler behind every timed playback. Everything goes on Tone's
+ * Transport rather than raw audio-time offsets so it stays cancellable — see
+ * `stopPlayback()`.
+ */
+async function schedulePitches(
+	pitches: string[],
+	{ gapSec, durationSec, tailSec, onStep, onEnd }: ScheduleOptions
+): Promise<void> {
 	if (typeof window === 'undefined' || pitches.length === 0) return;
 	const Tone = await ensureAudio();
 
@@ -126,7 +191,7 @@ export async function playSequence(
 
 	pitches.forEach((pitch, i) => {
 		transport.scheduleOnce((time) => {
-			sampler.triggerAttackRelease(pitch, gapSec * 1.8, time);
+			sampler.triggerAttackRelease(pitch, durationSec, time);
 			if (!onStep) return;
 			// Draw lands the highlight on the animation frame nearest the
 			// sound, but it silently drops events it misses and never runs at
@@ -145,10 +210,13 @@ export async function playSequence(
 
 	// End is driven off the Transport rather than Draw for the same reason: a
 	// stuck "playing" button is worse than resetting a lookahead-tick early.
-	transport.scheduleOnce(() => {
-		transport.stop();
-		if (generation === playbackGeneration) onEnd?.();
-	}, pitches.length * gapSec);
+	transport.scheduleOnce(
+		() => {
+			transport.stop();
+			if (generation === playbackGeneration) onEnd?.();
+		},
+		(pitches.length - 1) * gapSec + tailSec
+	);
 
 	transport.start();
 }

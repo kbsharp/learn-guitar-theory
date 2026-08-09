@@ -27,8 +27,16 @@ const chordToScale: Record<ChordType, string> = {
 	dim: 'diminished'
 };
 
+/**
+ * The notes of the chord itself, root first — what "Play chord" strums, and
+ * what gets the chord-tone highlight on the board.
+ */
+export function getChordNotes(root: string, chordType: ChordType): string[] {
+	return Chord.get(`${root}${chordType}`).notes.map(convertFlatToSharp);
+}
+
 export function getChordScaleClass(note: string, root: string, chordType: ChordType): string {
-	const chordNotes = Chord.get(`${root}${chordType}`).notes.map(convertFlatToSharp);
+	const chordNotes = getChordNotes(root, chordType);
 	const scaleType = chordToScale[chordType];
 	const scaleNotes = Scale.get(`${root} ${scaleType}`).notes.map(convertFlatToSharp);
 

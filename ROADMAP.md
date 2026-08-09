@@ -147,7 +147,7 @@ Audio currently proves the concept (click a note, hear it). Turn it into the
 teaching layer the ear-first design law needs.
 
 - [x] ~~**Play scale** button on Explorer — ascending/descending, notes light up on the fretboard in sync~~ — runs the _selected box_ (position 1 when showing the whole neck) root-to-root and back, walking real string/fret positions so what you hear is the shape you're looking at
-- [ ] **Play chord** button on Chord-Scale / Diatonic / CAGED — strum with slight offset, tones light up
+- [x] ~~**Play chord** button on Chord-Scale / Diatonic / CAGED — strum with slight offset, tones light up~~ — strums a real voicing on the neck (root in the bass, one note per string), strings lighting one by one as the strum passes and staying lit while the chord rings; on CAGED the strum stays inside the selected shape's box
 - [ ] **A/B comparison player** (new component) — two variants of the same phrase over the same root, user toggles; the characteristic note visually flagged. First uses: Dorian/Aeolian, Mixolydian/Ionian, Lydian/Ionian, maj3/min3
 - [ ] **Drone/loop player** (new component) — sustained root or looped chord vamp the user can leave running while they play. This is the backing for every rung-4 exercise
 - [ ] **Progression playback** on Progressions — hear the 4 slots in time; this makes function audible (V _leaning_ into I)
@@ -211,4 +211,12 @@ The differentiator. The journey router grows into a real "you are here."
 ## Decision log
 
 - **2026-08-09** — Roadmap created. Spine = guided path over tools; ear integrated early; self-guided practice first, mic later; all four application goals targeted with improv as first payoff arc.
+- **2026-08-09** — Chord playback strums a **real voicing on the neck**, not the chord's pitch set.
+  A stack of pitches is a chord an ear can learn; a voicing is a chord a hand can find. The rule is
+  one line — root in the bass, then the lowest chord tone within reach on every string above — and
+  it falls out as the shapes a guitarist already owns: open E, open Am, the E- and A-shape barres,
+  and each CAGED shape when its box is the window (locked in by `voicing.test.ts`). On CAGED the
+  strum is constrained to the selected shape's box, so nothing lights up outside what's on screen —
+  same principle as the scale run. Strings light cumulatively as the strum passes and stay lit while
+  the chord rings: the shape assembles at the speed it sounds, which is the point.
 - **2026-08-09** — Scale playback plays the **box on screen**, not an abstract pitch list. A run of decontextualised pitches teaches the sound of a scale but nothing about the neck; walking the real string/fret positions of the selected position, with each note lighting as it sounds, ties sound to shape — which is crux 1 (intervals, not shapes) and crux 5 (ear leads) doing their job together. Runs are trimmed root-to-root so the ear gets resolution, and playback stops the moment the board changes underneath it.
